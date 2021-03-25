@@ -1,0 +1,20 @@
+export default {
+  addToCart: 'Add to cart',
+  requestSample: 'Request Sample',
+  filterByName: 'Filter by name',
+  filterByStateName: 'Filter by state name',
+  chooseAFlavor: 'Choose a flavor',
+  orderValue: 'Order value',
+  next: 'Next',
+  invoice: 'Invoice',
+  invoices: 'Invoices',
+  directDes: 'These items will be delivered directly from the vendors.',
+  expressDes:
+    'These items will be consolidated and delivered to you from our distribution centers.',
+  podDirectItems: 'Pod Direct Items',
+  podExpressItems: 'Pod Express Items',
+  itemAddedCart: 'Items added to cart!',
+  addedToFavorites: 'Added to favorites',
+  clickHereToLogin: 'Click here to login',
+  removedFavorite: 'Item removed from favorites',
+};
