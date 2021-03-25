@@ -37,6 +37,7 @@
     "prop-types": "15.7.2",
     "react": "16.13.1",
     "react-native": "0.63.3",
+    "react-native-chart-kit": "file:./react-native-chart-kit",
     "react-native-device-info": "7.1.0",
     "react-native-exit-app": "1.1.0",
     "react-native-fast-image": "8.3.4",
