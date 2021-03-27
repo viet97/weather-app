@@ -1,4 +1,10 @@
-import {SplashScreen, HomeScreen, SettingScreen} from '../components/screen';
+import {
+  SplashScreen,
+  HomeScreen,
+  SettingScreen,
+  FrequencyScreen,
+  LanguageScreen,
+} from '../components/screen';
 import {AppTab} from './router/TabNavigator';
 
 export const ROUTER_NAME = {
@@ -21,5 +27,15 @@ export const ROUTER_NAME = {
     title: 'Setting',
     name: 'SettingScreen',
     component: SettingScreen,
+  },
+  FREQUENCY: {
+    title: 'Frequency',
+    name: 'FrequencyScreen',
+    component: FrequencyScreen,
+  },
+  LANGUAGE: {
+    title: 'Language',
+    name: 'LanguageScreen',
+    component: LanguageScreen,
   },
 };

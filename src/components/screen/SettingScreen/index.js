@@ -16,10 +16,13 @@ import IconPrivacySvg from '../../../../assets/SVGIcon/view-setting/icon_privacy
 import IconInfoSvg from '../../../../assets/SVGIcon/view-setting/icon_info.svg';
 import IconStarSvg from '../../../../assets/SVGIcon/view-setting/icon_star.svg';
 import IconUpSvg from '../../../../assets/SVGIcon/view-setting/icon_up.svg';
-import {widthDevice} from '../../../utils/DeviceUtil';
+import {STATUS_BAR_HEIGHT, widthDevice} from '../../../utils/DeviceUtil';
 import CustomImage, {TYPE_IMAGE_RESIZE_MODE} from '../../common/Image';
 import {Images} from '../../../themes/Images';
 import CustomText from '../../common/Text';
+import NavigationService from '../../../navigation/NavigationService';
+import {ROUTER_NAME} from '../../../navigation/NavigationConst';
+import {Header} from '../Header';
 
 const paddingHorizontalItem = 15;
 const styles = StyleSheet.create({
@@ -245,7 +248,22 @@ class SettingScreen extends BaseScreen {
       },
     ];
   }
-  onPressItem = item => {};
+  onPressItem = item => {
+    switch (item.key) {
+      case 'update':
+        NavigationService.getInstance().navigate({
+          routerName: ROUTER_NAME.FREQUENCY.name,
+        });
+        break;
+      case 'language':
+        NavigationService.getInstance().navigate({
+          routerName: ROUTER_NAME.LANGUAGE.name,
+        });
+        break;
+      default:
+        break;
+    }
+  };
   renderItem = params => {
     const {item, index} = params;
     const IconLeft = item.iconLeft;
@@ -348,7 +366,12 @@ class SettingScreen extends BaseScreen {
   };
   renderContent() {
     return (
-      <View style={{backgroundColor: '#FFFFFF', flex: 1}}>
+      <View
+        style={{
+          backgroundColor: '#FFFFFF',
+          flex: 1,
+          marginTop: STATUS_BAR_HEIGHT,
+        }}>
         <FlatList
           stickyHeaderIndices={[0]}
           ListHeaderComponent={this.renderHeader}
