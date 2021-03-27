@@ -140,7 +140,7 @@ class AbstractChart<
       verticalLabelsHeightPercentage = DEFAULT_X_LABELS_HEIGHT_PERCENTAGE
     } = config;
     const basePosition = height * verticalLabelsHeightPercentage;
-
+    return null;
     return [...new Array(count + 1)].map((_, i) => {
       const y = (basePosition / count) * i + paddingTop;
       return (
@@ -328,22 +328,28 @@ class AbstractChart<
     "data"
   > & { data: number[] }) => {
     const { yAxisInterval = 1 } = this.props;
-
+    console.log('renderVerticalLines',
+     data,
+    width,
+    height,
+    paddingTop,
+    paddingRight,
+    verticalLabelsHeightPercentage)
     return [...new Array(Math.ceil(data.length / yAxisInterval))].map(
       (_, i) => {
         return (
           <Line
-            key={Math.random()}
+            key={i}
             x1={Math.floor(
               ((width - paddingRight) / (data.length / yAxisInterval)) * i +
                 paddingRight
             )}
-            y1={0}
+            y1={height*(1-data[i]/100) + paddingTop}
             x2={Math.floor(
               ((width - paddingRight) / (data.length / yAxisInterval)) * i +
                 paddingRight
             )}
-            y2={height * verticalLabelsHeightPercentage + paddingTop}
+            y2={height + paddingTop}
             {...this.getPropsForBackgroundLines()}
           />
         );
@@ -399,7 +405,7 @@ class AbstractChart<
       useShadowColorFromDataset,
       data
     } = config;
-
+    
     const fromOpacity = config.hasOwnProperty("backgroundGradientFromOpacity")
       ? config.backgroundGradientFromOpacity
       : 1.0;
@@ -415,7 +421,7 @@ class AbstractChart<
       "fillShadowGradientOpacity"
     )
       ? config.fillShadowGradientOpacity
-      : 0.1;
+      : 1;
 
     return (
       <Defs>
