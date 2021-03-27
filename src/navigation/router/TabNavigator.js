@@ -154,6 +154,14 @@ export class MainTab extends BaseElement {
             iconFocus: Images.assets.default.source,
           }}
         />
+        <Tab.Screen
+          {...ROUTER_NAME.SETTING}
+          options={{
+            tabBarLabel: ROUTER_NAME.SETTING.name,
+            icon: Images.assets.default.source,
+            iconFocus: Images.assets.default.source,
+          }}
+        />
       </Tab.Navigator>
     );
   }

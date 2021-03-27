@@ -1,4 +1,4 @@
-import {SplashScreen, HomeScreen} from '../components/screen';
+import {SplashScreen, HomeScreen, SettingScreen} from '../components/screen';
 import {AppTab} from './router/TabNavigator';
 
 export const ROUTER_NAME = {
@@ -16,5 +16,10 @@ export const ROUTER_NAME = {
     title: 'Tài khoản',
     name: 'HomeScreen',
     component: HomeScreen,
+  },
+  SETTING: {
+    title: 'Setting',
+    name: 'SettingScreen',
+    component: SettingScreen,
   },
 };
