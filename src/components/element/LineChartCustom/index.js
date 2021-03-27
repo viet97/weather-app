@@ -27,11 +27,11 @@ export default class LineChartCustom extends BaseElement {
     } = this.props;
 
     return (
+      <View style={{height:200}}>
         <ScrollView 
           bounces={false}
           showsHorizontalScrollIndicator={false}
           horizontal>
-          <View>
             <LineChart
               data={{
                 datasets: [
@@ -42,6 +42,7 @@ export default class LineChartCustom extends BaseElement {
                       15 / 30 * 100,
                       30 / 30 * 100,
                       22 / 30 * 100,
+                      30 / 30 * 100,
                       30 / 30 * 100,
                     ],
                   },
@@ -67,8 +68,8 @@ export default class LineChartCustom extends BaseElement {
               withHorizontalLabels={false}
               withVerticalLabels={false}
             />
-          </View>
         </ScrollView>
+      </View>
     );
   }
 }
