@@ -5,7 +5,7 @@ export const ApplicationStyle = {
   textMore: '● ● ●',
   containerScreen: {
     flex: 1,
-    backgroundColor: Colors.STACK_BACKGROUND_COLOR,
+    backgroundColor: Colors.white,
   },
   menuDrawScreen: {
     flex: 1,

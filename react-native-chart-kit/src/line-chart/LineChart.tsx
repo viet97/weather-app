@@ -7,7 +7,7 @@ import {
   View,
   ViewStyle,
   TouchableOpacity,
-  Text
+  Text,
 } from "react-native";
 import {
   Circle,
@@ -16,12 +16,12 @@ import {
   Polygon,
   Polyline,
   Rect,
-  Svg
+  Svg,
 } from "react-native-svg";
 
 import AbstractChart, {
   AbstractChartConfig,
-  AbstractChartProps
+  AbstractChartProps,
 } from "../AbstractChart";
 import { ChartData, Dataset } from "../HelperTypes";
 import { LegendItem } from "./LegendItem";
@@ -226,7 +226,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
   label = React.createRef<TextInput>();
 
   state = {
-    scrollableDotHorizontalOffset: new Animated.Value(0)
+    scrollableDotHorizontalOffset: new Animated.Value(0),
   };
 
   getColor = (dataset: Dataset, opacity: number) => {
@@ -262,7 +262,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
     height,
     paddingTop,
     paddingRight,
-    onDataPointClick
+    onDataPointClick,
   }: Pick<
     AbstractChartConfig,
     "data" | "width" | "height" | "paddingRight" | "paddingTop"
@@ -278,10 +278,10 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
       hidePointsAtIndex = [],
       renderDotContent = () => {
         return null;
-      }
+      },
     } = this.props;
 
-    data.forEach(dataset => {
+    data.forEach((dataset) => {
       if (dataset.withDots == false) return;
 
       dataset.data.forEach((x, i) => {
@@ -292,9 +292,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
         const cx =
           paddingRight + (i * (width - paddingRight)) / dataset.data.length;
 
-        const cy =
-          height * (1-x/100) +
-          paddingTop;
+        const cy = height * (1 - x / 100) + paddingTop;
 
         const onPress = () => {
           if (!onDataPointClick || hidePointsAtIndex.includes(i)) {
@@ -307,7 +305,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
             dataset,
             x: cx,
             y: cy,
-            getColor: opacity => this.getColor(dataset, opacity)
+            getColor: (opacity) => this.getColor(dataset, opacity),
           });
         };
 
@@ -341,40 +339,60 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
     return output;
   };
 
-  renderLabel = ({height,width, data,paddingTop,paddingRight})=>{
-    const datas = this.getDatas(data);
-    const baseHeight = this.calcBaseHeight(datas, height);
+  renderLabel = ({
+    height,
+    width,
+    data,
+    paddingTop,
+    paddingRight,
+    dataValue,
+  }) => {
     const content = [];
-    data.forEach(dataset => {
+    data.forEach((dataset) => {
       dataset.data.forEach((x, i) => {
         const cx =
           paddingRight + (i * (width - paddingRight)) / dataset.data.length;
 
-        const cy =
-          height*(1-x/100) +
-          paddingTop;
-        content.push(<View style={{position:'absolute',top:cy-34,left:cx-10,width:40,height:20,backgroundColor:'red'}}>
-          <Text>{x}</Text>
-        </View>)
+        const cy = height * (1 - x / 100) + paddingTop;
+        content.push(
+          <View
+            style={{
+              position: "absolute",
+              top: cy - 24,
+              left: cx - 10,
+            }}
+          >
+            <Text>{dataValue[i]}</Text>
+          </View>
+        );
       });
     });
-    return (content.map(it=>it))
-  }
+    return content.map((it) => it);
+  };
 
-  renderBottomLabel = ({height,width, data,paddingTop,paddingRight})=>{
+  renderBottomLabel = ({ height, width, data, paddingTop, paddingRight }) => {
     const content = [];
-    data.forEach(dataset => {
+    data.forEach((dataset) => {
       dataset.data.forEach((x, i) => {
         const cx =
           paddingRight + (i * (width - paddingRight)) / dataset.data.length;
-        content.push(<View style={{position:'absolute',top:height+10,left:cx-10,flex:1,width:40,backgroundColor:'red'}}>
-          <Text>{x}</Text>
-        </View>)
+        content.push(
+          <View
+            style={{
+              position: "absolute",
+              top: height + 10,
+              left: cx - 10,
+              flex: 1,
+              backgroundColor: "red",
+            }}
+          >
+            <Text>{x}</Text>
+          </View>
+        );
       });
     });
-    return (content.map(it=>it))
-  }
-
+    return content.map((it) => it);
+  };
 
   renderScrollableDot = ({
     data,
@@ -389,9 +407,9 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
     scrollableDotRadius,
     scrollableInfoViewStyle,
     scrollableInfoTextStyle,
-    scrollableInfoTextDecorator = x => `${x}`,
+    scrollableInfoTextDecorator = (x) => `${x}`,
     scrollableInfoSize,
-    scrollableInfoOffset
+    scrollableInfoOffset,
   }: AbstractChartConfig & {
     onDataPointClick: LineChartProps["onDataPointClick"];
     scrollableDotHorizontalOffset: Animated.Value;
@@ -408,7 +426,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
     }
     let lastIndex: number;
 
-    scrollableDotHorizontalOffset.addListener(value => {
+    scrollableDotHorizontalOffset.addListener((value) => {
       const index = value.value / perData;
       if (!lastIndex) {
         lastIndex = index;
@@ -420,7 +438,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
 
       if (index >= data[0].data.length - 1) {
         this.label.current.setNativeProps({
-          text: scrollableInfoTextDecorator(Math.floor(data[0].data[0]))
+          text: scrollableInfoTextDecorator(Math.floor(data[0].data[0])),
         });
       } else {
         if (index > lastIndex) {
@@ -433,14 +451,14 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
             this.label.current.setNativeProps({
               text: scrollableInfoTextDecorator(
                 Math.floor(base + percent * rest)
-              )
+              ),
             });
           } else {
             let rest = base - prev;
             this.label.current.setNativeProps({
               text: scrollableInfoTextDecorator(
                 Math.floor(base - percent * rest)
-              )
+              ),
             });
           }
         } else {
@@ -454,14 +472,14 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
             this.label.current.setNativeProps({
               text: scrollableInfoTextDecorator(
                 Math.floor(base + percent * rest)
-              )
+              ),
             });
           } else {
             let rest = base - next;
             this.label.current.setNativeProps({
               text: scrollableInfoTextDecorator(
                 Math.floor(base - percent * rest)
-              )
+              ),
             });
           }
         }
@@ -469,7 +487,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
       lastIndex = index;
     });
 
-    data.forEach(dataset => {
+    data.forEach((dataset) => {
       if (dataset.withScrollableDot == false) return;
 
       const perData = width / dataset.data.length;
@@ -508,25 +526,25 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
       const translateX = scrollableDotHorizontalOffset.interpolate({
         inputRange: values,
         outputRange: xValues,
-        extrapolate: "clamp"
+        extrapolate: "clamp",
       });
 
       const translateY = scrollableDotHorizontalOffset.interpolate({
         inputRange: values,
         outputRange: yValues,
-        extrapolate: "clamp"
+        extrapolate: "clamp",
       });
 
       const labelTranslateX = scrollableDotHorizontalOffset.interpolate({
         inputRange: values,
         outputRange: xValuesLabel,
-        extrapolate: "clamp"
+        extrapolate: "clamp",
       });
 
       const labelTranslateY = scrollableDotHorizontalOffset.interpolate({
         inputRange: values,
         outputRange: yValuesLabel,
-        extrapolate: "clamp"
+        extrapolate: "clamp",
       });
 
       output.push([
@@ -537,11 +555,11 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
             {
               transform: [
                 { translateX: labelTranslateX },
-                { translateY: labelTranslateY }
+                { translateY: labelTranslateY },
               ],
               width: scrollableInfoSize.width,
-              height: scrollableInfoSize.height
-            }
+              height: scrollableInfoSize.height,
+            },
           ]}
         >
           <TextInput
@@ -549,7 +567,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
               this.label.current.setNativeProps({
                 text: scrollableInfoTextDecorator(
                   Math.floor(data[0].data[data[0].data.length - 1])
-                )
+                ),
               });
             }}
             style={scrollableInfoTextStyle}
@@ -564,7 +582,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
           stroke={scrollableDotStrokeColor}
           strokeWidth={scrollableDotStrokeWidth}
           fill={scrollableDotFill}
-        />
+        />,
       ]);
     });
 
@@ -577,7 +595,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
     paddingRight,
     paddingTop,
     data,
-    useColorFromDataset
+    useColorFromDataset,
   }: Pick<
     AbstractChartConfig,
     "data" | "width" | "height" | "paddingRight" | "paddingTop"
@@ -591,7 +609,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
         paddingRight,
         paddingTop,
         data,
-        useColorFromDataset
+        useColorFromDataset,
       });
     }
 
@@ -616,10 +634,13 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
                 return `${x},${y}`;
               })
               .join(" ") +
-            ` ${paddingRight +
+            ` ${
+              paddingRight +
               ((width - paddingRight) / dataset.data.length) *
-                (dataset.data.length - 1)},${(height / 4) * 3 +
-              paddingTop} ${paddingRight},${(height / 4) * 3 + paddingTop}`
+                (dataset.data.length - 1)
+            },${(height / 4) * 3 + paddingTop} ${paddingRight},${
+              (height / 4) * 3 + paddingTop
+            }`
           }
           fill={`url(#fillShadowGradient${
             useColorFromDataset ? `_${index}` : ""
@@ -636,7 +657,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
     paddingRight,
     paddingTop,
     data,
-    linejoinType
+    linejoinType,
   }: Pick<
     AbstractChartConfig,
     "data" | "width" | "height" | "paddingRight" | "paddingTop" | "linejoinType"
@@ -647,7 +668,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
         width,
         height,
         paddingRight,
-        paddingTop
+        paddingTop,
       });
     }
 
@@ -693,7 +714,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
       height,
       paddingRight,
       paddingTop,
-      data
+      data,
     }: Pick<
       AbstractChartConfig,
       "width" | "height" | "paddingRight" | "paddingTop" | "data"
@@ -710,12 +731,8 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
         paddingRight + (i * (width - paddingRight)) / dataset.data.length
       );
 
-    const baseHeight = this.calcBaseHeight(datas, height);
-
     const y = (i: number) => {
-      const yHeight = this.calcHeight(dataset.data[i], datas, height);
-
-      return Math.floor(height*(1-datas[i]/100) + paddingTop);
+      return Math.floor(height * (1 - datas[i] / 100) + paddingTop);
     };
 
     return [`M${x(0)},${y(0)}`]
@@ -739,7 +756,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
     width,
     height,
     paddingRight,
-    paddingTop
+    paddingTop,
   }: Pick<
     AbstractChartConfig,
     "data" | "width" | "height" | "paddingRight" | "paddingTop"
@@ -750,7 +767,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
         height,
         paddingRight,
         paddingTop,
-        data
+        data,
       });
 
       return (
@@ -773,7 +790,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
     paddingRight,
     paddingTop,
     data,
-    useColorFromDataset
+    useColorFromDataset,
   }: Pick<
     AbstractChartConfig,
     "data" | "width" | "height" | "paddingRight" | "paddingTop"
@@ -787,13 +804,13 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
           height,
           paddingRight,
           paddingTop,
-          data
+          data,
         }) +
-        ` L${paddingRight +
+        ` L${
+          paddingRight +
           ((width - paddingRight) / dataset.data.length) *
-            (dataset.data.length - 1)},${height +
-          paddingTop} L${paddingRight},${height + paddingTop} Z`;
-
+            (dataset.data.length - 1)
+        },${height + paddingTop} L${paddingRight},${height + paddingTop} Z`;
       return (
         <Path
           key={index}
@@ -843,11 +860,11 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
       onDataPointClick,
       verticalLabelRotation = 0,
       horizontalLabelRotation = 0,
-      formatYLabel = yLabel => yLabel,
-      formatXLabel = xLabel => xLabel,
+      formatYLabel = (yLabel) => yLabel,
+      formatXLabel = (xLabel) => xLabel,
       segments,
       transparent = false,
-      chartConfig
+      chartConfig,
     } = this.props;
 
     const { scrollableDotHorizontalOffset } = this.state;
@@ -865,7 +882,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
       width,
       height,
       verticalLabelRotation,
-      horizontalLabelRotation
+      horizontalLabelRotation,
     };
 
     const datas = this.getDatas(data.datasets);
@@ -895,7 +912,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
             {this.renderDefs({
               ...config,
               ...chartConfig,
-              data: data.datasets
+              data: data.datasets,
             })}
             <G>
               {withHorizontalLines &&
@@ -904,13 +921,13 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
                       ...config,
                       count: count,
                       paddingTop,
-                      paddingRight
+                      paddingRight,
                     })
                   : withOuterLines
                   ? this.renderHorizontalLine({
                       ...config,
                       paddingTop,
-                      paddingRight
+                      paddingRight,
                     })
                   : null)}
             </G>
@@ -923,26 +940,10 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
                   paddingTop: paddingTop as number,
                   paddingRight: paddingRight as number,
                   formatYLabel,
-                  decimalPlaces: chartConfig.decimalPlaces
+                  decimalPlaces: chartConfig.decimalPlaces,
                 })}
             </G>
-            <G>
-              {withVerticalLines &&
-                (withInnerLines
-                  ? this.renderVerticalLines({
-                      ...config,
-                      data: data.datasets[0].data,
-                      paddingTop: paddingTop as number,
-                      paddingRight: paddingRight as number
-                    })
-                  : withOuterLines
-                  ? this.renderVerticalLine({
-                      ...config,
-                      paddingTop: paddingTop as number,
-                      paddingRight: paddingRight as number
-                    })
-                  : null)}
-            </G>
+
             <G>
               {withVerticalLabels &&
                 this.renderVerticalLabels({
@@ -950,7 +951,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
                   labels,
                   paddingTop: paddingTop as number,
                   paddingRight: paddingRight as number,
-                  formatXLabel
+                  formatXLabel,
                 })}
             </G>
             <G>
@@ -959,7 +960,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
                 ...chartConfig,
                 paddingRight: paddingRight as number,
                 paddingTop: paddingTop as number,
-                data: data.datasets
+                data: data.datasets,
               })}
             </G>
             <G>
@@ -969,8 +970,25 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
                   data: data.datasets,
                   paddingRight: paddingRight as number,
                   paddingTop: paddingTop as number,
-                  useColorFromDataset: chartConfig.useShadowColorFromDataset
+                  useColorFromDataset: chartConfig.useShadowColorFromDataset,
                 })}
+            </G>
+            <G>
+              {withVerticalLines &&
+                (withInnerLines
+                  ? this.renderVerticalLines({
+                      ...config,
+                      data: data.datasets[0].data,
+                      paddingTop: paddingTop as number,
+                      paddingRight: paddingRight as number,
+                    })
+                  : withOuterLines
+                  ? this.renderVerticalLine({
+                      ...config,
+                      paddingTop: paddingTop as number,
+                      paddingRight: paddingRight as number,
+                    })
+                  : null)}
             </G>
             <G>
               {withDots &&
@@ -979,7 +997,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
                   data: data.datasets,
                   paddingTop: paddingTop as number,
                   paddingRight: paddingRight as number,
-                  onDataPointClick
+                  onDataPointClick,
                 })}
             </G>
             {this.renderLabel({
@@ -987,6 +1005,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
               data: data.datasets,
               paddingTop,
               paddingRight,
+              dataValue: data.dataValue,
             })}
             {this.renderBottomLabel({
               ...config,
@@ -1003,7 +1022,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
                   paddingTop: paddingTop as number,
                   paddingRight: paddingRight as number,
                   onDataPointClick,
-                  scrollableDotHorizontalOffset
+                  scrollableDotHorizontalOffset,
                 })}
             </G>
             <G>
@@ -1012,7 +1031,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
                   ...config,
                   data: data.datasets,
                   paddingTop,
-                  paddingRight
+                  paddingRight,
                 })}
             </G>
           </G>
@@ -1026,9 +1045,9 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
             onScroll={Animated.event([
               {
                 nativeEvent: {
-                  contentOffset: { x: scrollableDotHorizontalOffset }
-                }
-              }
+                  contentOffset: { x: scrollableDotHorizontalOffset },
+                },
+              },
             ])}
             horizontal
             bounces={false}

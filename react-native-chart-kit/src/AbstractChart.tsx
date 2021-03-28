@@ -86,10 +86,10 @@ class AbstractChart<
   getPropsForBackgroundLines() {
     const { propsForBackgroundLines = {} } = this.props.chartConfig;
     return {
-      stroke: this.props.chartConfig.color(0.2),
-      strokeDasharray: "5, 10",
+      stroke: "white",
+      strokeDasharray: "4, 5",
       strokeWidth: 1,
-      ...propsForBackgroundLines
+      ...propsForBackgroundLines,
     };
   }
 
@@ -97,12 +97,12 @@ class AbstractChart<
     const {
       propsForLabels = {},
       color,
-      labelColor = color
+      labelColor = color,
     } = this.props.chartConfig;
     return {
       fontSize: 12,
       fill: labelColor(0.8),
-      ...propsForLabels
+      ...propsForLabels,
     };
   }
 
@@ -110,11 +110,11 @@ class AbstractChart<
     const {
       propsForVerticalLabels = {},
       color,
-      labelColor = color
+      labelColor = color,
     } = this.props.chartConfig;
     return {
       fill: labelColor(0.8),
-      ...propsForVerticalLabels
+      ...propsForVerticalLabels,
     };
   }
 
@@ -122,22 +122,22 @@ class AbstractChart<
     const {
       propsForHorizontalLabels = {},
       color,
-      labelColor = color
+      labelColor = color,
     } = this.props.chartConfig;
     return {
       fill: labelColor(0.8),
-      ...propsForHorizontalLabels
+      ...propsForHorizontalLabels,
     };
   }
 
-  renderHorizontalLines = config => {
+  renderHorizontalLines = (config) => {
     const {
       count,
       width,
       height,
       paddingTop,
       paddingRight,
-      verticalLabelsHeightPercentage = DEFAULT_X_LABELS_HEIGHT_PERCENTAGE
+      verticalLabelsHeightPercentage = DEFAULT_X_LABELS_HEIGHT_PERCENTAGE,
     } = config;
     const basePosition = height * verticalLabelsHeightPercentage;
     return null;
@@ -156,13 +156,13 @@ class AbstractChart<
     });
   };
 
-  renderHorizontalLine = config => {
+  renderHorizontalLine = (config) => {
     const {
       width,
       height,
       paddingTop,
       paddingRight,
-      verticalLabelsHeightPercentage = DEFAULT_X_LABELS_HEIGHT_PERCENTAGE
+      verticalLabelsHeightPercentage = DEFAULT_X_LABELS_HEIGHT_PERCENTAGE,
     } = config;
     return (
       <Line
@@ -188,13 +188,13 @@ class AbstractChart<
       horizontalLabelRotation = 0,
       decimalPlaces = 2,
       formatYLabel = (yLabel: string) => yLabel,
-      verticalLabelsHeightPercentage = DEFAULT_X_LABELS_HEIGHT_PERCENTAGE
+      verticalLabelsHeightPercentage = DEFAULT_X_LABELS_HEIGHT_PERCENTAGE,
     } = config;
 
     const {
       yAxisLabel = "",
       yAxisSuffix = "",
-      yLabelsOffset = 12
+      yLabelsOffset = 12,
     } = this.props;
     return new Array(count === 1 ? 1 : count + 1).fill(1).map((_, i) => {
       let yLabel = String(i * count);
@@ -246,8 +246,8 @@ class AbstractChart<
     horizontalOffset = 0,
     stackedBar = false,
     verticalLabelRotation = 0,
-    formatXLabel = xLabel => xLabel,
-    verticalLabelsHeightPercentage = DEFAULT_X_LABELS_HEIGHT_PERCENTAGE
+    formatXLabel = (xLabel) => xLabel,
+    verticalLabelsHeightPercentage = DEFAULT_X_LABELS_HEIGHT_PERCENTAGE,
   }: Pick<
     AbstractChartConfig,
     | "labels"
@@ -264,7 +264,7 @@ class AbstractChart<
     const {
       xAxisLabel = "",
       xLabelsOffset = 0,
-      hidePointsAtIndex = []
+      hidePointsAtIndex = [],
     } = this.props;
 
     const fontSize = 12;
@@ -314,7 +314,7 @@ class AbstractChart<
     height,
     paddingTop,
     paddingRight,
-    verticalLabelsHeightPercentage = DEFAULT_X_LABELS_HEIGHT_PERCENTAGE
+    verticalLabelsHeightPercentage = DEFAULT_X_LABELS_HEIGHT_PERCENTAGE,
   }: Omit<
     Pick<
       AbstractChartConfig,
@@ -328,13 +328,6 @@ class AbstractChart<
     "data"
   > & { data: number[] }) => {
     const { yAxisInterval = 1 } = this.props;
-    console.log('renderVerticalLines',
-     data,
-    width,
-    height,
-    paddingTop,
-    paddingRight,
-    verticalLabelsHeightPercentage)
     return [...new Array(Math.ceil(data.length / yAxisInterval))].map(
       (_, i) => {
         return (
@@ -344,7 +337,7 @@ class AbstractChart<
               ((width - paddingRight) / (data.length / yAxisInterval)) * i +
                 paddingRight
             )}
-            y1={height*(1-data[i]/100) + paddingTop}
+            y1={height * (1 - data[i] / 100) + paddingTop}
             x2={Math.floor(
               ((width - paddingRight) / (data.length / yAxisInterval)) * i +
                 paddingRight
@@ -361,7 +354,7 @@ class AbstractChart<
     height,
     paddingTop,
     paddingRight,
-    verticalLabelsHeightPercentage = DEFAULT_X_LABELS_HEIGHT_PERCENTAGE
+    verticalLabelsHeightPercentage = DEFAULT_X_LABELS_HEIGHT_PERCENTAGE,
   }: Pick<
     AbstractChartConfig,
     "height" | "paddingRight" | "paddingTop" | "verticalLabelsHeightPercentage"
@@ -403,9 +396,9 @@ class AbstractChart<
       backgroundGradientFrom,
       backgroundGradientTo,
       useShadowColorFromDataset,
-      data
+      data,
     } = config;
-    
+
     const fromOpacity = config.hasOwnProperty("backgroundGradientFromOpacity")
       ? config.backgroundGradientFromOpacity
       : 1.0;
@@ -487,7 +480,7 @@ class AbstractChart<
               stopColor={fillShadowGradient}
               stopOpacity={fillShadowGradientOpacity}
             />
-            <Stop offset="1" stopColor={fillShadowGradient} stopOpacity="0" />
+            <Stop offset="1" stopColor={fillShadowGradient} stopOpacity="0.1" />
           </LinearGradient>
         )}
       </Defs>
