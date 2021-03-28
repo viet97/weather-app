@@ -349,6 +349,7 @@ class SettingScreen extends BaseScreen {
             const IconFinal = option.isActive ? IconChoiceSvg : IconUnChoiceSvg;
             return (
               <View
+                key={idx}
                 style={{
                   width: '100%',
                   paddingHorizontal: 15,
