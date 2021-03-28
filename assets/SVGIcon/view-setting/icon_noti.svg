@@ -1,5 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="32.667" height="35.5" viewBox="0 0 32.667 35.5">
-  <g id="Group_820" data-name="Group 820" transform="translate(0.25 1.25)">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="56" height="56" viewBox="0 0 56 56">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#ff4e4e" stop-opacity="0.702"/>
+      <stop offset="1" stop-color="#ff4e4e"/>
+    </linearGradient>
+  </defs>
+  <rect id="Rectangle_639" data-name="Rectangle 639" width="56" height="56" rx="18" fill="url(#linear-gradient)"/>
+  <g id="Group_820" data-name="Group 820" transform="translate(12 11)">
     <path id="Path_3847" data-name="Path 3847" d="M138.645,422.375a5.319,5.319,0,0,1-5.312-5.312,1.062,1.062,0,0,1,2.125,0,3.187,3.187,0,0,0,6.375,0,1.062,1.062,0,0,1,2.125,0A5.319,5.319,0,0,1,138.645,422.375Zm0,0" transform="translate(-124.478 -388.375)" fill="#fff" stroke="#fff" stroke-width="0.5"/>
     <path id="Path_3848" data-name="Path 3848" d="M25.854,89.5H2.479A2.48,2.48,0,0,1,.867,85.137a.979.979,0,0,1,.113-.085,9.521,9.521,0,0,0,3.27-7.183V73.917A9.928,9.928,0,0,1,14.167,64a4.268,4.268,0,0,1,.7.043,1.062,1.062,0,1,1-.349,2.1,2.23,2.23,0,0,0-.35-.013,7.8,7.8,0,0,0-7.792,7.792v3.952a11.652,11.652,0,0,1-4.113,8.884c-.021.017-.04.033-.063.048a.351.351,0,0,0-.075.22.358.358,0,0,0,.354.354H25.854a.358.358,0,0,0,.354-.354.339.339,0,0,0-.077-.22c-.021-.016-.04-.031-.061-.048a11.649,11.649,0,0,1-4.113-8.884V76.325a1.062,1.062,0,0,1,2.125,0v1.544a9.524,9.524,0,0,0,3.274,7.187,1.033,1.033,0,0,1,.109.082A2.479,2.479,0,0,1,25.854,89.5Zm0,0" transform="translate(0 -59.75)" fill="#fff" stroke="#fff" stroke-width="0.5"/>
     <path id="Path_3849" data-name="Path 3849" d="M263.083,14.167a7.083,7.083,0,1,1,7.083-7.083A7.091,7.091,0,0,1,263.083,14.167Zm0-12.042a4.958,4.958,0,1,0,4.958,4.958A4.964,4.964,0,0,0,263.083,2.125Zm0,0" transform="translate(-238 -1)" fill="#fff" stroke="#fff" stroke-width="0.5"/>

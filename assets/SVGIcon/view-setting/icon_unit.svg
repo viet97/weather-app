@@ -1,1 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="20.803" height="37" viewBox="0 0 20.803 37"><g transform="translate(1024 -747.5)"><path d="M23.274,8a5.044,5.044,0,0,0-5.038,5.038V25.6a9.909,9.909,0,1,0,10.075.009V13.038A5.044,5.044,0,0,0,23.274,8ZM31.4,34.093a8.125,8.125,0,1,1-11.865-7.211,1,1,0,0,0,.48-.789V13.038a3.261,3.261,0,1,1,6.521,0V26.1a.991.991,0,0,0,.482.79A8.056,8.056,0,0,1,31.4,34.093Z" transform="translate(-1036.872 740)" fill="#fff" stroke="#fff" stroke-width="1"/><g transform="translate(-1018.146 769.231)" fill="none" stroke="#fff" stroke-width="2.7"><circle cx="4.615" cy="4.615" r="4.615" stroke="none"/><circle cx="4.615" cy="4.615" r="3.265" fill="none"/></g></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="56" height="56" viewBox="0 0 56 56">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#29b6f6" stop-opacity="0.702"/>
+      <stop offset="1" stop-color="#29b6f6"/>
+    </linearGradient>
+  </defs>
+  <rect id="Rectangle_638" data-name="Rectangle 638" width="56" height="56" rx="18" fill="url(#linear-gradient)"/>
+  <g id="Group_847" data-name="Group 847" transform="translate(1041.5 -738)">
+    <path id="Path_3846" data-name="Path 3846" d="M23.274,8a5.044,5.044,0,0,0-5.038,5.038V25.6a9.909,9.909,0,1,0,10.075.009V13.038A5.044,5.044,0,0,0,23.274,8ZM31.4,34.093a8.125,8.125,0,1,1-11.865-7.211,1,1,0,0,0,.48-.789V13.038a3.261,3.261,0,1,1,6.521,0V26.1a.991.991,0,0,0,.482.79A8.056,8.056,0,0,1,31.4,34.093Z" transform="translate(-1036.872 740)" fill="#fff" stroke="#fff" stroke-width="1"/>
+    <g id="Ellipse_115" data-name="Ellipse 115" transform="translate(-1018.146 769.231)" fill="none" stroke="#fff" stroke-width="2.7">
+      <circle cx="4.615" cy="4.615" r="4.615" stroke="none"/>
+      <circle cx="4.615" cy="4.615" r="3.265" fill="none"/>
+    </g>
+  </g>
+</svg>

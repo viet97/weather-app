@@ -1,6 +1,5 @@
 import React from 'react';
 import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 import BaseScreen from '../BaseScreen';
 import IconUnitSvg from '../../../../assets/SVGIcon/view-setting/icon_unit.svg';
 import IconNotiSvg from '../../../../assets/SVGIcon/view-setting/icon_noti.svg';
@@ -69,12 +68,6 @@ class SettingScreen extends BaseScreen {
       {
         label: 'Units',
         iconLeft: IconUnitSvg,
-        iconSize: {
-          width: 19.8,
-          height: 36,
-        },
-        iconLeftBackgroundColor: '#29B6F6',
-        linearColor: ['rgba(41, 182, 246, 0.7)', 'rgba(41, 182, 246, 1)'],
         txtRight: 'oC, mm, cm, km, m/s, hPa',
         iconRight: IconRightSvg,
         onClick: () => {},
@@ -84,12 +77,6 @@ class SettingScreen extends BaseScreen {
       {
         label: 'Notification',
         iconLeft: IconNotiSvg,
-        iconSize: {
-          width: 32.17,
-          height: 35,
-        },
-        iconLeftBackgroundColor: '#FF4E4E',
-        linearColor: ['rgba(255, 78, 78, 0.7)', 'rgba(255, 78, 78, 1)'],
         txtRight: '',
         iconRight: IconRightSvg,
         onClick: () => {},
@@ -99,12 +86,6 @@ class SettingScreen extends BaseScreen {
       {
         label: 'Weather Provider',
         iconLeft: IconProviderSvg,
-        iconSize: {
-          width: 31.62,
-          height: 36,
-        },
-        iconLeftBackgroundColor: '#00A6F9',
-        linearColor: ['rgba(0, 166, 249, 1)', 'rgba(0, 113, 226, 1)'],
         txtRight: 'TheWeatherChannel',
         iconRight: IconRightSvg,
         onClick: () => {},
@@ -114,12 +95,6 @@ class SettingScreen extends BaseScreen {
       {
         label: 'Weather Iconset',
         iconLeft: IconWeatherSvg,
-        iconSize: {
-          width: 37.06,
-          height: 32,
-        },
-        iconLeftBackgroundColor: '#FAAE20',
-        linearColor: ['rgba(250, 174, 32, 0.7)', 'rgba(250, 174, 32, 1)'],
         txtRight: 'Colorful',
         iconRight: IconRightSvg,
         onClick: () => {},
@@ -129,12 +104,6 @@ class SettingScreen extends BaseScreen {
       {
         label: 'Theme Color',
         iconLeft: IconThemeSvg,
-        iconSize: {
-          width: 38,
-          height: 38,
-        },
-        iconLeftBackgroundColor: '#00A6F9',
-        linearColor: ['rgba(187, 196, 226, 1)', 'rgba(106, 128, 170, 1)'],
         txtRight: 'Light mode',
         iconRight: IconRightSvg,
         onClick: () => {},
@@ -144,12 +113,6 @@ class SettingScreen extends BaseScreen {
       {
         label: 'Language',
         iconLeft: IconLanguageSvg,
-        iconSize: {
-          width: 32,
-          height: 32,
-        },
-        linearColor: ['rgba(48, 131, 255, 0.7)', 'rgba(48, 131, 255, 1)'],
-        iconLeftBackgroundColor: '#29B6F6',
         txtRight: 'English',
         iconRight: IconRightSvg,
         onClick: () => {},
@@ -159,12 +122,6 @@ class SettingScreen extends BaseScreen {
       {
         label: 'Update Frequency',
         iconLeft: IconUpdateSvg,
-        iconSize: {
-          width: 34.01,
-          height: 34,
-        },
-        linearColor: ['rgba(255, 146, 72, 0.7)', 'rgba(255, 146, 72, 1)'],
-        iconLeftBackgroundColor: '#29B6F6',
         txtRight: '30 minutes',
         iconRight: IconRightSvg,
         onClick: () => {},
@@ -174,12 +131,6 @@ class SettingScreen extends BaseScreen {
       {
         label: 'Time Format',
         iconLeft: IconTimeSvg,
-        iconSize: {
-          width: 34,
-          height: 34,
-        },
-        linearColor: ['rgba(94, 91, 230, 0.7)', 'rgba(94, 91, 230, 1)'],
-        iconLeftBackgroundColor: '#29B6F6',
         txtRight: '24 hours',
         iconRight: IconRightSvg,
         onClick: () => {},
@@ -189,12 +140,6 @@ class SettingScreen extends BaseScreen {
       {
         label: 'Customize Layout',
         iconLeft: IconCustomSvg,
-        iconSize: {
-          width: 30,
-          height: 30,
-        },
-        linearColor: ['rgba(187, 196, 226, 1)', 'rgba(106, 128, 170, 1)'],
-        iconLeftBackgroundColor: '#29B6F6',
         txtRight: '',
         iconRight: IconRightSvg,
         onClick: () => {},
@@ -203,13 +148,7 @@ class SettingScreen extends BaseScreen {
       },
       {
         label: 'Privacy',
-        iconSize: {
-          width: 27.15,
-          height: 38.17,
-        },
         iconLeft: IconPrivacySvg,
-        linearColor: ['rgba(29, 160, 47, 1)', 'rgba(93, 195, 69, 1)'],
-        iconLeftBackgroundColor: '#29B6F6',
         txtRight: '',
         onClick: () => {},
         key: 'privacy',
@@ -219,12 +158,6 @@ class SettingScreen extends BaseScreen {
       {
         label: 'About App',
         iconLeft: IconInfoSvg,
-        iconSize: {
-          width: 34.02,
-          height: 34,
-        },
-        linearColor: ['rgba(0, 166, 249, 1)', 'rgba(0, 113, 226, 1)'],
-        iconLeftBackgroundColor: '#29B6F6',
         txtRight: 'Version 1.2.3',
         iconRight: IconRightSvg,
         onClick: () => {},
@@ -234,12 +167,6 @@ class SettingScreen extends BaseScreen {
       {
         label: 'Rate Us',
         iconLeft: IconStarSvg,
-        iconSize: {
-          width: 33.39,
-          height: 32,
-        },
-        linearColor: ['rgba(255, 210, 77, 1)', 'rgba(253, 175, 0, 1)'],
-        iconLeftBackgroundColor: '#29B6F6',
         txtRight: '',
         onClick: () => {},
         key: 'rate',
@@ -258,6 +185,11 @@ class SettingScreen extends BaseScreen {
       case 'language':
         NavigationService.getInstance().navigate({
           routerName: ROUTER_NAME.LANGUAGE.name,
+        });
+        break;
+      case 'provider':
+        NavigationService.getInstance().navigate({
+          routerName: ROUTER_NAME.WEATHER_PROVIDER.name,
         });
         break;
       default:
@@ -283,19 +215,7 @@ class SettingScreen extends BaseScreen {
             <View style={styles.wrapLeftItem}>
               {item.iconLeft ? (
                 item.isSvg ? (
-                  <LinearGradient
-                    colors={
-                      item.linearColor || [
-                        'rgba(41, 182, 246, 0.7)',
-                        'rgba(41, 182, 246, 1)',
-                      ]
-                    }
-                    style={styles.linearLeft}>
-                    <IconLeft
-                      width={item.iconSize ? item.iconSize.width : 19.8}
-                      height={item.iconSize ? item.iconSize.height : 36}
-                    />
-                  </LinearGradient>
+                  <IconLeft width={56} height={56} />
                 ) : (
                   <CustomImage source={IconLeft} style={styles.imageLeftItem} />
                 )

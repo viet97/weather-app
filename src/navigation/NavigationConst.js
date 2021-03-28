@@ -4,6 +4,7 @@ import {
   SettingScreen,
   FrequencyScreen,
   LanguageScreen,
+  WeatherProviderScreen,
 } from '../components/screen';
 import {AppTab} from './router/TabNavigator';
 
@@ -37,5 +38,10 @@ export const ROUTER_NAME = {
     title: 'Language',
     name: 'LanguageScreen',
     component: LanguageScreen,
+  },
+  WEATHER_PROVIDER: {
+    title: 'Weather Provider',
+    name: 'WeatherProviderScreen',
+    component: WeatherProviderScreen,
   },
 };
