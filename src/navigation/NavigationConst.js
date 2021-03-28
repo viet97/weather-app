@@ -5,6 +5,7 @@ import {
   FrequencyScreen,
   LanguageScreen,
   WeatherProviderScreen,
+  UnitScreen,
 } from '../components/screen';
 import {AppTab} from './router/TabNavigator';
 
@@ -43,5 +44,10 @@ export const ROUTER_NAME = {
     title: 'Weather Provider',
     name: 'WeatherProviderScreen',
     component: WeatherProviderScreen,
+  },
+  UNIT: {
+    title: 'Units',
+    name: 'UnitScreen',
+    component: UnitScreen,
   },
 };

@@ -192,6 +192,11 @@ class SettingScreen extends BaseScreen {
           routerName: ROUTER_NAME.WEATHER_PROVIDER.name,
         });
         break;
+      case 'units':
+        NavigationService.getInstance().navigate({
+          routerName: ROUTER_NAME.UNIT.name,
+        });
+        break;
       default:
         break;
     }
