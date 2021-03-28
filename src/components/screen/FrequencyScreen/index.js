@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
   wrapTouchItem: {
     borderBottomWidth: 1,
     borderBottomColor: '#DADCE3',
-    paddingVertical: 12,
+    paddingVertical: 18,
   },
   touchItem: {
     flexDirection: 'row',

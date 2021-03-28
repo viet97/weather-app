@@ -6,6 +6,7 @@ import {
   LanguageScreen,
   WeatherProviderScreen,
   UnitScreen,
+  CustomLayoutScreen,
 } from '../components/screen';
 import {AppTab} from './router/TabNavigator';
 
@@ -49,5 +50,10 @@ export const ROUTER_NAME = {
     title: 'Units',
     name: 'UnitScreen',
     component: UnitScreen,
+  },
+  CUSTOM_LAYOUT: {
+    title: 'Custom Layout',
+    name: 'CustomLayoutScreen',
+    component: CustomLayoutScreen,
   },
 };

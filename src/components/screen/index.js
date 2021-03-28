@@ -5,6 +5,7 @@ import FrequencyScreen from './FrequencyScreen';
 import LanguageScreen from './LanguageScreen';
 import WeatherProviderScreen from './WeatherProviderScreen';
 import UnitScreen from './UnitScreen';
+import CustomLayoutScreen from './CustomLayoutScreen';
 
 export {
   HomeScreen,
@@ -14,4 +15,5 @@ export {
   LanguageScreen,
   WeatherProviderScreen,
   UnitScreen,
+  CustomLayoutScreen,
 };

@@ -1,5 +1,6 @@
 import React from 'react';
 import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
+import Modal from 'react-native-modal';
 import BaseScreen from '../BaseScreen';
 import IconUnitSvg from '../../../../assets/SVGIcon/view-setting/icon_unit.svg';
 import IconNotiSvg from '../../../../assets/SVGIcon/view-setting/icon_noti.svg';
@@ -15,6 +16,8 @@ import IconPrivacySvg from '../../../../assets/SVGIcon/view-setting/icon_privacy
 import IconInfoSvg from '../../../../assets/SVGIcon/view-setting/icon_info.svg';
 import IconStarSvg from '../../../../assets/SVGIcon/view-setting/icon_star.svg';
 import IconUpSvg from '../../../../assets/SVGIcon/view-setting/icon_up.svg';
+import IconChoiceSvg from '../../../../assets/SVGIcon/view-frequency/icon_choice.svg';
+import IconUnChoiceSvg from '../../../../assets/SVGIcon/view-frequency/icon_nochoice.svg';
 import {STATUS_BAR_HEIGHT, widthDevice} from '../../../utils/DeviceUtil';
 import CustomImage, {TYPE_IMAGE_RESIZE_MODE} from '../../common/Image';
 import {Images} from '../../../themes/Images';
@@ -63,7 +66,9 @@ const styles = StyleSheet.create({
 class SettingScreen extends BaseScreen {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      isVisibleModalTime: true,
+    };
     this.listAction = [
       {
         label: 'Units',
@@ -197,6 +202,18 @@ class SettingScreen extends BaseScreen {
           routerName: ROUTER_NAME.UNIT.name,
         });
         break;
+      case 'custom':
+        NavigationService.getInstance().navigate({
+          routerName: ROUTER_NAME.CUSTOM_LAYOUT.name,
+        });
+        break;
+      case 'theme':
+        break;
+      case 'time':
+        this.setState({
+          isVisibleModalTime: true,
+        });
+        break;
       default:
         break;
     }
@@ -290,6 +307,7 @@ class SettingScreen extends BaseScreen {
     );
   };
   renderContent() {
+    const {isVisibleModalTime} = this.state;
     return (
       <View
         style={{
@@ -305,6 +323,128 @@ class SettingScreen extends BaseScreen {
           renderItem={this.renderItem}
           showsVerticalScrollIndicator={false}
         />
+        <Modal
+          isVisible={isVisibleModalTime}
+          style={{justifyContent: 'flex-end'}}
+          onBackdropPress={() => this.setState({isVisibleModalTime: false})}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+            }}>
+            <View
+              style={{
+                width: widthDevice - 20,
+                // height: 200,
+                backgroundColor: '#fff',
+                borderTopLeftRadius: 20,
+                borderTopRightRadius: 20,
+                borderBottomLeftRadius: 8,
+                borderBottomRightRadius: 8,
+                alignItems: 'center',
+              }}>
+              <View
+                style={{
+                  paddingVertical: 20,
+                  borderBottomWidth: 1,
+                  borderBottomColor: '#DADCE3',
+                  width: '100%',
+                  alignItems: 'center',
+                }}>
+                <CustomText color="#404040">Time Format</CustomText>
+              </View>
+              <View
+                style={{
+                  width: '100%',
+                  paddingHorizontal: 15,
+                }}>
+                <View
+                  style={{
+                    borderBottomColor: 'rgba(218, 220, 227, 0.6)',
+                    borderBottomWidth: 1,
+                    paddingVertical: 20,
+                  }}>
+                  <TouchableOpacity
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      <IconChoiceSvg width={25} height={25} />
+                      <CustomText style={{marginLeft: 15}} color="#404040">
+                        24 hours
+                      </CustomText>
+                    </View>
+                    <CustomText color="#404040">13:52</CustomText>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View
+                style={{
+                  width: '100%',
+                  paddingHorizontal: 15,
+                }}>
+                <View
+                  style={{
+                    paddingVertical: 20,
+                  }}>
+                  <TouchableOpacity
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}>
+                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                      <IconUnChoiceSvg width={25} height={25} />
+                      <CustomText style={{marginLeft: 15}} color="#404040">
+                        12 hours
+                      </CustomText>
+                    </View>
+                    <CustomText color="#404040">01:52 PM</CustomText>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+            <View
+              style={{
+                width: widthDevice - 20,
+                // height: 80,
+                backgroundColor: '#fff',
+                marginTop: 10,
+                borderTopLeftRadius: 8,
+                borderTopRightRadius: 8,
+                borderBottomLeftRadius: 20,
+                borderBottomRightRadius: 20,
+                flexDirection: 'row',
+                // justifyContent: 'space-evenly',
+                alignItems: 'center',
+              }}>
+              <TouchableOpacity
+                style={{
+                  paddingVertical: 20,
+                  width: '50%',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <CustomText color="#094FB9">Cancel</CustomText>
+              </TouchableOpacity>
+              <View
+                style={{width: 1, height: 30, backgroundColor: '#E9EAEE'}}
+              />
+              <TouchableOpacity
+                style={{
+                  paddingVertical: 20,
+                  width: '50%',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <CustomText color="#094FB9">Done</CustomText>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </View>
     );
   }

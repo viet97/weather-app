@@ -11,7 +11,7 @@ export const Header = props => {
     <View
       style={{
         marginTop: STATUS_BAR_HEIGHT,
-        marginBottom: 15,
+        // marginBottom: 15,
         flexDirection: 'row',
         alignItems: 'flex-end',
         justifyContent: 'space-between',
