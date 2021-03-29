@@ -188,14 +188,14 @@ export default class HomeScreen extends BaseScreen {
         }}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <SVGIcon.header_left width={12} height={40} />
-          <Text size={20} bold style={{marginLeft: 8, color: Colors.black}}>
+          <Text size={20} semiBold style={{marginLeft: 8, color: Colors.black}}>
             {title}
           </Text>
         </View>
         <TouchablePlatform
           style={{padding: 16}}
           onPress={() => onPressDetail && onPressDetail()}>
-          <Text size={15} style={{color: Colors.viewDetail}} bold>
+          <Text size={15} style={{color: Colors.viewDetail}} semiBold>
             View detail →
           </Text>
         </TouchablePlatform>
