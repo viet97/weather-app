@@ -53,11 +53,7 @@ export default class BaseScreen extends BaseComponent {
     return (
       <React.Fragment>
         <View
-          style={[
-            ApplicationStyle.containerScreen,
-            StyleSheet.absoluteFill,
-            {alignItems: 'center', justifyContent: 'center'},
-          ]}>
+          style={[ApplicationStyle.containerScreen, StyleSheet.absoluteFill]}>
           {this.renderContent()}
         </View>
       </React.Fragment>
@@ -66,4 +62,3 @@ export default class BaseScreen extends BaseComponent {
 }
 
 BaseScreen.prototype.shouldComponentUpdate = shouldComponentUpdate;
-
