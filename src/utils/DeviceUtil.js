@@ -1,4 +1,4 @@
-import { Dimensions, Platform, PixelRatio, StatusBar } from 'react-native';
+import {Dimensions, Platform, PixelRatio, StatusBar} from 'react-native';
 import RNDeviceInfo from 'react-native-device-info';
 import StaticSafeAreaInsets from 'react-native-static-safe-area-insets';
 import AppInfoManager from '../AppInfoManager';
@@ -6,7 +6,6 @@ import AppInfoManager from '../AppInfoManager';
 // Guideline sizes are based on standard ~5" screen mobile device
 const guidelineBaseWidth = 375;
 const guidelineBaseHeight = 667;
-
 
 export const IS_ANDROID = Platform.OS === 'android';
 
@@ -17,7 +16,7 @@ export const insets = {
   right: StaticSafeAreaInsets.safeAreaInsetsRight,
 };
 
-const { width, height } = Dimensions.get('screen');
+const {width, height} = Dimensions.get('screen');
 export const widthDevice = width < height ? width : height;
 export const heightDevice = width > height ? width : height;
 
@@ -61,7 +60,7 @@ const listHomeIndicatorIPad = [
 export const isHomeIndicatorIPad = () => {
   return (
     listHomeIndicatorIPad.indexOf(
-      AppInfoManager.getInstance().getAppInfo().model
+      AppInfoManager.getInstance().getAppInfo().model,
     ) !== -1
   );
 };
@@ -103,25 +102,25 @@ export function getStatusBarHeight(safe) {
   });
 }
 
-const getResponsiveValue = (ratio) => {
+const getResponsiveValue = ratio => {
   return PixelRatio.roundToNearestPixel((widthDevice * ratio) / 100);
 };
 
-export const getSizeResposive = (size) => {
+export const getSizeResposive = size => {
   const defaultWidth = 360;
   const ratio = (size / defaultWidth) * 100;
   const responsiveWidth = getResponsiveValue(ratio);
   return responsiveWidth;
 };
 
-export const scale = (size) => (widthDevice / guidelineBaseWidth) * size;
-export const verticalScale = (size) =>
+export const scale = size => (widthDevice / guidelineBaseWidth) * size;
+export const verticalScale = size =>
   (heightDevice / guidelineBaseHeight) * size;
 export const moderateScale = (size, factor = 0.5) =>
   size + (scale(size) - size) * factor;
 
-export const normalize = (size = 16) => {
-  return size;
+export const normalize = (size = 28) => {
+  return Math.floor((size * 20) / 42);
 };
 
 export const getDecelerationRate = Platform.select({
@@ -223,7 +222,7 @@ export const iosDevicesInch = {
   iPadAir3: 9.7,
 };
 
-export const enableStatusBar = (isEnable) => StatusBar.setHidden(!isEnable);
+export const enableStatusBar = isEnable => StatusBar.setHidden(!isEnable);
 
 export const HOME_INDICATOR_HEIGHT = 14;
 export const iconTabSize = 20;

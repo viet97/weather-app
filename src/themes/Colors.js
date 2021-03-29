@@ -27,4 +27,7 @@ export const Colors = {
   textTitle: '#808080',
   activeTitleLineChart: '#094FB9',
   backgroundHome: '#F0F1F5',
+  backgroundGray: '#F5F6FA',
+  weather_red: '#FF4E4E',
+  air_quality_text: '#404040',
 };
