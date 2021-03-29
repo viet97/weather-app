@@ -8,6 +8,7 @@ import {
   ViewStyle,
   TouchableOpacity,
   Text,
+  Platform,
 } from "react-native";
 import {
   Circle,
@@ -270,15 +271,13 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
     onDataPointClick: LineChartProps["onDataPointClick"];
   }) => {
     const output: ReactNode[] = [];
-    const datas = this.getDatas(data);
-    const baseHeight = this.calcBaseHeight(datas, height);
-
     const {
       getDotColor,
       hidePointsAtIndex = [],
       renderDotContent = () => {
         return null;
       },
+      pointDistance,
     } = this.props;
 
     data.forEach((dataset) => {
@@ -289,8 +288,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
           return;
         }
 
-        const cx =
-          paddingRight + (i * (width - paddingRight)) / dataset.data.length;
+        const cx = i * pointDistance + pointDistance / 2;
 
         const cy = height * (1 - x / 100) + paddingTop;
 
@@ -346,12 +344,12 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
     paddingTop,
     paddingRight,
     dataValue,
+    pointDistance,
   }) => {
     const content = [];
     data.forEach((dataset) => {
       dataset.data.forEach((x, i) => {
-        const cx =
-          paddingRight + (i * (width - paddingRight)) / dataset.data.length;
+        const cx = i * pointDistance + pointDistance / 2;
 
         const cy = height * (1 - x / 100) + paddingTop;
         content.push(
@@ -362,7 +360,16 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
               left: cx - 10,
             }}
           >
-            <Text>{dataValue[i]}</Text>
+            <Text
+              style={{
+                fontFamily:
+                  Platform.OS === "android"
+                    ? "SF-Pro-Display-Light"
+                    : "SFProDisplay-Light",
+              }}
+            >
+              {dataValue[i]}
+            </Text>
           </View>
         );
       });
@@ -370,28 +377,41 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
     return content.map((it) => it);
   };
 
-  renderBottomLabel = ({ height, width, data, paddingTop, paddingRight }) => {
+  renderBottomLabel = ({
+    height,
+    width,
+    data,
+    paddingTop,
+    paddingRight,
+    pointDistance,
+  }) => {
     const content = [];
+    const { renderBottomLabel } = this.props;
     data.forEach((dataset) => {
       dataset.data.forEach((x, i) => {
-        const cx =
-          paddingRight + (i * (width - paddingRight)) / dataset.data.length;
         content.push(
           <View
             style={{
-              position: "absolute",
-              top: height + 10,
-              left: cx - 10,
-              flex: 1,
-              backgroundColor: "red",
+              width: pointDistance - 8,
+              marginHorizontal: 4,
+              alignSelf: "center",
             }}
           >
-            <Text>{x}</Text>
+            {renderBottomLabel && renderBottomLabel({ index: i })}
           </View>
         );
       });
     });
-    return content.map((it) => it);
+    return (
+      <View
+        style={{
+          flexDirection: "row",
+          marginTop: 8,
+        }}
+      >
+        {content.map((it) => it)}
+      </View>
+    );
   };
 
   renderScrollableDot = ({
@@ -726,10 +746,8 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
 
     const datas = this.getDatas(data);
 
-    const x = (i: number) =>
-      Math.floor(
-        paddingRight + (i * (width - paddingRight)) / dataset.data.length
-      );
+    const { pointDistance } = this.props;
+    const x = (i: number) => Math.floor(i * pointDistance + pointDistance / 2);
 
     const y = (i: number) => {
       return Math.floor(height * (1 - datas[i] / 100) + paddingTop);
@@ -798,6 +816,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
     useColorFromDataset: AbstractChartConfig["useShadowColorFromDataset"];
   }) =>
     data.map((dataset, index) => {
+      const { pointDistance } = this.props;
       const d =
         this.getBezierLinePoints(dataset, {
           width,
@@ -806,11 +825,9 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
           paddingTop,
           data,
         }) +
-        ` L${
-          paddingRight +
-          ((width - paddingRight) / dataset.data.length) *
-            (dataset.data.length - 1)
-        },${height + paddingTop} L${paddingRight},${height + paddingTop} Z`;
+        ` L${(dataset.data.length - 1) * pointDistance + pointDistance / 2},${
+          height + paddingTop
+        } L${pointDistance / 2},${height + paddingTop} Z`;
       return (
         <Path
           key={index}
@@ -865,6 +882,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
       segments,
       transparent = false,
       chartConfig,
+      pointDistance,
     } = this.props;
 
     const { scrollableDotHorizontalOffset } = this.state;
@@ -872,7 +890,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
     const {
       borderRadius = 0,
       paddingTop = 16,
-      paddingRight = 64,
+      paddingRight = 0,
       margin = 0,
       marginRight = 0,
       paddingBottom = 0,
@@ -981,6 +999,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
                       data: data.datasets[0].data,
                       paddingTop: paddingTop as number,
                       paddingRight: paddingRight as number,
+                      pointDistance,
                     })
                   : withOuterLines
                   ? this.renderVerticalLine({
@@ -1006,13 +1025,9 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
               paddingTop,
               paddingRight,
               dataValue: data.dataValue,
+              pointDistance,
             })}
-            {this.renderBottomLabel({
-              ...config,
-              data: data.datasets,
-              paddingTop,
-              paddingRight,
-            })}
+
             <G>
               {withScrollableDot &&
                 this.renderScrollableDot({
@@ -1053,6 +1068,13 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
             bounces={false}
           />
         )}
+        {this.renderBottomLabel({
+          ...config,
+          data: data.datasets,
+          paddingTop,
+          paddingRight,
+          pointDistance,
+        })}
       </View>
     );
   }

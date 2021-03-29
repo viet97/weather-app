@@ -46,14 +46,14 @@ export default class BarChartCustom extends BaseElement {
                     width: this.widthBar,
                     aspectRatio: this.aspectRatio,
                     borderRadius: 22,
-                    backgroundColor: '#F5F6FA',
+                    backgroundColor: Colors.backgroundGray,
                     marginRight: index !== size(data) - 1 ? 8 : 0,
                     overflow: 'hidden',
                   }}>
                   {renderContentBar &&
                     renderContentBar({value: data[index], ratio: it})}
                 </View>
-                {renderBottomLabel && renderBottomLabel({value: data[index]})}
+                {renderBottomLabel && renderBottomLabel({index})}
               </View>
             );
           })}
