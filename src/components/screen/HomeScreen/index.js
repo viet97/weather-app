@@ -11,6 +11,19 @@ import {TouchablePlatform} from '../../../modules/TouchablePlatform';
 import {LineChartCustom, BarChartCustom} from '../../element';
 
 const exampleData = [15, 21, 23, 12, 24, 28, 29];
+const renderBottomLabel = () => (
+  <View
+    style={{
+      alignItems: 'center',
+      justifyContent: 'center',
+      flex: 1,
+    }}>
+    <SVGIcon.cloudy width={30} height={30} />
+    <Text size={12} style={{marginTop: 4, color: Colors.textTitle}}>
+      Mon 01
+    </Text>
+  </View>
+);
 export default class HomeScreen extends BaseScreen {
   constructor(props) {
     super(props);
@@ -26,7 +39,7 @@ export default class HomeScreen extends BaseScreen {
         data: exampleData,
         dotColor: Colors.tempDotColor,
         lineColor: Colors.tempLineColor,
-        renderBottomLabel: () => {},
+        renderBottomLabel,
       },
       {
         title: 'Rain',
@@ -34,7 +47,7 @@ export default class HomeScreen extends BaseScreen {
         data: exampleData,
         dotColor: Colors.rainDotColor,
         lineColor: Colors.rainLineColor,
-        renderBottomLabel: () => {},
+        renderBottomLabel,
       },
       {
         title: 'Wind',
@@ -42,7 +55,7 @@ export default class HomeScreen extends BaseScreen {
         data: exampleData,
         dotColor: Colors.windDotColor,
         lineColor: Colors.windLineColor,
-        renderBottomLabel: () => {},
+        renderBottomLabel,
       },
       {
         title: 'Pressure',
@@ -50,7 +63,7 @@ export default class HomeScreen extends BaseScreen {
         data: exampleData,
         dotColor: Colors.pressureDotColor,
         lineColor: Colors.pressureLineColor,
-        renderBottomLabel: () => {},
+        renderBottomLabel,
       },
     ];
     this.listBarChart = [
@@ -65,7 +78,10 @@ export default class HomeScreen extends BaseScreen {
                 flex: 1,
                 justifyContent: 'flex-end',
               }}>
-              <Text size={13} style={{alignSelf: 'center', marginBottom: 4}}>
+              <Text
+                size={13}
+                light
+                style={{alignSelf: 'center', marginBottom: 4}}>
                 {value}
               </Text>
               <LinearGradient
@@ -87,7 +103,7 @@ export default class HomeScreen extends BaseScreen {
                 marginTop: 16,
               }}>
               <SVGIcon.cloudy width={30} height={30} />
-              <Text size={12} style={{marginTop: 4}}>
+              <Text size={12} style={{marginTop: 4, color: Colors.textTitle}}>
                 Mon 01
               </Text>
             </View>
@@ -105,7 +121,10 @@ export default class HomeScreen extends BaseScreen {
                 flex: 1,
                 justifyContent: 'flex-end',
               }}>
-              <Text size={13} style={{alignSelf: 'center', marginBottom: 4}}>
+              <Text
+                size={13}
+                light
+                style={{alignSelf: 'center', marginBottom: 4}}>
                 {value}
               </Text>
               <LinearGradient
@@ -127,7 +146,7 @@ export default class HomeScreen extends BaseScreen {
                 marginTop: 16,
               }}>
               <SVGIcon.wind_direction width={30} height={30} />
-              <Text size={12} style={{marginTop: 4}}>
+              <Text size={12} style={{marginTop: 4, color: Colors.textTitle}}>
                 Mon 01
               </Text>
             </View>
@@ -145,7 +164,10 @@ export default class HomeScreen extends BaseScreen {
                 flex: 1,
                 justifyContent: 'flex-end',
               }}>
-              <Text size={13} style={{alignSelf: 'center', marginBottom: 4}}>
+              <Text
+                size={13}
+                light
+                style={{alignSelf: 'center', marginBottom: 4}}>
                 {value}
               </Text>
               <LinearGradient
@@ -167,7 +189,7 @@ export default class HomeScreen extends BaseScreen {
                 marginTop: 16,
               }}>
               <SVGIcon.cloudy width={30} height={30} />
-              <Text size={12} style={{marginTop: 4}}>
+              <Text size={12} style={{marginTop: 4, color: Colors.textTitle}}>
                 Mon 01
               </Text>
             </View>
@@ -208,7 +230,7 @@ export default class HomeScreen extends BaseScreen {
     const currentLineChartProps = this.listLineChart[currentIndexLineChart];
     return (
       <LineChartCustom
-        style={{marginTop: 64}}
+        style={{marginTop: 64, paddingHorizontal: 24}}
         chartHeight={150}
         {...currentLineChartProps}
       />

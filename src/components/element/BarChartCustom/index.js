@@ -53,7 +53,7 @@ export default class BarChartCustom extends BaseElement {
                   {renderContentBar &&
                     renderContentBar({value: data[index], ratio: it})}
                 </View>
-                {renderBottomLabel && renderBottomLabel({value: data[index]})}
+                {renderBottomLabel && renderBottomLabel({index})}
               </View>
             );
           })}
