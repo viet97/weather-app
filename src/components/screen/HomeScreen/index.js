@@ -16,6 +16,7 @@ import {TouchablePlatform} from '../../../modules/TouchablePlatform';
 import {LineChartCustom, BarChartCustom} from '../../element';
 import {Images} from '../../../themes/Images';
 import {TYPE_IMAGE_RESIZE_MODE} from '../../common/Image';
+import NavigationService from '../../../navigation/NavigationService';
 
 const exampleData = [15, 21, 23, 12, 24, 28, 29];
 const renderBottomLabel = () => (
@@ -475,7 +476,11 @@ export default class HomeScreen extends BaseScreen {
               <TouchablePlatform style={{padding: 8}}>
                 <SVGIcon.share width={normalize(42)} height={normalize(42)} />
               </TouchablePlatform>
-              <TouchablePlatform style={{padding: 8}}>
+              <TouchablePlatform
+                onPress={() => {
+                  NavigationService.getInstance().openDrawer();
+                }}
+                style={{padding: 8}}>
                 <SVGIcon.menu width={normalize(42)} height={normalize(42)} />
               </TouchablePlatform>
             </View>

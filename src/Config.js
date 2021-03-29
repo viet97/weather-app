@@ -20,7 +20,7 @@ const Config = {
   versionApi: 'appserver/',
   platformConfig: 1,
   buildRelease: BuildRelease,
-  debug: BuildRelease ? false : DebugLog,
+  debug: true, // BuildRelease ? false : DebugLog,
   useLoggerRedux: BuildRelease ? false : LoggerRedux,
   levelLog: 0,
   useServerTest: BuildRelease ? false : BuildServerTest,

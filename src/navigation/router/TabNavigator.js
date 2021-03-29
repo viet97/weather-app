@@ -1,15 +1,15 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { connect } from 'react-redux';
+import {View, StyleSheet} from 'react-native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {connect} from 'react-redux';
 
-import { ROUTER_NAME } from '../NavigationConst';
-import { withImmutablePropsToJS } from '../NavigationHOC';
-import { Colors } from '../../themes/Colors';
-import { Image, Text } from '../../components/common';
-import { Images } from '../../themes/Images';
-import { TYPE_FONT_SIZE } from '../../themes/Fonts';
-import { TouchablePlatform } from '../../modules/TouchablePlatform';
+import {ROUTER_NAME} from '../NavigationConst';
+import {withImmutablePropsToJS} from '../NavigationHOC';
+import {Colors} from '../../themes/Colors';
+import {Image, Text} from '../../components/common';
+import {Images} from '../../themes/Images';
+import {TYPE_FONT_SIZE} from '../../themes/Fonts';
+import {TouchablePlatform} from '../../modules/TouchablePlatform';
 
 import {
   TABBAR_HEIGHT,
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const CustomTabBar = ({ state, descriptors, navigation, isVisible }) => {
+const CustomTabBar = ({state, descriptors, navigation, isVisible}) => {
   let customTabBar = {
     flexDirection: 'row',
     backgroundColor: Colors.TAB_BACKGROUND_COLOR,
@@ -49,13 +49,13 @@ const CustomTabBar = ({ state, descriptors, navigation, isVisible }) => {
   return (
     <View style={customTabBar}>
       {state.routes.map((route, index) => {
-        const { options } = descriptors[route.key];
+        const {options} = descriptors[route.key];
         const label =
           options.tabBarLabel !== undefined
             ? options.tabBarLabel
             : options.title !== undefined
-              ? options.title
-              : route.name;
+            ? options.title
+            : route.name;
 
         const isFocused = state.index === index;
 
@@ -124,17 +124,17 @@ const CustomTabBar = ({ state, descriptors, navigation, isVisible }) => {
 export class MainTab extends BaseElement {
   constructor(props) {
     super(props);
-    this.state = { isVisible: true };
+    this.state = {isVisible: false};
   }
 
-  _componentDidMount() { }
+  _componentDidMount() {}
 
-  _componentWillUnmount() { }
+  _componentWillUnmount() {}
 
   renderContent() {
     return (
       <Tab.Navigator
-        tabBar={(props) => (
+        tabBar={props => (
           <CustomTabBar isVisible={this.state.isVisible} {...props} />
         )}
         initialRouteName={ROUTER_NAME.HOME.name}>
@@ -159,7 +159,7 @@ export class MainTab extends BaseElement {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {};
 };
 

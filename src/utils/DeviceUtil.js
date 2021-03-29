@@ -2,6 +2,7 @@ import {Dimensions, Platform, PixelRatio, StatusBar} from 'react-native';
 import RNDeviceInfo from 'react-native-device-info';
 import StaticSafeAreaInsets from 'react-native-static-safe-area-insets';
 import AppInfoManager from '../AppInfoManager';
+import {myLog} from '../Debug';
 
 // Guideline sizes are based on standard ~5" screen mobile device
 const guidelineBaseWidth = 375;
@@ -28,7 +29,6 @@ export const heightWindow =
   width_window > height_window ? width_window : height_window;
 
 export const IS_TABLET = RNDeviceInfo.isTablet();
-export const DRAWER_WIDTH = IS_TABLET ? widthDevice * 0.5 : widthDevice * 0.7;
 
 export const IS_IPHONE_X =
   Platform.OS === 'ios' &&
@@ -123,6 +123,7 @@ export const normalize = (size = 28) => {
   return Math.floor((size * 20) / 42);
 };
 
+export const DRAWER_WIDTH = normalize(562); // IS_TABLET ? widthDevice * 0.5 : widthDevice * 0.7;
 export const getDecelerationRate = Platform.select({
   ios: 0.995,
   android: 0.98,
@@ -130,6 +131,9 @@ export const getDecelerationRate = Platform.select({
 
 export const dvWidthPx = PixelRatio.getPixelSizeForLayoutSize(widthDevice);
 export const dvHeightPx = PixelRatio.getPixelSizeForLayoutSize(heightDevice);
+export const pixelRatio = PixelRatio.get();
+
+myLog('pixelRatio--->', pixelRatio);
 
 export const iosDevicesInch = {
   // 1st Gen
