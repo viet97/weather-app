@@ -120,8 +120,8 @@ export const verticalScale = size =>
 export const moderateScale = (size, factor = 0.5) =>
   size + (scale(size) - size) * factor;
 
-export const normalize = (size = 16) => {
-  return size;
+export const normalize = (size = 28) => {
+  return Math.floor((size * 20) / 42);
 };
 
 export const getDecelerationRate = Platform.select({

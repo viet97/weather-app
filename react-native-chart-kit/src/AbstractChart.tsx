@@ -31,6 +31,7 @@ export interface AbstractChartConfig extends ChartConfig {
   verticalLabelRotation?: number;
   formatXLabel?: (xLabel: string) => string;
   verticalLabelsHeightPercentage?: number;
+  pointDistance?: number;
 }
 
 export type AbstractChartState = {};
@@ -315,6 +316,7 @@ class AbstractChart<
     paddingTop,
     paddingRight,
     verticalLabelsHeightPercentage = DEFAULT_X_LABELS_HEIGHT_PERCENTAGE,
+    pointDistance,
   }: Omit<
     Pick<
       AbstractChartConfig,
@@ -324,6 +326,7 @@ class AbstractChart<
       | "paddingRight"
       | "paddingTop"
       | "verticalLabelsHeightPercentage"
+      | "pointDistance"
     >,
     "data"
   > & { data: number[] }) => {
@@ -333,15 +336,9 @@ class AbstractChart<
         return (
           <Line
             key={i}
-            x1={Math.floor(
-              ((width - paddingRight) / (data.length / yAxisInterval)) * i +
-                paddingRight
-            )}
+            x1={Math.floor(i * pointDistance) + pointDistance / 2}
             y1={height * (1 - data[i] / 100) + paddingTop}
-            x2={Math.floor(
-              ((width - paddingRight) / (data.length / yAxisInterval)) * i +
-                paddingRight
-            )}
+            x2={Math.floor(i * pointDistance) + pointDistance / 2}
             y2={height + paddingTop}
             {...this.getPropsForBackgroundLines()}
           />

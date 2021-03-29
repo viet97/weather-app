@@ -45,12 +45,16 @@ const DEFINE_REQUIRE = {
   setting_header_image: {
     source: require('../../assets/images/view-setting/header_image.png'),
     type: TYPE_IMAGE.PNG,
-    ratio: 750/341
+    ratio: 750 / 341,
   },
   setting_header_bg: {
     source: require('../../assets/images/view-setting/header_bg.png'),
     type: TYPE_IMAGE.PNG,
-    ratio: 750/341
+    ratio: 750 / 341,
+  },
+  home_background: {
+    source: require('../../assets/images/home_background.png'),
+    type: TYPE_IMAGE.PNG,
   },
 };
 
