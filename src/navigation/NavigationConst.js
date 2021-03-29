@@ -7,7 +7,9 @@ import {
   WeatherProviderScreen,
   UnitScreen,
   CustomLayoutScreen,
+  MenuScreen,
 } from '../components/screen';
+import {AppDraw} from './router/DrawNavigator';
 import {AppTab} from './router/TabNavigator';
 
 export const ROUTER_NAME = {
@@ -18,13 +20,15 @@ export const ROUTER_NAME = {
   },
   APP_TAB: {
     title: 'Drawer',
-    name: 'AppTab',
-    component: AppTab,
+    name: 'AppDraw',
+    component: AppDraw,
+    isNoStack: true,
   },
   HOME: {
     title: 'Tài khoản',
     name: 'HomeScreen',
     component: HomeScreen,
+    isNoStack: true,
   },
   SETTING: {
     title: 'Setting',
@@ -55,5 +59,10 @@ export const ROUTER_NAME = {
     title: 'Custom Layout',
     name: 'CustomLayoutScreen',
     component: CustomLayoutScreen,
+  },
+  MENU: {
+    title: 'Menu',
+    name: 'MenuScreen',
+    component: MenuScreen,
   },
 };

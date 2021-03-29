@@ -3,19 +3,24 @@ import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import BaseScreen from '../BaseScreen';
 import IconChoiceSvg from '../../../../assets/SVGIcon/view-frequency/icon_choice.svg';
 import IconNoChoiceSvg from '../../../../assets/SVGIcon/view-frequency/icon_nochoice.svg';
-import {STATUS_BAR_HEIGHT, widthDevice} from '../../../utils/DeviceUtil';
+import {
+  normalize,
+  STATUS_BAR_HEIGHT,
+  widthDevice,
+} from '../../../utils/DeviceUtil';
 import CustomText from '../../common/Text';
 import {Header} from '../Header';
+import {ItemListSetting} from '../LanguageScreen';
 
-const paddingHorizontalItem = 15;
+const paddingHorizontalItem = normalize(30);
 const styles = StyleSheet.create({
   containerItem: {
     paddingHorizontal: paddingHorizontalItem,
   },
   wrapTouchItem: {
     borderBottomWidth: 1,
-    borderBottomColor: '#DADCE3',
-    paddingVertical: 18,
+    borderBottomColor: 'rgba(218, 220, 227, 0.6)',
+    paddingVertical: normalize(41),
   },
   touchItem: {
     flexDirection: 'row',
@@ -23,7 +28,6 @@ const styles = StyleSheet.create({
   },
   labelItem: {
     marginLeft: paddingHorizontalItem,
-    fontWeight: 'bold',
   },
 });
 
@@ -61,24 +65,12 @@ class FrequencyScreen extends BaseScreen {
     const {item, index} = params;
     const {value} = this.state;
     return (
-      <View key={index} style={styles.containerItem}>
-        <View style={styles.wrapTouchItem}>
-          <TouchableOpacity
-            onPress={() => {
-              this.onPressItem(item);
-            }}
-            style={styles.touchItem}>
-            {value === item.value ? (
-              <IconChoiceSvg width={25} height={25} />
-            ) : (
-              <IconNoChoiceSvg width={25} height={25} />
-            )}
-            <CustomText style={styles.labelItem} color="#404040">
-              {item.label}
-            </CustomText>
-          </TouchableOpacity>
-        </View>
-      </View>
+      <ItemListSetting
+        key={index}
+        value={value}
+        onPressItem={this.onPressItem}
+        item={item}
+      />
     );
   };
   renderContent() {

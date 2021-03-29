@@ -10,18 +10,22 @@ import IconWindSvg from '../../../../assets/SVGIcon/view-unit/icon_wind.svg';
 import IconPressureSvg from '../../../../assets/SVGIcon/view-unit/icon_pressure.svg';
 import IconCSvg from '../../../../assets/SVGIcon/view-unit/icon_c.svg';
 import IconFSvg from '../../../../assets/SVGIcon/view-unit/icon_f.svg';
-import {STATUS_BAR_HEIGHT, widthDevice} from '../../../utils/DeviceUtil';
+import {
+  normalize,
+  STATUS_BAR_HEIGHT,
+  widthDevice,
+} from '../../../utils/DeviceUtil';
 import CustomText from '../../common/Text';
 import {Header} from '../Header';
 
-const borderRadiusBtn = 10;
-const paddingHorizontalItem = 15;
+const borderRadiusBtn = normalize(16);
+const paddingHorizontalItem = normalize(30);
 const styles = StyleSheet.create({
   containerItem: {
     paddingLeft: paddingHorizontalItem,
   },
   wrapTouchItem: {
-    paddingVertical: 12,
+    paddingTop: normalize(35),
     flexDirection: 'row',
   },
   touchItem: {
@@ -29,8 +33,7 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
   },
   labelItem: {
-    marginBottom: 10,
-    fontWeight: 'bold',
+    marginBottom: normalize(24),
   },
 });
 
@@ -52,6 +55,10 @@ class UnitScreen extends BaseScreen {
         label: 'Temperature',
         icon: IconTempSvg,
         key: 'temp',
+        iconSize: {
+          width: normalize(29.28),
+          height: normalize(57),
+        },
         buttons: [
           {
             label: '℃',
@@ -69,6 +76,10 @@ class UnitScreen extends BaseScreen {
         label: 'Rain, Snow',
         icon: IconRainSvg,
         key: 'rain',
+        iconSize: {
+          width: normalize(47.22),
+          height: normalize(57.43),
+        },
         buttons: [
           {
             label: 'mm',
@@ -84,6 +95,10 @@ class UnitScreen extends BaseScreen {
         label: 'Distance',
         icon: IconDistanceSvg,
         key: 'distance',
+        iconSize: {
+          width: normalize(56.04),
+          height: normalize(40.57),
+        },
         buttons: [
           {
             label: 'mi',
@@ -99,6 +114,10 @@ class UnitScreen extends BaseScreen {
         label: 'Wind speed',
         icon: IconWindSvg,
         key: 'windSpeed',
+        iconSize: {
+          width: normalize(52),
+          height: normalize(52),
+        },
         buttons: [
           {
             label: 'mph',
@@ -122,6 +141,10 @@ class UnitScreen extends BaseScreen {
         label: 'Pressure',
         icon: IconPressureSvg,
         key: 'pressure',
+        iconSize: {
+          width: normalize(51),
+          height: normalize(51),
+        },
         buttons: [
           {
             label: 'mBar',
@@ -156,23 +179,23 @@ class UnitScreen extends BaseScreen {
     return (
       <View key={index} style={styles.containerItem}>
         <View style={styles.wrapTouchItem}>
-          <View
-            onPress={() => {
-              this.onPressItem(item);
-            }}
-            style={styles.touchItem}>
-            <IconLeft width={25} height={25} />
+          <View style={{marginTop: 2}}>
+            <IconLeft {...item.iconSize} />
           </View>
           <View
             style={{
               marginLeft: paddingHorizontalItem,
-              paddingBottom: 20,
+              paddingBottom: normalize(50),
               borderBottomWidth: 1,
-              borderBottomColor: '#DADCE3',
+              borderBottomColor: 'rgba(218, 220, 227, 0.5)',
               flex: 1,
             }}>
-            <View style={{}}>
-              <CustomText style={styles.labelItem} color="#404040">
+            <View>
+              <CustomText
+                includeFontPadding={true}
+                size={32}
+                style={styles.labelItem}
+                color="#404040">
                 {item.label}
               </CustomText>
               <View style={{flexDirection: 'row'}}>
@@ -208,13 +231,16 @@ class UnitScreen extends BaseScreen {
                             : 0,
                         borderColor: isChoiced ? '#094FB9' : '#DADCE3',
                         backgroundColor: isChoiced ? '#094FB9' : '#F5F6FA',
-                        width: 70,
-                        height: 45,
+                        width: normalize(120) + normalize(34),
+                        height: normalize(74) + normalize(34),
+                        // padding: normalize(34),
                         alignItems: 'center',
                         justifyContent: 'center',
                       }}
                       key={index}>
-                      <CustomText color={isChoiced ? '#ffffff' : '#808080'}>
+                      <CustomText
+                        size={32}
+                        color={isChoiced ? '#ffffff' : '#808080'}>
                         {btn.label}
                       </CustomText>
                     </TouchableOpacity>

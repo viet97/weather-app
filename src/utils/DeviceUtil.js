@@ -29,7 +29,6 @@ export const heightWindow =
   width_window > height_window ? width_window : height_window;
 
 export const IS_TABLET = RNDeviceInfo.isTablet();
-export const DRAWER_WIDTH = IS_TABLET ? widthDevice * 0.5 : widthDevice * 0.7;
 
 export const IS_IPHONE_X =
   Platform.OS === 'ios' &&
@@ -124,6 +123,7 @@ export const normalize = (size = 28) => {
   return Math.floor((size * 20) / 42);
 };
 
+export const DRAWER_WIDTH = normalize(562); // IS_TABLET ? widthDevice * 0.5 : widthDevice * 0.7;
 export const getDecelerationRate = Platform.select({
   ios: 0.995,
   android: 0.98,

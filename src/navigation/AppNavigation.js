@@ -9,6 +9,7 @@ import {ROUTER_NAME} from './NavigationConst';
 import {EmitterManager} from '../modules/EmitterManager';
 import {IS_ANDROID} from '../utils/DeviceUtil';
 import LocalStorage from '../modules/LocalStorage';
+import {AppDraw} from './router/DrawNavigator';
 
 let isBack = false,
   timeoutVar = null;
@@ -72,7 +73,7 @@ class AppNavigator extends BaseElement {
         ref={ref => (this.navigation = ref)}
         {...this.props}
         onStateChange={this._onStateChange}>
-        <AppStack />
+        <AppDraw />
       </NavigationContainer>
     );
   }

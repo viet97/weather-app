@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Config from '../Config';
-import { shouldComponentUpdate } from '../utils/RenderUtil';
+import {myLog} from '../Debug';
+import {shouldComponentUpdate} from '../utils/RenderUtil';
 
 export default class BaseComponent extends React.Component {
   constructor(props) {

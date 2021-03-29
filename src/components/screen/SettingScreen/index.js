@@ -18,7 +18,11 @@ import IconStarSvg from '../../../../assets/SVGIcon/view-setting/icon_star.svg';
 import IconUpSvg from '../../../../assets/SVGIcon/view-setting/icon_up.svg';
 import IconChoiceSvg from '../../../../assets/SVGIcon/view-frequency/icon_choice.svg';
 import IconUnChoiceSvg from '../../../../assets/SVGIcon/view-frequency/icon_nochoice.svg';
-import {STATUS_BAR_HEIGHT, widthDevice} from '../../../utils/DeviceUtil';
+import {
+  normalize,
+  STATUS_BAR_HEIGHT,
+  widthDevice,
+} from '../../../utils/DeviceUtil';
 import CustomImage, {TYPE_IMAGE_RESIZE_MODE} from '../../common/Image';
 import {Images} from '../../../themes/Images';
 import CustomText from '../../common/Text';
@@ -26,7 +30,7 @@ import NavigationService from '../../../navigation/NavigationService';
 import {ROUTER_NAME} from '../../../navigation/NavigationConst';
 import {Header} from '../Header';
 
-const paddingHorizontalItem = 15;
+const paddingHorizontalItem = normalize(30);
 const styles = StyleSheet.create({
   containerItem: {
     paddingHorizontal: paddingHorizontalItem,
@@ -34,7 +38,7 @@ const styles = StyleSheet.create({
   wrapTouchItem: {
     borderBottomWidth: 1,
     borderBottomColor: '#DADCE3',
-    paddingVertical: 12,
+    paddingVertical: normalize(35),
   },
   touchItem: {
     flexDirection: 'row',
@@ -42,13 +46,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   wrapLeftItem: {flexDirection: 'row', alignItems: 'center'},
-  linearLeft: {
-    width: 56,
-    height: 56,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 18,
-  },
   imageLeftItem: {width: 20, height: 20},
   wrapRightItem: {
     flexDirection: 'row',
@@ -243,33 +240,37 @@ class SettingScreen extends BaseScreen {
             <View style={styles.wrapLeftItem}>
               {item.iconLeft ? (
                 item.isSvg ? (
-                  <IconLeft width={56} height={56} />
+                  <IconLeft width={normalize(56)} height={normalize(56)} />
                 ) : (
                   <CustomImage source={IconLeft} style={styles.imageLeftItem} />
                 )
               ) : null}
               {item.label ? (
                 <CustomText
-                  size={15}
+                  size={32}
                   numberOfLines={1}
                   style={labelStyle}
                   color="#404040">
                   {item.label}
                 </CustomText>
               ) : null}
-              {item.isUp ? <IconUpSvg width={16} height={16} /> : null}
+              {item.isUp ? (
+                <IconUpSvg width={normalize(16)} height={normalize(16)} />
+              ) : null}
             </View>
             <View style={styles.wrapRightItem}>
               {item.txtRight ? (
                 <CustomText
-                  size={14}
-                  style={{marginRight: paddingHorizontalItem}}
+                  size={28}
+                  style={{marginRight: normalize(33)}}
                   numberOfLines={1}
                   color="#AAAAAA">
                   {item.txtRight}
                 </CustomText>
               ) : null}
-              {IconRight ? <IconRight /> : null}
+              {IconRight ? (
+                <IconRight width={normalize(9.88)} height={18.29} />
+              ) : null}
             </View>
           </TouchableOpacity>
         </View>
@@ -301,10 +302,9 @@ class SettingScreen extends BaseScreen {
         <View style={styles.wrapTextHeader}>
           <CustomText
             color="#fff"
+            size={36}
             style={{
-              marginTop:
-                (widthDevice * (1 / Images.assets.setting_header_image.ratio)) /
-                3,
+              marginTop: normalize(105),
             }}>
             Settings
           </CustomText>
