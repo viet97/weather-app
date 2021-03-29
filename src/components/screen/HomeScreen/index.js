@@ -44,7 +44,7 @@ export default class HomeScreen extends BaseScreen {
               yAxisInterval={1} // optional, defaults to 1
               fromZero
               chartConfig={{
-                backgroundColor: "#e26a00",
+                backgroundColor: "black",
                 backgroundGradientFrom: "#fb8c00",
                 backgroundGradientTo: "#ffa726",
                 decimalPlaces: 2, // optional, defaults to 2dp
@@ -61,12 +61,13 @@ export default class HomeScreen extends BaseScreen {
               bezier
               style={{
                 marginVertical: 8,
-                borderRadius: 16
+                borderRadius: 16,
+                paddingRight: 24,
               }}
               withHorizontalLabels={false}
+              withVerticalLabels={false}
             />
             <View style={{ flexDirection: "row" }}>
-              <Text>123123121</Text>
               <Text>123123121</Text>
               <Text>123123121</Text>
               <Text>123123121</Text>

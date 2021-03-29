@@ -338,7 +338,7 @@ class AbstractChart<
               ((width - paddingRight) / (data.length / yAxisInterval)) * i +
                 paddingRight
             )}
-            y1={0}
+            y1={height - (100-data[i])/100}
             x2={Math.floor(
               ((width - paddingRight) / (data.length / yAxisInterval)) * i +
                 paddingRight

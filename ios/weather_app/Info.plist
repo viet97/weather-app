@@ -74,28 +74,11 @@
 		<string>Octicons.ttf</string>
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
-		<string>Roboto-Light.ttf</string>
-		<string>Roboto-Medium.ttf</string>
-		<string>Roboto-Thin.ttf</string>
-		<string>Roboto.ttf</string>
-		<string>SanFranciscoText-Bold.otf</string>
-		<string>SanFranciscoText-BoldItalic.otf</string>
-		<string>SanFranciscoText-Heavy.otf</string>
-		<string>SanFranciscoText-HeavyItalic.otf</string>
-		<string>SanFranciscoText-Italic.otf</string>
-		<string>SanFranciscoText-Light.otf</string>
-		<string>SanFranciscoText-LightItalic.otf</string>
-		<string>SanFranciscoText-Medium.otf</string>
-		<string>SanFranciscoText-MediumItalic.otf</string>
-		<string>SanFranciscoText-Regular.otf</string>
-		<string>SanFranciscoText-Semibold.otf</string>
-		<string>SanFranciscoText-SemiboldItalic.otf</string>
-		<string>SanFranciscoText-Thin.otf</string>
-		<string>SanFranciscoText-ThinItalic.otf</string>
-		<string>SanFranciscoDisplay-Bold.otf</string>
-		<string>SanFranciscoDisplay-Medium.otf</string>
-		<string>Manrope-ExtraBold.ttf</string>
-		<string>Manrope-Medium.ttf</string>
+		<string>SFPro-Regular.ttf</string>
+		<string>SFPro-Light.ttf</string>
+		<string>SFPro-Medium.ttf</string>
+		<string>SFPro-Semibold.ttf</string>
+		<string>SFPro-Bold.ttf</string>
 	</array>
 </dict>
 </plist>
