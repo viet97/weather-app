@@ -1,9 +1,9 @@
 import React from 'react';
-import {Text, StyleSheet} from 'react-native';
+import { Text, StyleSheet } from 'react-native';
 import BaseCommon from '../BaseCommon';
-import {normalize, IS_ANDROID} from '../../../utils/DeviceUtil';
-import {KEY_FONT} from '../../../themes/Fonts';
-import {Colors} from '../../../themes/Colors';
+import { normalize, IS_ANDROID } from '../../../utils/DeviceUtil';
+import { KEY_FONT } from '../../../themes/Fonts';
+import { Colors } from '../../../themes/Colors';
 
 class CustomText extends BaseCommon {
   constructor(props) {
@@ -14,7 +14,7 @@ class CustomText extends BaseCommon {
   }
 
   getFontFamily = () => {
-    const {light, semiBold, bold, thin, medium} = this.props;
+    const { light, semiBold, bold, thin, medium } = this.props;
 
     let fontFamily = KEY_FONT.regular;
 
@@ -49,13 +49,14 @@ class CustomText extends BaseCommon {
     if (color) {
       colorStyle.color = color;
     }
+
     return (
       <Text
         numberOfLines={numberOfLines}
         style={[
           styles.defaultText,
           style,
-          {fontSize: normalize(size), fontFamily: this.fontFamily},
+          { fontSize: normalize(size), fontFamily: this.fontFamily },
           colorStyle,
         ]}
         {...otherProps}>

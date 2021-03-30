@@ -1,8 +1,8 @@
 import React from 'react';
-import {ScrollView, View, StyleSheet, ImageBackground} from 'react-native';
+import { ScrollView, View, StyleSheet, ImageBackground } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-import {Colors} from '../../../themes/Colors';
+import { Colors } from '../../../themes/Colors';
 import {
   getStatusBarHeight,
   heightDevice,
@@ -10,12 +10,13 @@ import {
   widthDevice,
 } from '../../../utils/DeviceUtil';
 import SVGIcon from '../../../../assets/SVGIcon';
-import {Text} from '../../common';
+import { Text } from '../../common';
 import BaseScreen from '../BaseScreen';
-import {TouchablePlatform} from '../../../modules/TouchablePlatform';
-import {LineChartCustom, BarChartCustom} from '../../element';
-import {Images} from '../../../themes/Images';
-import {TYPE_IMAGE_RESIZE_MODE} from '../../common/Image';
+import { TouchablePlatform } from '../../../modules/TouchablePlatform';
+import { LineChartCustom, BarChartCustom } from '../../element';
+import { Images } from '../../../themes/Images';
+import { TYPE_IMAGE_RESIZE_MODE } from '../../common/Image';
+import NavigationService from '../../../navigation/NavigationService';
 
 const exampleData = [15, 21, 23, 12, 24, 28, 29];
 const renderBottomLabel = () => (
@@ -26,7 +27,7 @@ const renderBottomLabel = () => (
       flex: 1,
     }}>
     <SVGIcon.cloudy width={30} height={30} />
-    <Text size={24} style={{marginTop: 4, color: Colors.textTitle}}>
+    <Text size={24} style={{ marginTop: 4, color: Colors.textTitle }}>
       Mon 01
     </Text>
   </View>
@@ -103,7 +104,7 @@ export default class HomeScreen extends BaseScreen {
         title: 'Snow',
         unit: 'mm',
         data: exampleData,
-        renderContentBar: ({value, ratio}) => {
+        renderContentBar: ({ value, ratio }) => {
           return (
             <View
               style={{
@@ -113,14 +114,14 @@ export default class HomeScreen extends BaseScreen {
               <Text
                 size={28}
                 light
-                style={{alignSelf: 'center', marginBottom: 4}}>
+                style={{ alignSelf: 'center', marginBottom: 4 }}>
                 {value}
               </Text>
               <LinearGradient
-                start={{x: 0, y: 0.1}}
-                end={{x: 0, y: 1.0}}
+                start={{ x: 0, y: 0.1 }}
+                end={{ x: 0, y: 1.0 }}
                 colors={['#89D378', '#EAF7E6']}
-                style={{flex: ratio}}
+                style={{ flex: ratio }}
               />
             </View>
           );
@@ -135,7 +136,7 @@ export default class HomeScreen extends BaseScreen {
                 marginTop: 16,
               }}>
               <SVGIcon.cloudy width={30} height={30} />
-              <Text size={24} style={{marginTop: 4, color: Colors.textTitle}}>
+              <Text size={24} style={{ marginTop: 4, color: Colors.textTitle }}>
                 Mon 01
               </Text>
             </View>
@@ -146,7 +147,7 @@ export default class HomeScreen extends BaseScreen {
         title: 'Wind',
         unit: 'Km/h',
         data: exampleData,
-        renderContentBar: ({value, ratio}) => {
+        renderContentBar: ({ value, ratio }) => {
           return (
             <View
               style={{
@@ -156,14 +157,14 @@ export default class HomeScreen extends BaseScreen {
               <Text
                 size={28}
                 light
-                style={{alignSelf: 'center', marginBottom: 4}}>
+                style={{ alignSelf: 'center', marginBottom: 4 }}>
                 {value}
               </Text>
               <LinearGradient
-                start={{x: 0, y: 0.1}}
-                end={{x: 0, y: 1.0}}
+                start={{ x: 0, y: 0.1 }}
+                end={{ x: 0, y: 1.0 }}
                 colors={['#89D378', '#EAF7E6']}
-                style={{flex: ratio}}
+                style={{ flex: ratio }}
               />
             </View>
           );
@@ -178,7 +179,7 @@ export default class HomeScreen extends BaseScreen {
                 marginTop: 16,
               }}>
               <SVGIcon.wind_direction width={30} height={30} />
-              <Text size={24} style={{marginTop: 4, color: Colors.textTitle}}>
+              <Text size={24} style={{ marginTop: 4, color: Colors.textTitle }}>
                 Mon 01
               </Text>
             </View>
@@ -189,7 +190,7 @@ export default class HomeScreen extends BaseScreen {
         title: 'Pressure',
         unit: 'mb',
         data: exampleData,
-        renderContentBar: ({value, ratio}) => {
+        renderContentBar: ({ value, ratio }) => {
           return (
             <View
               style={{
@@ -199,14 +200,14 @@ export default class HomeScreen extends BaseScreen {
               <Text
                 size={28}
                 light
-                style={{alignSelf: 'center', marginBottom: 4}}>
+                style={{ alignSelf: 'center', marginBottom: 4 }}>
                 {value}
               </Text>
               <LinearGradient
-                start={{x: 0, y: 0.1}}
-                end={{x: 0, y: 1.0}}
+                start={{ x: 0, y: 0.1 }}
+                end={{ x: 0, y: 1.0 }}
                 colors={['#9C94ED', '#F4F4FD']}
-                style={{flex: ratio}}
+                style={{ flex: ratio }}
               />
             </View>
           );
@@ -221,7 +222,7 @@ export default class HomeScreen extends BaseScreen {
                 marginTop: 16,
               }}>
               <SVGIcon.cloudy width={30} height={30} />
-              <Text size={24} style={{marginTop: 4, color: Colors.textTitle}}>
+              <Text size={24} style={{ marginTop: 4, color: Colors.textTitle }}>
                 Mon 01
               </Text>
             </View>
@@ -231,7 +232,7 @@ export default class HomeScreen extends BaseScreen {
     ];
   }
 
-  renderHeaderSection = ({title, onPressDetail}) => {
+  renderHeaderSection = ({ title, onPressDetail }) => {
     return (
       <View style={styles.headerSectionContainer}>
         <View style={styles.leftHeaderSection}>
@@ -243,7 +244,7 @@ export default class HomeScreen extends BaseScreen {
         <TouchablePlatform
           style={styles.detailButton}
           onPress={() => onPressDetail && onPressDetail()}>
-          <Text size={30} style={{color: Colors.viewDetail}} semiBold>
+          <Text size={30} style={{ color: Colors.viewDetail }} semiBold>
             View detail →
           </Text>
         </TouchablePlatform>
@@ -252,11 +253,11 @@ export default class HomeScreen extends BaseScreen {
   };
 
   renderLineChart = () => {
-    const {currentIndexLineChart} = this.state;
+    const { currentIndexLineChart } = this.state;
     const currentLineChartProps = this.listLineChart[currentIndexLineChart];
     return (
       <LineChartCustom
-        style={{marginTop: 48}}
+        style={{ marginTop: 48 }}
         chartHeight={150}
         {...currentLineChartProps}
       />
@@ -264,10 +265,10 @@ export default class HomeScreen extends BaseScreen {
   };
 
   renderHourlyChart = () => {
-    const {currentIndexLineChart} = this.state;
+    const { currentIndexLineChart } = this.state;
     return (
       <View style={styles.sectionContainer}>
-        {this.renderHeaderSection({title: 'Hourly'})}
+        {this.renderHeaderSection({ title: 'Hourly' })}
         <ScrollView
           bounces={false}
           horizontal
@@ -279,7 +280,7 @@ export default class HomeScreen extends BaseScreen {
             return (
               <TouchablePlatform
                 onPress={() => {
-                  this.setStateSafe({currentIndexLineChart: index});
+                  this.setStateSafe({ currentIndexLineChart: index });
                 }}
                 style={{
                   padding: 8,
@@ -294,7 +295,7 @@ export default class HomeScreen extends BaseScreen {
                 <Text
                   size={26}
                   medium
-                  style={{color: isFocus ? Colors.white : Colors.textTitle}}>
+                  style={{ color: isFocus ? Colors.white : Colors.textTitle }}>
                   {it.title}
                   <Text size={26} light>
                     {' '}
@@ -311,16 +312,16 @@ export default class HomeScreen extends BaseScreen {
   };
 
   renderBarChart = () => {
-    const {currentIndexBarChart} = this.state;
+    const { currentIndexBarChart } = this.state;
     const currentBarChartProps = this.listBarChart[currentIndexBarChart];
-    return <BarChartCustom style={{marginTop: 24}} {...currentBarChartProps} />;
+    return <BarChartCustom style={{ marginTop: 24 }} {...currentBarChartProps} />;
   };
 
   renderDailyChart = () => {
-    const {currentIndexBarChart} = this.state;
+    const { currentIndexBarChart } = this.state;
     return (
       <View style={styles.sectionContainer}>
-        {this.renderHeaderSection({title: 'Daily'})}
+        {this.renderHeaderSection({ title: 'Daily' })}
         <ScrollView
           bounces={false}
           horizontal
@@ -332,7 +333,7 @@ export default class HomeScreen extends BaseScreen {
             return (
               <TouchablePlatform
                 onPress={() => {
-                  this.setStateSafe({currentIndexBarChart: index});
+                  this.setStateSafe({ currentIndexBarChart: index });
                 }}
                 style={{
                   padding: 8,
@@ -347,7 +348,7 @@ export default class HomeScreen extends BaseScreen {
                 <Text
                   size={26}
                   medium
-                  style={{color: isFocus ? Colors.white : Colors.textTitle}}>
+                  style={{ color: isFocus ? Colors.white : Colors.textTitle }}>
                   {it.title}
                   <Text size={26} light>
                     {' '}
@@ -421,7 +422,7 @@ export default class HomeScreen extends BaseScreen {
             <Text
               size={30}
               medium
-              style={{color: Colors.air_quality_text, marginLeft: 4}}>
+              style={{ color: Colors.air_quality_text, marginLeft: 4 }}>
               Good
             </Text>
           </View>
@@ -430,7 +431,7 @@ export default class HomeScreen extends BaseScreen {
             <Text
               size={30}
               medium
-              style={{color: Colors.air_quality_text, marginLeft: 4}}>
+              style={{ color: Colors.air_quality_text, marginLeft: 4 }}>
               Unsafe
             </Text>
           </View>
@@ -442,7 +443,7 @@ export default class HomeScreen extends BaseScreen {
   renderAirQualityIndex = () => {
     return (
       <View style={styles.sectionContainer}>
-        {this.renderHeaderSection({title: 'Air Quality Index'})}
+        {this.renderHeaderSection({ title: 'Air Quality Index' })}
         <View style={styles.sectionContentContainer}>
           {this.renderAirQualityStatus()}
           {this.renderAirSeekBar()}
@@ -463,27 +464,31 @@ export default class HomeScreen extends BaseScreen {
           height: heightDevice,
           paddingTop: getStatusBarHeight() + 16,
         }}>
-        <View style={{paddingHorizontal: 12}}>
-          <View style={{flexDirection: 'row'}}>
+        <View style={{ paddingHorizontal: 12 }}>
+          <View style={{ flexDirection: 'row' }}>
             <Text
               size={36}
-              style={{color: Colors.white, flex: 1, alignSelf: 'center'}}
+              style={{ color: Colors.white, flex: 1, alignSelf: 'center' }}
               medium>
               Good Morning!
             </Text>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <TouchablePlatform style={{padding: 8}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <TouchablePlatform style={{ padding: 8 }}>
                 <SVGIcon.share width={normalize(42)} height={normalize(42)} />
               </TouchablePlatform>
-              <TouchablePlatform style={{padding: 8}}>
+              <TouchablePlatform
+                onPress={() => {
+                  NavigationService.getInstance().openDrawer();
+                }}
+                style={{ padding: 8 }}>
                 <SVGIcon.menu width={normalize(42)} height={normalize(42)} />
               </TouchablePlatform>
             </View>
           </View>
-          <Text size={38} style={{color: Colors.white, marginTop: 4}} semiBold>
+          <Text size={38} style={{ color: Colors.white, marginTop: 4 }} semiBold>
             Tan Binh, Ho Chi Minh
           </Text>
-          <Text size={28} style={{color: Colors.white, marginTop: 2}}>
+          <Text size={28} style={{ color: Colors.white, marginTop: 2 }}>
             Wed, March 03
           </Text>
         </View>
@@ -515,7 +520,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.backgroundHome,
   },
-  chartScrollView: {marginTop: 8},
+  chartScrollView: { marginTop: 8 },
   sectionContainer: {
     flex: 1,
     backgroundColor: 'white',
@@ -535,10 +540,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
-  leftHeaderSection: {flexDirection: 'row', alignItems: 'center'},
-  headerSectionTitle: {marginLeft: 8, color: Colors.black},
-  detailButton: {padding: 16},
-  airStatusContainer: {flexDirection: 'row', marginTop: 16},
+  leftHeaderSection: { flexDirection: 'row', alignItems: 'center' },
+  headerSectionTitle: { marginLeft: 8, color: Colors.black },
+  detailButton: { padding: 16 },
+  airStatusContainer: { flexDirection: 'row', marginTop: 16 },
   airIndexContainer: {
     width: normalize(210),
     height: normalize(129),
@@ -547,12 +552,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-end',
   },
-  air_status_icon: {position: 'absolute', top: -normalize(66) / 2},
+  air_status_icon: { position: 'absolute', top: -normalize(66) / 2 },
   airWarnContainer: {
     flex: 1,
     marginLeft: 16,
   },
-  airWarnContent: {flex: 1, justifyContent: 'flex-end'},
+  airWarnContent: { flex: 1, justifyContent: 'flex-end' },
   airSeekBar: {
     width: '100%',
     height: normalize(10),

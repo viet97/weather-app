@@ -9,12 +9,12 @@ const getXdpi = () => (IS_ANDROID ? NativeModules.AndroidUtils.xdpi : 0);
 
 const showAndroidNavigationBar = () => {
   if (IS_ANDROID) {
-    NativeModules.AndroidUtils.showNavigationBar();
+    // NativeModules.AndroidUtils.showNavigationBar();
   }
 };
 const hideAndroidNavigationBar = () => {
   if (IS_ANDROID) {
-    NativeModules.AndroidUtils.hideNavigationBar();
+    // NativeModules.AndroidUtils.hideNavigationBar();
   }
 };
 

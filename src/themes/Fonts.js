@@ -1,4 +1,4 @@
-import {IS_ANDROID} from '../utils/DeviceUtil';
+import { IS_ANDROID } from '../utils/DeviceUtil';
 
 export const TYPE_FONT_SIZE = {
   TITLE_TAB: 13,

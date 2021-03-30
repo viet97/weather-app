@@ -18,6 +18,7 @@ const AppStack = () => {
       }}
       initialRouteName={ROUTER_NAME.HOME.name}>
       {Object.values(ROUTER_NAME).map(screen => {
+        if (screen.isNoStack) return;
         return <Stack.Screen key={screen.name} {...screen} />;
       })}
     </Stack.Navigator>

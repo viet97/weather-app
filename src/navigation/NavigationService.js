@@ -4,18 +4,18 @@ import {
   DrawerActions,
   StackActions,
 } from '@react-navigation/native';
-import { Keyboard, StyleSheet } from 'react-native';
+import {Keyboard, StyleSheet} from 'react-native';
 import Toast from 'react-native-root-toast';
 import AppInfoManager from '../AppInfoManager';
-import { getStateForKeys, getValueFromObjectByKeys } from '../utils/Util';
-import { isString } from '../modules/Lodash';
-import { DialogGlobal } from '../components/element';
+import {getStateForKeys, getValueFromObjectByKeys} from '../utils/Util';
+import {isString} from '../modules/Lodash';
+import {DialogGlobal} from '../components/element';
 import NetworkModule from '../modules/NetworkStateModule';
-import { myLog } from '../Debug';
+import {myLog} from '../Debug';
 
 let timeoutVar = null;
 
-const defaulFunc = () => { };
+const defaulFunc = () => {};
 
 export default class NavigationService {
   static getInstance(navigation) {
@@ -72,7 +72,7 @@ export default class NavigationService {
     }
     return getValueFromObjectByKeys(props, ['route', 'params', ...keys]);
   }
-  closeDrawer({ time = 0 } = { time: 0 }) {
+  closeDrawer({time = 0} = {time: 0}) {
     if (!this._checkNavigation()) {
       return;
     }
@@ -85,14 +85,27 @@ export default class NavigationService {
     };
     timeoutVar = setTimeout(callback, time);
   }
-  navigate({ routerName, params }) {
+  openDrawer({time = 0} = {time: 0}) {
+    if (!this._checkNavigation()) {
+      return;
+    }
+    if (timeoutVar) {
+      clearTimeout(timeoutVar);
+      timeoutVar = null;
+    }
+    const callback = () => {
+      this.navigation.dispatch(DrawerActions.openDrawer());
+    };
+    timeoutVar = setTimeout(callback, time);
+  }
+  navigate({routerName, params}) {
     const currentRouteName = this.getCurrentScreen();
     myLog('--currentRouteName---', currentRouteName);
     if (!this._checkNavigation() || !routerName) {
       return;
     }
     if (!NetworkModule.isConnected) {
-      alert('no network')
+      alert('no network');
       return;
     }
     const name = isString(routerName) ? routerName : routerName.name;
@@ -104,7 +117,24 @@ export default class NavigationService {
       }),
     );
   }
-  goBack({ n = 1 } = { n: 1 }) {
+  drawerNavigate({routerName, params = {}, screenName}) {
+    const currentRouteName = this.getCurrentScreen();
+    myLog('--currentRouteName---', currentRouteName);
+    if (!this._checkNavigation() || !routerName) {
+      return;
+    }
+    if (!NetworkModule.isConnected) {
+      alert('no network');
+      return;
+    }
+    const name = isString(screenName) ? screenName : screenName.name;
+    Keyboard.dismiss();
+    this.navigation.navigate(routerName, {
+      screen: name,
+      params,
+    });
+  }
+  goBack({n = 1} = {n: 1}) {
     if (!this._checkNavigation()) {
       return;
     }
@@ -118,7 +148,7 @@ export default class NavigationService {
     };
     timeoutVar = setTimeout(callback);
   }
-  reset({ routerName, params, time = 100 }) {
+  reset({routerName, params, time = 100}) {
     if (!this._checkNavigation()) {
       return;
     }
@@ -144,18 +174,18 @@ export default class NavigationService {
     {
       message = '',
       second = 3,
-      onShow = () => { },
-      onHide = () => { },
-      onShown = () => { },
-      onHidden = () => { },
+      onShow = () => {},
+      onHide = () => {},
+      onShown = () => {},
+      onHidden = () => {},
     } = {
-        message: '',
-        second: 3,
-        onShow: () => { },
-        onHide: () => { },
-        onShown: () => { },
-        onHidden: () => { },
-      },
+      message: '',
+      second: 3,
+      onShow: () => {},
+      onHide: () => {},
+      onShown: () => {},
+      onHidden: () => {},
+    },
   ) {
     if (this.toast) {
       Toast.hide(this.toast);
@@ -199,18 +229,18 @@ export default class NavigationService {
       titleAction = 'Đóng',
       contentBody = undefined,
     } = {
-        isImportant: false,
-        title: 'Thông báo',
-        message: 'Thông báo mặc định!',
-        image: undefined,
-        heightImage: undefined,
-        ratioImage: undefined,
-        onAction: defaulFunc,
-        onClose: defaulFunc,
-        // onCancel: defaulFunc,
-        titleAction: 'Đóng',
-        contentBody: undefined,
-      },
+      isImportant: false,
+      title: 'Thông báo',
+      message: 'Thông báo mặc định!',
+      image: undefined,
+      heightImage: undefined,
+      ratioImage: undefined,
+      onAction: defaulFunc,
+      onClose: defaulFunc,
+      // onCancel: defaulFunc,
+      titleAction: 'Đóng',
+      contentBody: undefined,
+    },
   ) {
     DialogGlobal.getInstance().showDialog({
       type: DialogGlobal.TypeDialog.DIALOG_NOTICE,
@@ -241,18 +271,18 @@ export default class NavigationService {
       titleAccept = 'Đồng ý',
       titleCancel = 'Đóng',
     } = {
-        isImportant: false,
-        title: 'Xác nhận',
-        message: 'Thông báo mặc định!',
-        image: undefined,
-        heightImage: undefined,
-        ratioImage: undefined,
-        onAccept: defaulFunc,
-        onClose: defaulFunc,
-        onCancel: defaulFunc,
-        titleAccept: 'Đồng ý',
-        titleCancel: 'Đóng',
-      },
+      isImportant: false,
+      title: 'Xác nhận',
+      message: 'Thông báo mặc định!',
+      image: undefined,
+      heightImage: undefined,
+      ratioImage: undefined,
+      onAccept: defaulFunc,
+      onClose: defaulFunc,
+      onCancel: defaulFunc,
+      titleAccept: 'Đồng ý',
+      titleCancel: 'Đóng',
+    },
   ) {
     DialogGlobal.getInstance().showDialog({
       type: DialogGlobal.TypeDialog.DIALOG_CONFIRM,
@@ -281,15 +311,15 @@ export default class NavigationService {
       onClose = defaulFunc,
       actionList = [],
     } = {
-        isImportant: false,
-        title: 'Xác nhận',
-        message: 'Thông báo mặc định!',
-        image: undefined,
-        heightImage: undefined,
-        ratioImage: undefined,
-        onClose: defaulFunc,
-        actionList: [],
-      },
+      isImportant: false,
+      title: 'Xác nhận',
+      message: 'Thông báo mặc định!',
+      image: undefined,
+      heightImage: undefined,
+      ratioImage: undefined,
+      onClose: defaulFunc,
+      actionList: [],
+    },
   ) {
     DialogGlobal.getInstance().showDialog({
       type: DialogGlobal.TypeDialog.DIALOG_MULTI_ACTION,
