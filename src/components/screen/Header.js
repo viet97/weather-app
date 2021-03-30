@@ -15,7 +15,7 @@ export const Header = props => {
   return (
     <View
       style={{
-        marginTop: STATUS_BAR_HEIGHT,
+        // marginTop: STATUS_BAR_HEIGHT,
         // marginBottom: 15,
         flexDirection: 'row',
         alignItems: 'flex-end',
@@ -50,10 +50,7 @@ export const Header = props => {
           alignItems: 'center',
           paddingBottom: paddingBottomTitle,
         }}>
-        <CustomText
-          size={36}
-          style={{fontFamily: KEY_FONT.medium}}
-          color="#202020">
+        <CustomText size={36} semiBold color="#202020">
           {props.title || 'Screen'}
         </CustomText>
       </View>

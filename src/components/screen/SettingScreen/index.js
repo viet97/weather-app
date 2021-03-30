@@ -29,6 +29,7 @@ import CustomText from '../../common/Text';
 import NavigationService from '../../../navigation/NavigationService';
 import {ROUTER_NAME} from '../../../navigation/NavigationConst';
 import {Header} from '../Header';
+import {temperatureC} from '../../../utils/Util';
 
 const paddingHorizontalItem = normalize(30);
 const styles = StyleSheet.create({
@@ -37,7 +38,7 @@ const styles = StyleSheet.create({
   },
   wrapTouchItem: {
     borderBottomWidth: 1,
-    borderBottomColor: '#DADCE3',
+    borderBottomColor: 'rgba(218, 220, 227, 0.6)',
     paddingVertical: normalize(35),
   },
   touchItem: {
@@ -71,7 +72,7 @@ class SettingScreen extends BaseScreen {
       {
         label: 'Units',
         iconLeft: IconUnitSvg,
-        txtRight: 'oC, mm, cm, km, m/s, hPa',
+        txtRight: temperatureC + ', mm, cm, km, m/s, hPa',
         iconRight: IconRightSvg,
         onClick: () => {},
         key: 'units',
@@ -327,23 +328,25 @@ class SettingScreen extends BaseScreen {
         }}>
         <View
           style={{
-            width: widthDevice - 20,
+            width: widthDevice - normalize(20),
             backgroundColor: '#fff',
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
-            borderBottomLeftRadius: 8,
-            borderBottomRightRadius: 8,
+            borderTopLeftRadius: normalize(40),
+            borderTopRightRadius: normalize(40),
+            borderBottomLeftRadius: normalize(10),
+            borderBottomRightRadius: normalize(10),
             alignItems: 'center',
           }}>
           <View
             style={{
-              paddingVertical: 20,
+              paddingVertical: normalize(40),
               borderBottomWidth: 1,
               borderBottomColor: '#DADCE3',
               width: '100%',
               alignItems: 'center',
             }}>
-            <CustomText color="#404040">{title}</CustomText>
+            <CustomText semiBold size={36} color="#404040">
+              {title}
+            </CustomText>
           </View>
           {options.map((option, idx) => {
             const IconFinal = option.isActive ? IconChoiceSvg : IconUnChoiceSvg;
@@ -352,13 +355,13 @@ class SettingScreen extends BaseScreen {
                 key={idx}
                 style={{
                   width: '100%',
-                  paddingHorizontal: 15,
+                  paddingHorizontal: normalize(40),
                 }}>
                 <View
                   style={{
                     borderBottomColor: 'rgba(218, 220, 227, 0.6)',
                     borderBottomWidth: idx === options.length - 1 ? 0 : 1,
-                    paddingVertical: 20,
+                    paddingVertical: normalize(40),
                   }}>
                   <TouchableOpacity
                     style={{
@@ -367,14 +370,16 @@ class SettingScreen extends BaseScreen {
                       justifyContent: 'space-between',
                     }}>
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      <IconFinal width={25} height={25} />
+                      <IconFinal width={normalize(40)} height={normalize(40)} />
                       <CustomText
-                        style={{marginLeft: 15, fontWeight: 'bold'}}
+                        size={32}
+                        medium
+                        style={{marginLeft: normalize(40)}}
                         color="#404040">
                         {option.label}
                       </CustomText>
                     </View>
-                    <CustomText color="#404040">
+                    <CustomText size={32} color="#404040">
                       {option.txtRight || ''}
                     </CustomText>
                   </TouchableOpacity>
@@ -385,14 +390,14 @@ class SettingScreen extends BaseScreen {
         </View>
         <View
           style={{
-            width: widthDevice - 20,
+            width: widthDevice - normalize(20),
             // height: 80,
             backgroundColor: '#fff',
             marginTop: 10,
-            borderTopLeftRadius: 8,
-            borderTopRightRadius: 8,
-            borderBottomLeftRadius: 20,
-            borderBottomRightRadius: 20,
+            borderTopLeftRadius: normalize(10),
+            borderTopRightRadius: normalize(10),
+            borderBottomLeftRadius: normalize(40),
+            borderBottomRightRadius: normalize(40),
             flexDirection: 'row',
             // justifyContent: 'space-evenly',
             alignItems: 'center',
@@ -407,7 +412,9 @@ class SettingScreen extends BaseScreen {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <CustomText color="#094FB9">Cancel</CustomText>
+            <CustomText size={36} color="#094FB9">
+              Cancel
+            </CustomText>
           </TouchableOpacity>
           <View style={{width: 1, height: 30, backgroundColor: '#E9EAEE'}} />
           <TouchableOpacity
@@ -420,7 +427,9 @@ class SettingScreen extends BaseScreen {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <CustomText color="#094FB9">Done</CustomText>
+            <CustomText size={36} color="#094FB9">
+              Done
+            </CustomText>
           </TouchableOpacity>
         </View>
       </View>
@@ -433,7 +442,6 @@ class SettingScreen extends BaseScreen {
         style={{
           backgroundColor: '#FFFFFF',
           flex: 1,
-          marginTop: STATUS_BAR_HEIGHT,
         }}>
         <FlatList
           stickyHeaderIndices={[0]}

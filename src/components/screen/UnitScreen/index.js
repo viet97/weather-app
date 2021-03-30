@@ -17,6 +17,7 @@ import {
 } from '../../../utils/DeviceUtil';
 import CustomText from '../../common/Text';
 import {Header} from '../Header';
+import {temperatureC, temperatureF} from '../../../utils/Util';
 
 const borderRadiusBtn = normalize(16);
 const paddingHorizontalItem = normalize(30);
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
     paddingLeft: paddingHorizontalItem,
   },
   wrapTouchItem: {
-    paddingTop: normalize(35),
+    paddingTop: normalize(45),
     flexDirection: 'row',
   },
   touchItem: {
@@ -61,12 +62,12 @@ class UnitScreen extends BaseScreen {
         },
         buttons: [
           {
-            label: '℃',
+            label: temperatureC,
             icon: IconCSvg,
             value: 'c',
           },
           {
-            label: '℉',
+            label: temperatureF,
             icon: IconFSvg,
             value: 'f',
           },
@@ -179,13 +180,13 @@ class UnitScreen extends BaseScreen {
     return (
       <View key={index} style={styles.containerItem}>
         <View style={styles.wrapTouchItem}>
-          <View style={{marginTop: 2}}>
+          <View style={{marginTop: 0}}>
             <IconLeft {...item.iconSize} />
           </View>
           <View
             style={{
               marginLeft: paddingHorizontalItem,
-              paddingBottom: normalize(50),
+              paddingBottom: normalize(45),
               borderBottomWidth: 1,
               borderBottomColor: 'rgba(218, 220, 227, 0.5)',
               flex: 1,
