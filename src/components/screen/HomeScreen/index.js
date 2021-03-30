@@ -123,7 +123,11 @@ export default class HomeScreen extends BaseScreen {
               <Text
                 size={28}
                 light
-                style={{alignSelf: 'center', marginBottom: 4}}>
+                style={{
+                  alignSelf: 'center',
+                  marginBottom: 4,
+                  color: Colors.black,
+                }}>
                 {value}
               </Text>
               <LinearGradient
@@ -166,7 +170,11 @@ export default class HomeScreen extends BaseScreen {
               <Text
                 size={28}
                 light
-                style={{alignSelf: 'center', marginBottom: 4}}>
+                style={{
+                  alignSelf: 'center',
+                  marginBottom: 4,
+                  color: Colors.black,
+                }}>
                 {value}
               </Text>
               <LinearGradient
@@ -209,7 +217,11 @@ export default class HomeScreen extends BaseScreen {
               <Text
                 size={28}
                 light
-                style={{alignSelf: 'center', marginBottom: 4}}>
+                style={{
+                  alignSelf: 'center',
+                  marginBottom: 4,
+                  color: Colors.black,
+                }}>
                 {value}
               </Text>
               <LinearGradient
@@ -357,7 +369,10 @@ export default class HomeScreen extends BaseScreen {
                   medium
                   style={{color: isFocus ? Colors.white : Colors.textTitle}}>
                   {it.title}
-                  <Text size={26} light>
+                  <Text
+                    style={{color: isFocus ? Colors.white : Colors.textTitle}}
+                    size={26}
+                    light>
                     {' '}
                     {it.unit}
                   </Text>
@@ -410,7 +425,10 @@ export default class HomeScreen extends BaseScreen {
                   medium
                   style={{color: isFocus ? Colors.white : Colors.textTitle}}>
                   {it.title}
-                  <Text size={26} light>
+                  <Text
+                    size={26}
+                    style={{color: isFocus ? Colors.white : Colors.textTitle}}
+                    light>
                     {' '}
                     {it.unit}
                   </Text>
@@ -518,7 +536,7 @@ export default class HomeScreen extends BaseScreen {
                 shadowColor={Colors.border_color}
                 bgColor={Colors.white}>
                 <View style={styles.innerDashedCircle}>
-                  <Text size={54} thin>
+                  <Text style={{color: Colors.text_color1}} size={54} thin>
                     119
                   </Text>
                 </View>
