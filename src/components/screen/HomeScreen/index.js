@@ -1,11 +1,20 @@
 import React from 'react';
-import {ScrollView, View, StyleSheet, ImageBackground} from 'react-native';
+import {
+  ScrollView,
+  View,
+  StyleSheet,
+  ImageBackground,
+  FlatList,
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import ProgressCircle from 'react-native-progress-circle';
 
 import {Colors} from '../../../themes/Colors';
 import {
+  getBottomSpace,
   getStatusBarHeight,
   heightDevice,
+  insets,
   normalize,
   widthDevice,
 } from '../../../utils/DeviceUtil';
@@ -114,7 +123,11 @@ export default class HomeScreen extends BaseScreen {
               <Text
                 size={28}
                 light
-                style={{alignSelf: 'center', marginBottom: 4}}>
+                style={{
+                  alignSelf: 'center',
+                  marginBottom: 4,
+                  color: Colors.black,
+                }}>
                 {value}
               </Text>
               <LinearGradient
@@ -157,7 +170,11 @@ export default class HomeScreen extends BaseScreen {
               <Text
                 size={28}
                 light
-                style={{alignSelf: 'center', marginBottom: 4}}>
+                style={{
+                  alignSelf: 'center',
+                  marginBottom: 4,
+                  color: Colors.black,
+                }}>
                 {value}
               </Text>
               <LinearGradient
@@ -200,7 +217,11 @@ export default class HomeScreen extends BaseScreen {
               <Text
                 size={28}
                 light
-                style={{alignSelf: 'center', marginBottom: 4}}>
+                style={{
+                  alignSelf: 'center',
+                  marginBottom: 4,
+                  color: Colors.black,
+                }}>
                 {value}
               </Text>
               <LinearGradient
@@ -228,6 +249,57 @@ export default class HomeScreen extends BaseScreen {
             </View>
           );
         },
+      },
+    ];
+
+    this.listGridInfo = [
+      {
+        Icon: SVGIcon.temp,
+        value: 36,
+        unit: 'oC',
+        description: 'Feel Like',
+      },
+      {
+        Icon: SVGIcon.humidity,
+        value: 43,
+        unit: '%',
+        description: 'Humidity',
+      },
+      {
+        Icon: SVGIcon.rain_snow,
+        value: 0,
+        unit: 'mm',
+        description: 'Rain/Snow',
+      },
+      {
+        Icon: SVGIcon.wind,
+        value: 3,
+        unit: 'km/h',
+        description: 'Wind',
+      },
+      {
+        Icon: SVGIcon.uv_index,
+        value: 9,
+        unit: '',
+        description: 'UV Index',
+      },
+      {
+        Icon: SVGIcon.dew_point,
+        value: 43,
+        unit: '%',
+        description: 'Dew Point',
+      },
+      {
+        Icon: SVGIcon.pressure,
+        value: 1011,
+        unit: 'mb',
+        description: 'Pressure',
+      },
+      {
+        Icon: SVGIcon.visibility,
+        value: 8,
+        unit: 'km',
+        description: 'Visibility',
       },
     ];
   }
@@ -297,7 +369,10 @@ export default class HomeScreen extends BaseScreen {
                   medium
                   style={{color: isFocus ? Colors.white : Colors.textTitle}}>
                   {it.title}
-                  <Text size={26} light>
+                  <Text
+                    style={{color: isFocus ? Colors.white : Colors.textTitle}}
+                    size={26}
+                    light>
                     {' '}
                     {it.unit}
                   </Text>
@@ -350,7 +425,10 @@ export default class HomeScreen extends BaseScreen {
                   medium
                   style={{color: isFocus ? Colors.white : Colors.textTitle}}>
                   {it.title}
-                  <Text size={26} light>
+                  <Text
+                    size={26}
+                    style={{color: isFocus ? Colors.white : Colors.textTitle}}
+                    light>
                     {' '}
                     {it.unit}
                   </Text>
@@ -440,6 +518,41 @@ export default class HomeScreen extends BaseScreen {
     );
   };
 
+  renderPMCircleProgress = () => {
+    return (
+      <View style={styles.pmCircleContainer}>
+        {this.listQualityIndex.map(airQuality => {
+          return (
+            <View style={styles.circleContainer}>
+              <Text size={36} medium style={{color: Colors.air_quality_text}}>
+                PM2.5
+              </Text>
+              <ProgressCircle
+                outerCircleStyle={{marginTop: 12}}
+                percent={30}
+                radius={normalize(80)}
+                borderWidth={normalize(8)}
+                color="green"
+                shadowColor={Colors.border_color}
+                bgColor={Colors.white}>
+                <View style={styles.innerDashedCircle}>
+                  <Text style={{color: Colors.text_color1}} size={54} thin>
+                    119
+                  </Text>
+                </View>
+              </ProgressCircle>
+              <View style={styles.airQualityBackground}>
+                <Text size={28} style={{color: Colors.weather_red}}>
+                  Unhealthy
+                </Text>
+              </View>
+            </View>
+          );
+        })}
+      </View>
+    );
+  };
+
   renderAirQualityIndex = () => {
     return (
       <View style={styles.sectionContainer}>
@@ -447,7 +560,104 @@ export default class HomeScreen extends BaseScreen {
         <View style={styles.sectionContentContainer}>
           {this.renderAirQualityStatus()}
           {this.renderAirSeekBar()}
+          <View style={styles.airQualityLine} />
+          {this.renderPMCircleProgress()}
         </View>
+      </View>
+    );
+  };
+
+  renderCommonInfo = () => {
+    return (
+      <View style={styles.commonContainer}>
+        <View style={styles.weatherToday}>
+          <Text style={{color: Colors.white}} size={160} thin>
+            36
+            <Text size={80} light>
+              oC
+            </Text>
+          </Text>
+          <View style={styles.tempRange}>
+            <Text
+              style={{color: Colors.white, alignSelf: 'flex-start'}}
+              size={55}
+              thin>
+              38o
+            </Text>
+            <Text
+              style={{color: Colors.white, alignSelf: 'center'}}
+              size={55}
+              thin>
+              /
+            </Text>
+            <Text
+              style={{color: Colors.white, alignSelf: 'flex-end'}}
+              size={55}
+              thin>
+              25o
+            </Text>
+          </View>
+        </View>
+        <View style={styles.partyCloud}>
+          <SVGIcon.cloudy width={normalize(52)} height={normalize(52)} />
+          <Text size={50} medium style={styles.partyCloudText}>
+            Partly Cloudy
+          </Text>
+        </View>
+        <Text size={32} style={styles.weatherSuggest}>
+          Good weather, suitable for outdoor activities!
+        </Text>
+        <View style={{flexDirection: 'row'}}>
+          <View style={styles.networkStatus}>
+            <SVGIcon.offline width={normalize(24)} height={normalize(24)} />
+            <Text light size={26} style={{marginLeft: 6}}>
+              Offline Mode - last update 2 hours ago
+            </Text>
+          </View>
+        </View>
+      </View>
+    );
+  };
+
+  renderGridInfoItem = ({item, index}) => {
+    const {description, value, unit, Icon} = item;
+    return (
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'row',
+          paddingVertical: 18,
+          marginLeft: index % 2 === 0 ? 14 : 0,
+          marginRight: index % 2 !== 0 ? 14 : 0,
+          borderBottomColor: Colors.border_color_3,
+          borderBottomWidth: 1,
+        }}>
+        <Icon width={normalize(90)} height={normalize(90)} />
+        <View style={{marginLeft: 6, flex: 1}}>
+          <Text style={{color: Colors.text_color1}} size={44}>
+            {value}{' '}
+            <Text style={{color: Colors.text_color1}} size={34}>
+              {unit}
+            </Text>
+          </Text>
+          <View style={styles.gridInfoItemDes}>
+            <Text style={{color: Colors.textTitle}}>{description}</Text>
+          </View>
+        </View>
+      </View>
+    );
+  };
+
+  renderGridInfo = () => {
+    return (
+      <View style={styles.gridInfoContainer}>
+        <FlatList
+          bounces={false}
+          data={this.listGridInfo}
+          numColumns={this.listGridInfo.length / 4}
+          renderItem={this.renderGridInfoItem}
+          showsVerticalScrollIndicator={false}
+        />
       </View>
     );
   };
@@ -459,20 +669,16 @@ export default class HomeScreen extends BaseScreen {
           resizeMode: TYPE_IMAGE_RESIZE_MODE.COVER,
         }}
         source={Images.assets.home_background.source}
-        style={{
-          width: widthDevice,
-          height: heightDevice,
-          paddingTop: getStatusBarHeight() + 16,
-        }}>
-        <View style={{paddingHorizontal: 12}}>
-          <View style={{flexDirection: 'row'}}>
+        style={styles.homeImageBackground}>
+        <View style={{flex: 1}}>
+          <View style={styles.homeHeader}>
             <Text
               size={36}
               style={{color: Colors.white, flex: 1, alignSelf: 'center'}}
               medium>
               Good Morning!
             </Text>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={styles.iconsContainer}>
               <TouchablePlatform style={{padding: 8}}>
                 <SVGIcon.share width={normalize(42)} height={normalize(42)} />
               </TouchablePlatform>
@@ -485,12 +691,16 @@ export default class HomeScreen extends BaseScreen {
               </TouchablePlatform>
             </View>
           </View>
-          <Text size={38} style={{color: Colors.white, marginTop: 4}} semiBold>
+          <Text size={38} style={styles.locationText} semiBold>
             Tan Binh, Ho Chi Minh
           </Text>
-          <Text size={28} style={{color: Colors.white, marginTop: 2}}>
+          <Text size={28} style={styles.dateText}>
             Wed, March 03
           </Text>
+          <View style={styles.infoContainer}>
+            {this.renderCommonInfo()}
+            {this.renderGridInfo()}
+          </View>
         </View>
       </ImageBackground>
     );
@@ -501,6 +711,7 @@ export default class HomeScreen extends BaseScreen {
       <View style={styles.container}>
         <ScrollView
           showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.contentContainerStyle}
           style={styles.scrollContainer}>
           {this.renderHomeInformation()}
           {this.renderHourlyChart()}
@@ -519,6 +730,9 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flex: 1,
     backgroundColor: Colors.backgroundHome,
+  },
+  contentContainerStyle: {
+    paddingBottom: insets.bottom,
   },
   chartScrollView: {marginTop: 8},
   sectionContainer: {
@@ -579,4 +793,76 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  airQualityLine: {
+    width: '100%',
+    height: 1,
+    backgroundColor: Colors.border_color,
+    marginTop: 24,
+  },
+  pmCircleContainer: {
+    marginTop: 24,
+    flexDirection: 'row',
+  },
+  circleContainer: {flex: 1, alignItems: 'center'},
+  innerDashedCircle: {
+    width: normalize(130),
+    height: normalize(130),
+    borderRadius: normalize(130) / 2,
+    borderWidth: 1,
+    borderColor: Colors.border_color,
+    borderStyle: 'dashed',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  airQualityBackground: {
+    paddingVertical: 8,
+    backgroundColor: Colors.weather_red + '26',
+    marginTop: 8,
+    width: normalize(160),
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: normalize(70),
+  },
+  homeImageBackground: {
+    width: widthDevice,
+    height: heightDevice,
+    paddingTop: getStatusBarHeight() + 16,
+  },
+  homeHeader: {flexDirection: 'row', paddingHorizontal: 12},
+  iconsContainer: {flexDirection: 'row', alignItems: 'center'},
+  locationText: {color: Colors.white, marginTop: 4, paddingHorizontal: 12},
+  dateText: {color: Colors.white, marginTop: 2, paddingHorizontal: 12},
+  infoContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  commonContainer: {paddingHorizontal: 12},
+  weatherToday: {flexDirection: 'row', alignItems: 'flex-end'},
+  tempRange: {
+    flexDirection: 'row',
+    height: normalize(100),
+    marginLeft: 4,
+  },
+  partyCloud: {flexDirection: 'row', alignItems: 'center'},
+  partyCloudText: {color: Colors.white, marginLeft: 8},
+  weatherSuggest: {color: Colors.white, marginTop: 4},
+  networkStatus: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.transparent_opacity,
+    borderRadius: normalize(12),
+    padding: 4,
+    marginTop: 8,
+    borderWidth: 1,
+    borderColor: Colors.border_color_2,
+  },
+  gridInfoContainer: {
+    backgroundColor: Colors.white,
+    marginTop: 12,
+    paddingHorizontal: 12,
+    borderTopRightRadius: normalize(40),
+    borderTopLeftRadius: normalize(40),
+    overflow: 'hidden',
+  },
+  gridInfoItemDes: {flex: 1, justifyContent: 'flex-end'},
 });

@@ -49,6 +49,7 @@ class CustomText extends BaseCommon {
     if (color) {
       colorStyle.color = color;
     }
+
     return (
       <Text
         numberOfLines={numberOfLines}
@@ -66,12 +67,12 @@ class CustomText extends BaseCommon {
 }
 
 CustomText.defaultProps = {
-  size: 16,
+  size: 28,
 };
 
 const styles = StyleSheet.create({
   defaultText: {
-    color: Colors.textDefault,
+    color: Colors.white,
   },
 });
 
