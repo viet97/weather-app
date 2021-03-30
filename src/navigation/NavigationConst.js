@@ -8,6 +8,7 @@ import {
   UnitScreen,
   CustomLayoutScreen,
   MenuScreen,
+  AboutScreen,
 } from '../components/screen';
 import {AppDraw} from './router/DrawNavigator';
 import {AppTab} from './router/TabNavigator';
@@ -64,5 +65,10 @@ export const ROUTER_NAME = {
     title: 'Menu',
     name: 'MenuScreen',
     component: MenuScreen,
+  },
+  ABOUT: {
+    title: 'About',
+    name: 'AboutScreen',
+    component: AboutScreen,
   },
 };

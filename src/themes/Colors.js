@@ -30,4 +30,8 @@ export const Colors = {
   backgroundGray: '#F5F6FA',
   weather_red: '#FF4E4E',
   air_quality_text: '#404040',
+  borderRgb: 'rgba(218, 220, 227, 0.6)',
+  blackAlpha20: 'rgba(0,0,0,0.2)',
+  bgHeaderBottomModal: '#DADCE3',
+  shadowHeader: 'rgba(0,0,0,0.1)',
 };

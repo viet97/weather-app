@@ -8,15 +8,14 @@ import {
 import IconBackSvg from '../../../assets/SVGIcon/header/icon_back.svg';
 import CustomText from '../common/Text';
 import NavigationService from '../../navigation/NavigationService';
-import {KEY_FONT} from '../../themes/Fonts';
+import {Colors} from '../../themes/Colors';
 
 const paddingBottomTitle = normalize(25);
 export const Header = props => {
   return (
     <View
       style={{
-        // marginTop: STATUS_BAR_HEIGHT,
-        // marginBottom: 15,
+        position: 'absolute',
         flexDirection: 'row',
         alignItems: 'flex-end',
         justifyContent: 'space-between',
@@ -24,13 +23,12 @@ export const Header = props => {
         paddingBottom: paddingBottomTitle,
         paddingTop: normalize(109),
         width: widthDevice,
-        // height: 90,
-        shadowColor: '#000',
+        shadowColor: Colors.shadowHeader,
         shadowOffset: {width: 0, height: 1},
         shadowOpacity: 0.4,
         shadowRadius: 3,
         elevation: 5,
-        backgroundColor: '#fff',
+        backgroundColor: Colors.white,
       }}>
       <TouchableOpacity
         style={{

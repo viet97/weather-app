@@ -4,8 +4,6 @@ import BaseScreen from '../BaseScreen';
 import IconChoiceSvg from '../../../../assets/SVGIcon/view-frequency/icon_choice.svg';
 import IconNoChoiceSvg from '../../../../assets/SVGIcon/view-frequency/icon_nochoice.svg';
 import IconUpSvg from '../../../../assets/SVGIcon/view-setting/icon_up.svg';
-import IconCSvg from '../../../../assets/SVGIcon/weather-provider/icon_c.svg';
-import IconFSvg from '../../../../assets/SVGIcon/weather-provider/icon_f.svg';
 import IconSecureSvg from '../../../../assets/SVGIcon/weather-provider/icon_secure.svg';
 import BgSecureSvg from '../../../../assets/SVGIcon/weather-provider/secure_bg.svg';
 import IconWeatherSvg from '../../../../assets/SVGIcon/weather-provider/icon_weather.svg';
@@ -18,8 +16,13 @@ import CustomText from '../../common/Text';
 import {Header} from '../Header';
 import {temperatureC} from '../../../utils/Util';
 import {KEY_FONT} from '../../../themes/Fonts';
+import {Colors} from '../../../themes/Colors';
 
-const paddingHorizontalItem = 15;
+const sizeIconLeft = {
+  width: normalize(44),
+  height: normalize(44),
+};
+const paddingHorizontalItem = normalize(30);
 const distanceVerticalTxtLeft = normalize(14);
 const styles = StyleSheet.create({
   containerItem: {
@@ -27,7 +30,7 @@ const styles = StyleSheet.create({
   },
   wrapTouchItem: {
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(218, 220, 227, 0.6)',
+    borderBottomColor: Colors.borderRgb,
     paddingVertical: normalize(40),
   },
   touchItem: {
@@ -43,7 +46,7 @@ const styles = StyleSheet.create({
   },
   txtDataSource: {
     marginLeft: paddingHorizontalItem,
-    marginRight: 10,
+    marginRight: normalize(10),
   },
   txtSub: {
     marginLeft: paddingHorizontalItem,
@@ -73,6 +76,13 @@ class WeatherProviderScreen extends BaseScreen {
         temperatureValue: 37,
         temperatureSuffix: 'f',
       },
+      {
+        label: 'Accuweather.com',
+        value: 'acc',
+        sub: 'Parly sunny',
+        temperatureValue: 33,
+        temperatureSuffix: 'f',
+      },
     ];
   }
   onPressItem = item => {
@@ -93,18 +103,18 @@ class WeatherProviderScreen extends BaseScreen {
             style={styles.touchItem}>
             <View style={{flexDirection: 'row'}}>
               {value === item.value ? (
-                <IconChoiceSvg width={normalize(44)} height={normalize(44)} />
+                <IconChoiceSvg {...sizeIconLeft} />
               ) : item.isSecure ? (
-                <IconSecureSvg width={normalize(44)} height={normalize(44)} />
+                <IconSecureSvg {...sizeIconLeft} />
               ) : (
-                <IconNoChoiceSvg width={normalize(44)} height={normalize(44)} />
+                <IconNoChoiceSvg {...sizeIconLeft} />
               )}
               <View style={{}}>
                 <CustomText
                   medium
                   size={34}
                   style={styles.labelItem}
-                  color="#404040">
+                  color={Colors.air_quality_text}>
                   {item.label}
                 </CustomText>
                 {item.sub ? (
@@ -127,7 +137,7 @@ class WeatherProviderScreen extends BaseScreen {
                       marginLeft: paddingHorizontalItem,
                       flexDirection: 'row',
                       alignItems: 'center',
-                      marginTop: 10,
+                      marginTop: normalize(20),
                     }}>
                     <BgSecureSvg
                       width={normalize(129)}
@@ -152,7 +162,7 @@ class WeatherProviderScreen extends BaseScreen {
                 size={56}
                 style={{includeFontPadding: false, marginTop: -normalize(7)}}
                 thin
-                color="#404040">
+                color={Colors.air_quality_text}>
                 {item.temperatureValue}
               </CustomText>
               <CustomText
@@ -162,7 +172,7 @@ class WeatherProviderScreen extends BaseScreen {
                 }}
                 size={27}
                 light
-                color="#404040">
+                color={Colors.air_quality_text}>
                 {temperatureC}
               </CustomText>
               {/* <View

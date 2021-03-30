@@ -30,15 +30,19 @@ import NavigationService from '../../../navigation/NavigationService';
 import {ROUTER_NAME} from '../../../navigation/NavigationConst';
 import {Header} from '../Header';
 import {temperatureC} from '../../../utils/Util';
+import {Colors} from '../../../themes/Colors';
 
+const borderRadiusBig = normalize(40);
+const borderRadiusSmall = normalize(10);
 const paddingHorizontalItem = normalize(30);
+const textSizeBottom = 36;
 const styles = StyleSheet.create({
   containerItem: {
     paddingHorizontal: paddingHorizontalItem,
   },
   wrapTouchItem: {
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(218, 220, 227, 0.6)',
+    borderBottomColor: Colors.borderRgb,
     paddingVertical: normalize(35),
   },
   touchItem: {
@@ -58,6 +62,48 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: widthDevice,
+  },
+  touchBottom: {
+    paddingVertical: normalize(36),
+    width: '50%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  wrapContentModal: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  wrapTouch: {
+    width: widthDevice - normalize(20),
+    backgroundColor: Colors.white,
+    marginTop: normalize(10),
+    borderTopLeftRadius: borderRadiusSmall,
+    borderTopRightRadius: borderRadiusSmall,
+    borderBottomLeftRadius: borderRadiusBig,
+    borderBottomRightRadius: borderRadiusBig,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  wrapTopModal: {
+    width: widthDevice - normalize(20),
+    backgroundColor: '#fff',
+    borderTopLeftRadius: borderRadiusBig,
+    borderTopRightRadius: borderRadiusBig,
+    borderBottomLeftRadius: borderRadiusSmall,
+    borderBottomRightRadius: borderRadiusSmall,
+    alignItems: 'center',
+  },
+  wrapTitleModal: {
+    paddingVertical: normalize(40),
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.bgHeaderBottomModal,
+    width: '100%',
+    alignItems: 'center',
+  },
+  wrapOption: {
+    width: '100%',
+    paddingHorizontal: normalize(40),
   },
 });
 
@@ -165,7 +211,7 @@ class SettingScreen extends BaseScreen {
         txtRight: 'Version 1.2.3',
         iconRight: IconRightSvg,
         onClick: () => {},
-        key: 'units',
+        key: 'about',
         isSvg: true,
       },
       {
@@ -218,6 +264,11 @@ class SettingScreen extends BaseScreen {
           isVisibleModalTheme: false,
         });
         break;
+      case 'about':
+        NavigationService.getInstance().navigate({
+          routerName: ROUTER_NAME.ABOUT.name,
+        });
+        break;
       default:
         break;
     }
@@ -251,7 +302,7 @@ class SettingScreen extends BaseScreen {
                   size={32}
                   numberOfLines={1}
                   style={labelStyle}
-                  color="#404040">
+                  color={Colors.air_quality_text}>
                   {item.label}
                 </CustomText>
               ) : null}
@@ -320,49 +371,23 @@ class SettingScreen extends BaseScreen {
     onOk = () => {},
   }) => {
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'flex-end',
-          alignItems: 'center',
-        }}>
-        <View
-          style={{
-            width: widthDevice - normalize(20),
-            backgroundColor: '#fff',
-            borderTopLeftRadius: normalize(40),
-            borderTopRightRadius: normalize(40),
-            borderBottomLeftRadius: normalize(10),
-            borderBottomRightRadius: normalize(10),
-            alignItems: 'center',
-          }}>
-          <View
-            style={{
-              paddingVertical: normalize(40),
-              borderBottomWidth: 1,
-              borderBottomColor: '#DADCE3',
-              width: '100%',
-              alignItems: 'center',
-            }}>
-            <CustomText semiBold size={36} color="#404040">
+      <View style={styles.wrapContentModal}>
+        <View style={styles.wrapTopModal}>
+          <View style={styles.wrapTitleModal}>
+            <CustomText semiBold size={36} color={Colors.air_quality_text}>
               {title}
             </CustomText>
           </View>
           {options.map((option, idx) => {
             const IconFinal = option.isActive ? IconChoiceSvg : IconUnChoiceSvg;
+            const styleWrapTouch = {
+              borderBottomColor: Colors.borderRgb,
+              borderBottomWidth: idx === options.length - 1 ? 0 : 1,
+              paddingVertical: normalize(40),
+            };
             return (
-              <View
-                key={idx}
-                style={{
-                  width: '100%',
-                  paddingHorizontal: normalize(40),
-                }}>
-                <View
-                  style={{
-                    borderBottomColor: 'rgba(218, 220, 227, 0.6)',
-                    borderBottomWidth: idx === options.length - 1 ? 0 : 1,
-                    paddingVertical: normalize(40),
-                  }}>
+              <View key={idx} style={styles.wrapOption}>
+                <View style={styleWrapTouch}>
                   <TouchableOpacity
                     style={{
                       flexDirection: 'row',
@@ -375,11 +400,11 @@ class SettingScreen extends BaseScreen {
                         size={32}
                         medium
                         style={{marginLeft: normalize(40)}}
-                        color="#404040">
+                        color={Colors.air_quality_text}>
                         {option.label}
                       </CustomText>
                     </View>
-                    <CustomText size={32} color="#404040">
+                    <CustomText size={32} color={Colors.air_quality_text}>
                       {option.txtRight || ''}
                     </CustomText>
                   </TouchableOpacity>
@@ -388,46 +413,35 @@ class SettingScreen extends BaseScreen {
             );
           })}
         </View>
-        <View
-          style={{
-            width: widthDevice - normalize(20),
-            // height: 80,
-            backgroundColor: '#fff',
-            marginTop: 10,
-            borderTopLeftRadius: normalize(10),
-            borderTopRightRadius: normalize(10),
-            borderBottomLeftRadius: normalize(40),
-            borderBottomRightRadius: normalize(40),
-            flexDirection: 'row',
-            // justifyContent: 'space-evenly',
-            alignItems: 'center',
-          }}>
+        <View style={styles.wrapTouch}>
           <TouchableOpacity
             onPress={() => {
               onCancel && onCancel();
             }}
-            style={{
-              paddingVertical: 20,
-              width: '50%',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <CustomText size={36} color="#094FB9">
+            style={styles.touchBottom}>
+            <CustomText
+              semiBold
+              size={textSizeBottom}
+              color={Colors.viewDetail}>
               Cancel
             </CustomText>
           </TouchableOpacity>
-          <View style={{width: 1, height: 30, backgroundColor: '#E9EAEE'}} />
+          <View
+            style={{
+              width: 1,
+              height: normalize(53),
+              backgroundColor: '#E9EAEE',
+            }}
+          />
           <TouchableOpacity
             onOk={() => {
               onOk && onOk();
             }}
-            style={{
-              paddingVertical: 20,
-              width: '50%',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <CustomText size={36} color="#094FB9">
+            style={styles.touchBottom}>
+            <CustomText
+              semiBold
+              size={textSizeBottom}
+              color={Colors.viewDetail}>
               Done
             </CustomText>
           </TouchableOpacity>

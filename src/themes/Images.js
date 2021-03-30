@@ -65,6 +65,11 @@ const DEFINE_REQUIRE = {
     source: require('../../assets/images/view-menu/icon_more.png'),
     type: TYPE_IMAGE.PNG,
   },
+  bg_bottom_about: {
+    source: require('../../assets/images/view-about/bg_bottom.png'),
+    type: TYPE_IMAGE.PNG,
+    ratio: 750 / 781,
+  },
 };
 
 export const Images = {
