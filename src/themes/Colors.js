@@ -30,4 +30,9 @@ export const Colors = {
   backgroundGray: '#F5F6FA',
   weather_red: '#FF4E4E',
   air_quality_text: '#404040',
+  border_color: '#DADCE3',
+  transparent_opacity: 'rgba(0, 0, 0, 0.3)',
+  border_color_2: '#838383',
+  text_color1: '#202020',
+  border_color_3: '#E9EAEE',
 };

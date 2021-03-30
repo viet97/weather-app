@@ -6232,7 +6232,7 @@ react-native-device-info@7.1.0:
   resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-7.1.0.tgz#82610d190bf94ae5ee7ed28f693b230aba276b05"
   integrity sha512-H0fQ9fi6DNq85SUmJK8Opo8twHKXKp86FI4jL1Abg2tH6CjVbQ871QibD12ZMjKLMy4kKHL7BRxNEPUcI79JNg==
 
-react-native-draggable-flatlist@^2.5.4:
+react-native-draggable-flatlist@2.5.4:
   version "2.5.4"
   resolved "https://registry.yarnpkg.com/react-native-draggable-flatlist/-/react-native-draggable-flatlist-2.5.4.tgz#31ef421e05a7273495995d11852f5892634ad860"
   integrity sha512-ylnJFB16hTy6G4Z0b7OWJrmgVh5dvm1YvZ7jGBYtOW1tjgC//QhhRO9YhoNKFzPB32UsFsweU6RNGZTASnw0yQ==
@@ -6345,6 +6345,11 @@ react-native-popover-view@^3.1.1:
   integrity sha512-SfI9sh8t1UpzpUq0BT8WEVXvcPbww/yLh6hKGwp/5U3LEEQtP21nFjqFYGAdM/SBtuyQR6EPQE2RYnwubVcuaQ==
   dependencies:
     react-native-safe-area-view "0.14.9"
+
+react-native-progress-circle@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-progress-circle/-/react-native-progress-circle-2.1.0.tgz#62bdf31c76962d10c5c14446b61ff7d05cf0d0ec"
+  integrity sha512-VP0s92bgbTMQy4hQzPU4LlGyFj3z5u7i1HYFG8/yzXXfGkX1cxKS4xOlE+OTaObWC99w7Bodi3h8R7En2nQPYw==
 
 react-native-push-notification@^7.0.0:
   version "7.2.3"
