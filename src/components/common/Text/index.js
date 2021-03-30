@@ -10,29 +10,31 @@ class CustomText extends BaseCommon {
     super(props);
     this.state = {};
     this.displayName = 'CustomText';
-    this.fontFamily = this.getFontFamily()
+    this.fontFamily = this.getFontFamily();
   }
+
   getFontFamily = () => {
-    const {
-      semiBold,
-      light,
-      bold,
-      medium
-    } = this.props;
+    const { light, semiBold, bold, thin, medium } = this.props;
+
+    let fontFamily = KEY_FONT.regular;
+
     if (light) {
-      return KEY_FONT.light;
-    }
-    if (medium) {
-      return KEY_FONT.medium;
+      fontFamily = KEY_FONT.light;
     }
     if (semiBold) {
-      return KEY_FONT.semiBold;
+      fontFamily = KEY_FONT.semiBold;
     }
     if (bold) {
-      return KEY_FONT.bold;
+      fontFamily = KEY_FONT.bold;
     }
-    return KEY_FONT.regular;
-  }
+    if (thin) {
+      fontFamily = KEY_FONT.thin;
+    }
+    if (medium) {
+      fontFamily = KEY_FONT.medium;
+    }
+    return fontFamily;
+  };
 
   renderContent() {
     const {
@@ -54,10 +56,7 @@ class CustomText extends BaseCommon {
         style={[
           styles.defaultText,
           style,
-          {
-            fontSize: normalize(size),
-            fontFamily: this.fontFamily
-          },
+          { fontSize: normalize(size), fontFamily: this.fontFamily },
           colorStyle,
         ]}
         {...otherProps}>

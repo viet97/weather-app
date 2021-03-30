@@ -16,6 +16,7 @@ export default class LineChartCustom extends BaseElement {
     super(props);
     this.state = {};
     this.displayName = 'LineChartCustom';
+    this.pointDistance = 70;
   }
 
   getDataAssets = () => {
@@ -52,7 +53,8 @@ export default class LineChartCustom extends BaseElement {
               ],
               dataValue: data,
             }}
-            width={chartWidth} // from react-native
+            pointDistance={this.pointDistance}
+            width={size(data) * this.pointDistance} // from react-native
             height={chartHeight}
             chartConfig={{
               decimalPlaces: 2, // optional, defaults to 2dp
@@ -69,8 +71,8 @@ export default class LineChartCustom extends BaseElement {
             style={style}
             withHorizontalLabels={false}
             withVerticalLabels={false}
-            renderBottomLabel={({values, percentage}) => {
-              renderBottomLabel && renderBottomLabel({values, percentage});
+            renderBottomLabel={({index}) => {
+              return renderBottomLabel && renderBottomLabel({index});
             }}
           />
         </ScrollView>

@@ -1,5 +1,5 @@
 import RNFS from 'react-native-fs';
-import { Platform } from 'react-native';
+import {Platform} from 'react-native';
 import replace from 'lodash/replace';
 
 const getImageAssets = (name = '', extendName = '') => {
@@ -42,13 +42,36 @@ const DEFINE_REQUIRE = {
     source: require('../../assets/images/ic_close.png'),
     type: TYPE_IMAGE.PNG,
   },
+  setting_header_image: {
+    source: require('../../assets/images/view-setting/header_image.png'),
+    type: TYPE_IMAGE.PNG,
+    ratio: 750 / 341,
+  },
+  setting_header_bg: {
+    source: require('../../assets/images/view-setting/header_bg.png'),
+    type: TYPE_IMAGE.PNG,
+    ratio: 750 / 341,
+  },
+  home_background: {
+    source: require('../../assets/images/home_background.png'),
+    type: TYPE_IMAGE.PNG,
+  },
+  bg_menu: {
+    source: require('../../assets/images/view-menu/menu-bg.png'),
+    type: TYPE_IMAGE.PNG,
+    ratio: 543 / 271.5,
+  },
+  icon_more_menu: {
+    source: require('../../assets/images/view-menu/icon_more.png'),
+    type: TYPE_IMAGE.PNG,
+  },
 };
 
 export const Images = {
   assets: {
     ...DEFINE_REQUIRE,
   },
-  init: function (cb = () => { }) {
+  init: function (cb = () => {}) {
     const pathAssets =
       Platform.OS === 'ios'
         ? RNFS.DocumentDirectoryPath + '/assets/'

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="56" height="56" viewBox="0 0 56 56">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#bbc4e2"/>
+      <stop offset="1" stop-color="#6a80aa"/>
+    </linearGradient>
+  </defs>
+  <g id="Group_1077" data-name="Group 1077" transform="translate(-30 -1389)">
+    <rect id="Rectangle_804" data-name="Rectangle 804" width="56" height="56" rx="18" transform="translate(30 1389)" opacity="0.9" fill="url(#linear-gradient)"/>
+    <path id="Customize" d="M36.929,32.643H22.848a4.265,4.265,0,0,0-8.267,0H9.071a1.071,1.071,0,0,0,0,2.143h5.509a4.265,4.265,0,0,0,8.267,0H36.929a1.071,1.071,0,0,0,0-2.143ZM18.714,35.857a2.143,2.143,0,1,1,2.143-2.143A2.145,2.145,0,0,1,18.714,35.857ZM36.929,21.929H31.419a4.265,4.265,0,0,0-8.267,0H9.071a1.071,1.071,0,0,0,0,2.143H23.152a4.265,4.265,0,0,0,8.267,0h5.509a1.071,1.071,0,0,0,0-2.143Zm-9.643,3.214A2.143,2.143,0,1,1,29.429,23,2.145,2.145,0,0,1,27.286,25.143ZM9.071,13.357h5.509a4.265,4.265,0,0,0,8.267,0H36.929a1.071,1.071,0,0,0,0-2.143H22.848a4.265,4.265,0,0,0-8.267,0H9.071a1.071,1.071,0,0,0,0,2.143Zm9.643-3.214a2.143,2.143,0,1,1-2.143,2.143A2.145,2.145,0,0,1,18.714,10.143Z" transform="translate(35.5 1394.5)" fill="#fff" stroke="#fff" stroke-width="0.6"/>
+  </g>
+</svg>

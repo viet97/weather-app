@@ -6232,6 +6232,11 @@ react-native-device-info@7.1.0:
   resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-7.1.0.tgz#82610d190bf94ae5ee7ed28f693b230aba276b05"
   integrity sha512-H0fQ9fi6DNq85SUmJK8Opo8twHKXKp86FI4jL1Abg2tH6CjVbQ871QibD12ZMjKLMy4kKHL7BRxNEPUcI79JNg==
 
+react-native-draggable-flatlist@^2.5.4:
+  version "2.5.4"
+  resolved "https://registry.yarnpkg.com/react-native-draggable-flatlist/-/react-native-draggable-flatlist-2.5.4.tgz#31ef421e05a7273495995d11852f5892634ad860"
+  integrity sha512-ylnJFB16hTy6G4Z0b7OWJrmgVh5dvm1YvZ7jGBYtOW1tjgC//QhhRO9YhoNKFzPB32UsFsweU6RNGZTASnw0yQ==
+
 react-native-exit-app@1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/react-native-exit-app/-/react-native-exit-app-1.1.0.tgz#5ec082152974240e2d6a93f1608efb49a4385f21"

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {ROUTER_NAME} from '../NavigationConst';
-import {IS_ANDROID} from '../../utils/DeviceUtil';
 
 const Stack = createStackNavigator();
 
@@ -17,9 +16,10 @@ const AppStack = () => {
         animationEnabled: true,
         gestureDirection: 'horizontal',
       }}
-      initialRouteName={ROUTER_NAME.APP_TAB.name}>
+      initialRouteName={ROUTER_NAME.HOME.name}>
       {Object.values(ROUTER_NAME).map(screen => {
-          return <Stack.Screen key={screen.name} {...screen} />;
+        if (screen.isNoStack) return;
+        return <Stack.Screen key={screen.name} {...screen} />;
       })}
     </Stack.Navigator>
   );
