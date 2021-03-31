@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="140" height="140" viewBox="0 0 140 140">
+  <path id="Rectangle_503" data-name="Rectangle 503" d="M20,0H140a0,0,0,0,1,0,0V140a0,0,0,0,1,0,0H20A20,20,0,0,1,0,120V20A20,20,0,0,1,20,0Z" fill="#4f596c"/>
+  <g id="hospital" transform="translate(40 40)" opacity="0.7">
+    <g id="Group_554" data-name="Group 554" transform="translate(24.727 7.266)">
+      <g id="Group_553" data-name="Group 553">
+        <path id="Path_3695" data-name="Path 3695" d="M219.789,65.516h-1.758V63.758a1.758,1.758,0,1,0-3.516,0v1.758h-1.758a1.758,1.758,0,0,0,0,3.516h1.758v1.758a1.758,1.758,0,0,0,3.516,0V69.031h1.758a1.758,1.758,0,1,0,0-3.516Z" transform="translate(-211 -62)" fill="#fff"/>
+      </g>
+    </g>
+    <g id="Group_556" data-name="Group 556" transform="translate(0 24.844)">
+      <g id="Group_555" data-name="Group 555">
+        <path id="Path_3696" data-name="Path 3696" d="M5.273,215.516H7.031V212H5.273A5.279,5.279,0,0,0,0,217.273V245.4a1.757,1.757,0,0,0,1.758,1.758H7.031V233.094H3.516v-3.516H7.031v-3.516H3.516v-3.516H7.031v-3.516H3.516v-1.758A1.76,1.76,0,0,1,5.273,215.516Z" transform="translate(0 -212)" fill="#fff"/>
+      </g>
+    </g>
+    <g id="Group_558" data-name="Group 558" transform="translate(52.969 24.844)">
+      <g id="Group_557" data-name="Group 557">
+        <path id="Path_3697" data-name="Path 3697" d="M453.758,212H452v3.516h1.758a1.76,1.76,0,0,1,1.758,1.758v1.758H452v3.516h3.516v3.516H452v3.516h3.516v3.516H452v14.063h5.273a1.757,1.757,0,0,0,1.758-1.758V217.273A5.279,5.279,0,0,0,453.758,212Z" transform="translate(-452 -212)" fill="#fff"/>
+      </g>
+    </g>
+    <g id="Group_560" data-name="Group 560" transform="translate(10.547)">
+      <g id="Group_559" data-name="Group 559">
+        <path id="Path_3698" data-name="Path 3698" d="M123.633,7.266h-1.875V1.758A1.757,1.757,0,0,0,120,0H98.906a1.757,1.757,0,0,0-1.758,1.758V7.266H95.273A5.279,5.279,0,0,0,90,12.539V60h14.18V52.969h10.547V60h14.18V12.539A5.279,5.279,0,0,0,123.633,7.266ZM107.7,42.422h-7.031V38.906H107.7Zm0-7.031h-7.031V31.875H107.7Zm0-7.031h-7.031V24.844H107.7Zm10.547,14.062h-7.031V38.906h7.031Zm0-7.031h-7.031V31.875h7.031Zm0-7.031h-7.031V24.844h7.031Zm0-19.336v12.3H100.664V3.516h17.578Z" transform="translate(-90 0)" fill="#fff"/>
+      </g>
+    </g>
+  </g>
+</svg>
