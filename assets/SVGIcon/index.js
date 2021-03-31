@@ -16,6 +16,7 @@ import temp from './temp.svg';
 import uv_index from './uv_index.svg';
 import visibility from './visibility.svg';
 import wind from './wind.svg';
+import sun from './sun.svg';
 
 export default {
   header_left,
@@ -36,4 +37,5 @@ export default {
   uv_index,
   visibility,
   wind,
+  sun
 };

@@ -1,8 +1,8 @@
-import {size} from 'lodash';
+import { size } from 'lodash';
 import React from 'react';
-import {ScrollView, View} from 'react-native';
-import {Colors} from '../../../themes/Colors';
-import {Text} from '../../common';
+import { ScrollView, View } from 'react-native';
+import { Colors } from '../../../themes/Colors';
+import { Text } from '../../common';
 import BaseElement from '../BaseElement';
 
 export default class BarChartCustom extends BaseElement {
@@ -15,7 +15,7 @@ export default class BarChartCustom extends BaseElement {
   }
 
   getDataPercentage = () => {
-    const {data} = this.props;
+    const { data } = this.props;
     if (size(data) === 0) return data;
     const maxValue = Math.max(...data);
     this._debugLog('getDataPercentage', data);
@@ -37,7 +37,7 @@ export default class BarChartCustom extends BaseElement {
           horizontal
           bounces={false}
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{paddingHorizontal: 8}}>
+          contentContainerStyle={contentContainerStyle}>
           {this.getDataPercentage().map((it, index) => {
             return (
               <View>
@@ -51,9 +51,9 @@ export default class BarChartCustom extends BaseElement {
                     overflow: 'hidden',
                   }}>
                   {renderContentBar &&
-                    renderContentBar({value: data[index], ratio: it})}
+                    renderContentBar({ value: data[index], ratio: it })}
                 </View>
-                {renderBottomLabel && renderBottomLabel({index})}
+                {renderBottomLabel && renderBottomLabel({ index })}
               </View>
             );
           })}
