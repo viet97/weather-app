@@ -35,4 +35,7 @@ export const Colors = {
   border_color_2: '#838383',
   text_color1: '#202020',
   border_color_3: '#E9EAEE',
+  border_color_4: '#C8CAD1',
+  sun_rise: '#FADA81',
+  sun_set: '#FDF8EB',
 };
