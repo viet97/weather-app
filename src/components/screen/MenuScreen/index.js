@@ -14,6 +14,7 @@ import CustomText from '../../common/Text';
 import {TouchablePlatform} from '../../../modules/TouchablePlatform';
 import NavigationService from '../../../navigation/NavigationService';
 import {ROUTER_NAME} from '../../../navigation/NavigationConst';
+import {Colors} from '../../../themes/Colors';
 
 export default class MenuScreen extends BaseScreen {
   constructor(props) {
@@ -47,7 +48,7 @@ export default class MenuScreen extends BaseScreen {
             height: normalize(271.5),
             top: 0,
             left: normalize(9),
-            backgroundColor: 'rgb(0,0,0,0.2)',
+            backgroundColor: Colors.blackAlpha20,
           }}
         />
         <View
@@ -67,7 +68,7 @@ export default class MenuScreen extends BaseScreen {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <CustomText numberOfLines={1} color="#fff" size={36}>
+            <CustomText numberOfLines={1} color={Colors.white} size={36}>
               {item.label}
             </CustomText>
             <TouchablePlatform>
@@ -87,7 +88,7 @@ export default class MenuScreen extends BaseScreen {
               alignItems: 'center',
             }}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <CustomText color={'#fff'} size={80}>
+              <CustomText color={Colors.white} size={80}>
                 {item.temperature}
               </CustomText>
               <IconTempCSvg width={normalize(42)} height={normalize(33)} />
@@ -126,9 +127,8 @@ export default class MenuScreen extends BaseScreen {
           </View>
           <TouchablePlatform
             onPress={() => {
-              NavigationService.getInstance().drawerNavigate({
-                routerName: 'Stack',
-                screenName: ROUTER_NAME.SETTING.name,
+              NavigationService.getInstance().navigate({
+                routerName: ROUTER_NAME.SETTING.name,
               });
             }}>
             <IconSettingSvg width={normalize(64)} height={normalize(64)} />

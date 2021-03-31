@@ -10,6 +10,7 @@ import {
 } from '../../../utils/DeviceUtil';
 import CustomText from '../../common/Text';
 import {Header} from '../Header';
+import {Colors} from '../../../themes/Colors';
 
 const paddingHorizontalItem = normalize(30);
 const styles = StyleSheet.create({
@@ -18,7 +19,7 @@ const styles = StyleSheet.create({
   },
   wrapTouchItem: {
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(218, 220, 227, 0.6)',
+    borderBottomColor: Colors.borderRgb,
     paddingVertical: normalize(41),
   },
   touchItem: {
@@ -30,23 +31,48 @@ const styles = StyleSheet.create({
   },
 });
 export const ItemListSetting = props => {
-  const {onPressItem = () => {}, item, value} = props;
+  const {
+    onPressItem = () => {},
+    item,
+    value,
+    iconLeft = null,
+    iconRight = null,
+    customStyle = {},
+    txtRight = '',
+    noBorder = false,
+  } = props;
   return (
-    <View style={styles.containerItem}>
-      <View style={styles.wrapTouchItem}>
+    <View style={[styles.containerItem, customStyle]}>
+      <View
+        style={[styles.wrapTouchItem, noBorder ? {borderBottomWidth: 0} : {}]}>
         <TouchableOpacity
           onPress={() => {
             onPressItem(item);
           }}
-          style={styles.touchItem}>
-          {value === item.value ? (
-            <IconChoiceSvg width={normalize(44)} height={normalize(44)} />
-          ) : (
-            <IconNoChoiceSvg width={normalize(44)} height={normalize(44)} />
-          )}
-          <CustomText size={32} style={styles.labelItem} color="#404040">
-            {item.label}
-          </CustomText>
+          style={[
+            styles.touchItem,
+            iconRight ? {justifyContent: 'space-between'} : {},
+          ]}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            {iconLeft ? (
+              iconLeft
+            ) : value === item.value ? (
+              <IconChoiceSvg width={normalize(44)} height={normalize(44)} />
+            ) : (
+              <IconNoChoiceSvg width={normalize(44)} height={normalize(44)} />
+            )}
+            <CustomText
+              medium
+              size={32}
+              style={styles.labelItem}
+              color={Colors.air_quality_text}>
+              {item.label}
+            </CustomText>
+          </View>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            {txtRight ? txtRight : null}
+            {iconRight ? iconRight : null}
+          </View>
         </TouchableOpacity>
       </View>
     </View>
@@ -98,7 +124,7 @@ class LanguageScreen extends BaseScreen {
     return (
       <View
         style={{
-          backgroundColor: '#FFFFFF',
+          backgroundColor: Colors.white,
           flex: 1,
           width: widthDevice,
         }}>

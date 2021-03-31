@@ -18,6 +18,7 @@ import IconStarSvg from '../../../../assets/SVGIcon/view-setting/icon_star.svg';
 import IconUpSvg from '../../../../assets/SVGIcon/view-setting/icon_up.svg';
 import IconChoiceSvg from '../../../../assets/SVGIcon/view-frequency/icon_choice.svg';
 import IconUnChoiceSvg from '../../../../assets/SVGIcon/view-frequency/icon_nochoice.svg';
+import IconHeaderBackSvg from '../../../../assets/SVGIcon/view-setting/icon_header_back.svg';
 import {
   normalize,
   STATUS_BAR_HEIGHT,
@@ -29,15 +30,22 @@ import CustomText from '../../common/Text';
 import NavigationService from '../../../navigation/NavigationService';
 import {ROUTER_NAME} from '../../../navigation/NavigationConst';
 import {Header} from '../Header';
+import {temperatureC} from '../../../utils/Util';
+import {Colors} from '../../../themes/Colors';
+import {TouchablePlatform} from '../../../modules/TouchablePlatform';
 
+const borderRadiusBig = normalize(40);
+const borderRadiusSmall = normalize(10);
 const paddingHorizontalItem = normalize(30);
+const paddingTopHeader = normalize(105);
+const textSizeBottom = 36;
 const styles = StyleSheet.create({
   containerItem: {
     paddingHorizontal: paddingHorizontalItem,
   },
   wrapTouchItem: {
     borderBottomWidth: 1,
-    borderBottomColor: '#DADCE3',
+    borderBottomColor: Colors.borderRgb,
     paddingVertical: normalize(35),
   },
   touchItem: {
@@ -55,8 +63,53 @@ const styles = StyleSheet.create({
   wrapTextHeader: {
     position: 'absolute',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     width: widthDevice,
+    flexDirection: 'row',
+    paddingTop: paddingTopHeader,
+    // paddingLeft: normalize(30),
+  },
+  touchBottom: {
+    paddingVertical: normalize(36),
+    width: '50%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  wrapContentModal: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  wrapTouch: {
+    width: widthDevice - normalize(20),
+    backgroundColor: Colors.white,
+    marginTop: normalize(10),
+    borderTopLeftRadius: borderRadiusSmall,
+    borderTopRightRadius: borderRadiusSmall,
+    borderBottomLeftRadius: borderRadiusBig,
+    borderBottomRightRadius: borderRadiusBig,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  wrapTopModal: {
+    width: widthDevice - normalize(20),
+    backgroundColor: '#fff',
+    borderTopLeftRadius: borderRadiusBig,
+    borderTopRightRadius: borderRadiusBig,
+    borderBottomLeftRadius: borderRadiusSmall,
+    borderBottomRightRadius: borderRadiusSmall,
+    alignItems: 'center',
+  },
+  wrapTitleModal: {
+    paddingVertical: normalize(40),
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.bgHeaderBottomModal,
+    width: '100%',
+    alignItems: 'center',
+  },
+  wrapOption: {
+    width: '100%',
+    paddingHorizontal: normalize(40),
   },
 });
 
@@ -71,7 +124,7 @@ class SettingScreen extends BaseScreen {
       {
         label: 'Units',
         iconLeft: IconUnitSvg,
-        txtRight: 'oC, mm, cm, km, m/s, hPa',
+        txtRight: temperatureC + ', mm, cm, km, m/s, hPa',
         iconRight: IconRightSvg,
         onClick: () => {},
         key: 'units',
@@ -164,7 +217,7 @@ class SettingScreen extends BaseScreen {
         txtRight: 'Version 1.2.3',
         iconRight: IconRightSvg,
         onClick: () => {},
-        key: 'units',
+        key: 'about',
         isSvg: true,
       },
       {
@@ -217,6 +270,16 @@ class SettingScreen extends BaseScreen {
           isVisibleModalTheme: false,
         });
         break;
+      case 'about':
+        NavigationService.getInstance().navigate({
+          routerName: ROUTER_NAME.ABOUT.name,
+        });
+        break;
+      case 'noti':
+        NavigationService.getInstance().navigate({
+          routerName: ROUTER_NAME.Notification.name,
+        });
+        break;
       default:
         break;
     }
@@ -250,7 +313,7 @@ class SettingScreen extends BaseScreen {
                   size={32}
                   numberOfLines={1}
                   style={labelStyle}
-                  color="#404040">
+                  color={Colors.air_quality_text}>
                   {item.label}
                 </CustomText>
               ) : null}
@@ -300,14 +363,37 @@ class SettingScreen extends BaseScreen {
           resizeMode={TYPE_IMAGE_RESIZE_MODE.COVER}
         />
         <View style={styles.wrapTextHeader}>
-          <CustomText
-            color="#fff"
-            size={36}
-            style={{
-              marginTop: normalize(105),
+          <TouchablePlatform
+            style={{marginLeft: normalize(30)}}
+            onPress={() => {
+              NavigationService.getInstance().goBack();
             }}>
-            Settings
-          </CustomText>
+            <IconHeaderBackSvg
+              width={normalize(18.36)}
+              height={normalize(34)}
+            />
+          </TouchablePlatform>
+          <View
+            style={{
+              width: widthDevice,
+              justifyContent: 'center',
+              alignItems: 'center',
+              position: 'absolute',
+              top: paddingTopHeader,
+            }}>
+            <CustomText
+              style={
+                {
+                  // marginLeft: -normalize(60),
+                }
+              }
+              color="#fff"
+              semiBold
+              size={36}>
+              Settings
+            </CustomText>
+          </View>
+          <View />
         </View>
       </View>
     );
@@ -319,47 +405,23 @@ class SettingScreen extends BaseScreen {
     onOk = () => {},
   }) => {
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'flex-end',
-          alignItems: 'center',
-        }}>
-        <View
-          style={{
-            width: widthDevice - 20,
-            backgroundColor: '#fff',
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
-            borderBottomLeftRadius: 8,
-            borderBottomRightRadius: 8,
-            alignItems: 'center',
-          }}>
-          <View
-            style={{
-              paddingVertical: 20,
-              borderBottomWidth: 1,
-              borderBottomColor: '#DADCE3',
-              width: '100%',
-              alignItems: 'center',
-            }}>
-            <CustomText color="#404040">{title}</CustomText>
+      <View style={styles.wrapContentModal}>
+        <View style={styles.wrapTopModal}>
+          <View style={styles.wrapTitleModal}>
+            <CustomText semiBold size={36} color={Colors.air_quality_text}>
+              {title}
+            </CustomText>
           </View>
           {options.map((option, idx) => {
             const IconFinal = option.isActive ? IconChoiceSvg : IconUnChoiceSvg;
+            const styleWrapTouch = {
+              borderBottomColor: Colors.borderRgb,
+              borderBottomWidth: idx === options.length - 1 ? 0 : 1,
+              paddingVertical: normalize(40),
+            };
             return (
-              <View
-                key={idx}
-                style={{
-                  width: '100%',
-                  paddingHorizontal: 15,
-                }}>
-                <View
-                  style={{
-                    borderBottomColor: 'rgba(218, 220, 227, 0.6)',
-                    borderBottomWidth: idx === options.length - 1 ? 0 : 1,
-                    paddingVertical: 20,
-                  }}>
+              <View key={idx} style={styles.wrapOption}>
+                <View style={styleWrapTouch}>
                   <TouchableOpacity
                     style={{
                       flexDirection: 'row',
@@ -367,14 +429,16 @@ class SettingScreen extends BaseScreen {
                       justifyContent: 'space-between',
                     }}>
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      <IconFinal width={25} height={25} />
+                      <IconFinal width={normalize(40)} height={normalize(40)} />
                       <CustomText
-                        style={{marginLeft: 15, fontWeight: 'bold'}}
-                        color="#404040">
+                        size={32}
+                        medium
+                        style={{marginLeft: normalize(40)}}
+                        color={Colors.air_quality_text}>
                         {option.label}
                       </CustomText>
                     </View>
-                    <CustomText color="#404040">
+                    <CustomText size={32} color={Colors.air_quality_text}>
                       {option.txtRight || ''}
                     </CustomText>
                   </TouchableOpacity>
@@ -383,44 +447,37 @@ class SettingScreen extends BaseScreen {
             );
           })}
         </View>
-        <View
-          style={{
-            width: widthDevice - 20,
-            // height: 80,
-            backgroundColor: '#fff',
-            marginTop: 10,
-            borderTopLeftRadius: 8,
-            borderTopRightRadius: 8,
-            borderBottomLeftRadius: 20,
-            borderBottomRightRadius: 20,
-            flexDirection: 'row',
-            // justifyContent: 'space-evenly',
-            alignItems: 'center',
-          }}>
+        <View style={styles.wrapTouch}>
           <TouchableOpacity
             onPress={() => {
               onCancel && onCancel();
             }}
-            style={{
-              paddingVertical: 20,
-              width: '50%',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <CustomText color="#094FB9">Cancel</CustomText>
+            style={styles.touchBottom}>
+            <CustomText
+              semiBold
+              size={textSizeBottom}
+              color={Colors.viewDetail}>
+              Cancel
+            </CustomText>
           </TouchableOpacity>
-          <View style={{width: 1, height: 30, backgroundColor: '#E9EAEE'}} />
+          <View
+            style={{
+              width: 1,
+              height: normalize(53),
+              backgroundColor: '#E9EAEE',
+            }}
+          />
           <TouchableOpacity
             onOk={() => {
               onOk && onOk();
             }}
-            style={{
-              paddingVertical: 20,
-              width: '50%',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <CustomText color="#094FB9">Done</CustomText>
+            style={styles.touchBottom}>
+            <CustomText
+              semiBold
+              size={textSizeBottom}
+              color={Colors.viewDetail}>
+              Done
+            </CustomText>
           </TouchableOpacity>
         </View>
       </View>
@@ -433,7 +490,6 @@ class SettingScreen extends BaseScreen {
         style={{
           backgroundColor: '#FFFFFF',
           flex: 1,
-          marginTop: STATUS_BAR_HEIGHT,
         }}>
         <FlatList
           stickyHeaderIndices={[0]}

@@ -119,7 +119,7 @@ export const nowCustom = () => {
   return Date.now();
 };
 
-export const sortObjectByKey = (unordered) => {
+export const sortObjectByKey = unordered => {
   const ordered = {};
   Object.keys(unordered)
     .sort()
@@ -129,7 +129,7 @@ export const sortObjectByKey = (unordered) => {
   return ordered;
 };
 
-export const createSignature = (obj) => {
+export const createSignature = obj => {
   return md5(Object.values(obj).join('$') + '$#123Ag');
 };
 
@@ -159,7 +159,7 @@ export const checkNetwork = (
   const networkModule = require('../modules/NetworkStateModule').NetworkModule;
   if (!networkModule.isConnected) {
     if (isShowPopup) {
-      //show popup  
+      //show popup
     } else if (isShowToast) {
       //show toast
     }
@@ -179,7 +179,7 @@ export const checkDiffTwoObject = (obj1 = {}, obj2 = {}) => {
     if (Object.keys(obj1).length !== Object.keys(obj2).length) {
       return true;
     } else {
-      Object.keys(obj1).map((key) => {
+      Object.keys(obj1).map(key => {
         if (
           typeof obj1[key] === 'string' &&
           typeof obj1[key] === typeof obj2[key] &&
@@ -206,7 +206,7 @@ export const addQueryToUrl = (url, query = {}) => {
   let urlReturn = url;
   if (url && typeof url === 'string') {
     if (url.indexOf('?') !== -1) {
-      Object.keys(query).map((keyQ) => {
+      Object.keys(query).map(keyQ => {
         if (keyQ && query[keyQ]) {
           urlReturn += `&${keyQ}=${query[keyQ]}`;
         }
@@ -223,6 +223,9 @@ export const addQueryToUrl = (url, query = {}) => {
   }
   return urlReturn;
 };
+
+export const temperatureC = '°C';
+export const temperatureF = '°F';
 
 const Util = {
   getStateForKeys,

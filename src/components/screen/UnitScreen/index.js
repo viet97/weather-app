@@ -17,6 +17,8 @@ import {
 } from '../../../utils/DeviceUtil';
 import CustomText from '../../common/Text';
 import {Header} from '../Header';
+import {temperatureC, temperatureF} from '../../../utils/Util';
+import {Colors} from '../../../themes/Colors';
 
 const borderRadiusBtn = normalize(16);
 const paddingHorizontalItem = normalize(30);
@@ -25,7 +27,7 @@ const styles = StyleSheet.create({
     paddingLeft: paddingHorizontalItem,
   },
   wrapTouchItem: {
-    paddingTop: normalize(35),
+    paddingTop: normalize(45),
     flexDirection: 'row',
   },
   touchItem: {
@@ -61,12 +63,12 @@ class UnitScreen extends BaseScreen {
         },
         buttons: [
           {
-            label: '℃',
+            label: temperatureC,
             icon: IconCSvg,
             value: 'c',
           },
           {
-            label: '℉',
+            label: temperatureF,
             icon: IconFSvg,
             value: 'f',
           },
@@ -179,13 +181,13 @@ class UnitScreen extends BaseScreen {
     return (
       <View key={index} style={styles.containerItem}>
         <View style={styles.wrapTouchItem}>
-          <View style={{marginTop: 2}}>
+          <View style={{marginTop: 0}}>
             <IconLeft {...item.iconSize} />
           </View>
           <View
             style={{
               marginLeft: paddingHorizontalItem,
-              paddingBottom: normalize(50),
+              paddingBottom: normalize(45),
               borderBottomWidth: 1,
               borderBottomColor: 'rgba(218, 220, 227, 0.5)',
               flex: 1,
@@ -195,7 +197,7 @@ class UnitScreen extends BaseScreen {
                 includeFontPadding={true}
                 size={32}
                 style={styles.labelItem}
-                color="#404040">
+                color={Colors.air_quality_text}>
                 {item.label}
               </CustomText>
               <View style={{flexDirection: 'row'}}>
@@ -229,8 +231,12 @@ class UnitScreen extends BaseScreen {
                           index === item.buttons.length - 1
                             ? borderRadiusBtn
                             : 0,
-                        borderColor: isChoiced ? '#094FB9' : '#DADCE3',
-                        backgroundColor: isChoiced ? '#094FB9' : '#F5F6FA',
+                        borderColor: isChoiced
+                          ? Colors.viewDetail
+                          : Colors.bgHeaderBottomModal,
+                        backgroundColor: isChoiced
+                          ? Colors.viewDetail
+                          : Colors.backgroundGray,
                         width: normalize(120) + normalize(34),
                         height: normalize(74) + normalize(34),
                         // padding: normalize(34),
@@ -240,7 +246,7 @@ class UnitScreen extends BaseScreen {
                       key={index}>
                       <CustomText
                         size={32}
-                        color={isChoiced ? '#ffffff' : '#808080'}>
+                        color={isChoiced ? Colors.white : Colors.textTitle}>
                         {btn.label}
                       </CustomText>
                     </TouchableOpacity>

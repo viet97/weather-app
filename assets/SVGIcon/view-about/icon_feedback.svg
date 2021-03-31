@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="56" height="56" viewBox="0 0 56 56">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#bbc4e2"/>
+      <stop offset="1" stop-color="#6a80aa"/>
+    </linearGradient>
+  </defs>
+  <rect id="Rectangle_814" data-name="Rectangle 814" width="56" height="56" rx="18" opacity="0.9" fill="url(#linear-gradient)"/>
+  <g id="Group_1107" data-name="Group 1107" transform="translate(12 -1)">
+    <g id="Group_1104" data-name="Group 1104" transform="translate(0 16)">
+      <g id="Group_1103" data-name="Group 1103">
+        <path id="Path_3922" data-name="Path 3922" d="M29.188,16H2.813A2.816,2.816,0,0,0,0,18.813v18.75a2.816,2.816,0,0,0,2.813,2.813H5.688v4.688a.938.938,0,0,0,1.6.663l5.35-5.35H29.188A2.816,2.816,0,0,0,32,37.563V18.813A2.816,2.816,0,0,0,29.188,16Zm.938,21.563a.939.939,0,0,1-.937.938H12.25a.937.937,0,0,0-.663.275L7.563,42.8V39.438a.938.938,0,0,0-.937-.937H2.813a.939.939,0,0,1-.937-.937V18.813a.939.939,0,0,1,.938-.937H29.188a.939.939,0,0,1,.938.938Z" transform="translate(0 -16)" fill="#fff" stroke="#fff" stroke-width="0.6"/>
+      </g>
+    </g>
+    <g id="Group_1106" data-name="Group 1106" transform="translate(8.5 21.692)">
+      <g id="Group_1105" data-name="Group 1105">
+        <path id="Path_3923" data-name="Path 3923" d="M149.847,108.422a4.07,4.07,0,0,0-3.066-1.356,4,4,0,0,0-3.281,1.721,4,4,0,0,0-3.281-1.721,4.28,4.28,0,0,0-4.219,4.46,5.51,5.51,0,0,0,1.551,3.673,55.151,55.151,0,0,0,5.339,4.766.938.938,0,0,0,1.22,0,55.17,55.17,0,0,0,5.339-4.766A5.51,5.51,0,0,0,151,111.526,4.619,4.619,0,0,0,149.847,108.422ZM144.6,117.1c-.357.3-.723.6-1.1.924-.379-.32-.745-.625-1.1-.924-2.821-2.354-4.523-3.776-4.523-5.573a2.419,2.419,0,0,1,2.344-2.585c1.738,0,2.353,2.039,2.38,2.132a.937.937,0,0,0,1.8,0c.006-.021.616-2.128,2.379-2.128a2.419,2.419,0,0,1,2.344,2.585C149.125,113.323,147.423,114.745,144.6,117.1Z" transform="translate(-136 -107.066)" fill="#fff" stroke="#fff" stroke-width="0.6"/>
+      </g>
+    </g>
+  </g>
+</svg>

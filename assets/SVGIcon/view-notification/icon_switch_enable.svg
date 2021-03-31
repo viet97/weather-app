@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="70.002" height="40.86" viewBox="0 0 70.002 40.86">
+  <defs>
+    <clipPath id="clip-path">
+      <rect x="-1" y="21" width="70.002" height="40.86" fill="none"/>
+    </clipPath>
+    <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#00a6f9"/>
+      <stop offset="1" stop-color="#0071e2"/>
+    </linearGradient>
+    <filter id="Path_3889" x="5.143" y="-21" width="86.86" height="86.86" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feFlood flood-opacity="0.259"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Scroll_Group_1" data-name="Scroll Group 1" transform="translate(1 -21)" clip-path="url(#clip-path)" style="isolation: isolate">
+    <g id="Group_883" data-name="Group 883" transform="translate(0 20.429)">
+      <path id="Path_3888" data-name="Path 3888" d="M0,20A20.024,20.024,0,0,0,20,40H48.571a20,20,0,0,0,0-40H20A20.024,20.024,0,0,0,0,20Zm0,0" fill="url(#linear-gradient)"/>
+      <g transform="matrix(1, 0, 0, 1, -1, 0.57)" filter="url(#Path_3889)">
+        <path id="Path_3889-2" data-name="Path 3889" d="M304.192,77.43A13.43,13.43,0,1,1,290.762,64,13.43,13.43,0,0,1,304.192,77.43Zm0,0" transform="translate(-242.19 -58)" fill="#fff"/>
+      </g>
+    </g>
+  </g>
+</svg>
