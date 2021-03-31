@@ -37,10 +37,14 @@ export const ItemListSetting = props => {
     value,
     iconLeft = null,
     iconRight = null,
+    customStyle = {},
+    txtRight = '',
+    noBorder = false,
   } = props;
   return (
-    <View style={styles.containerItem}>
-      <View style={styles.wrapTouchItem}>
+    <View style={[styles.containerItem, customStyle]}>
+      <View
+        style={[styles.wrapTouchItem, noBorder ? {borderBottomWidth: 0} : {}]}>
         <TouchableOpacity
           onPress={() => {
             onPressItem(item);
@@ -65,7 +69,10 @@ export const ItemListSetting = props => {
               {item.label}
             </CustomText>
           </View>
-          {iconRight ? iconRight : null}
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            {txtRight ? txtRight : null}
+            {iconRight ? iconRight : null}
+          </View>
         </TouchableOpacity>
       </View>
     </View>

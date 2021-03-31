@@ -8,6 +8,7 @@ import UnitScreen from './UnitScreen';
 import CustomLayoutScreen from './CustomLayoutScreen';
 import MenuScreen from './MenuScreen';
 import AboutScreen from './AboutScreen';
+import NotificationScreen from './NotificationScreen';
 
 export {
   HomeScreen,
@@ -20,4 +21,5 @@ export {
   CustomLayoutScreen,
   MenuScreen,
   AboutScreen,
+  NotificationScreen,
 };

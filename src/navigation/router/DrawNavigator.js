@@ -20,11 +20,11 @@ export const AppDraw = () => {
       edgeWidth={0}
       drawerContent={props => <MenuScreen {...props} />}>
       <Drawer.Screen name="MyTabs" component={AppTab} />
-      <Drawer.Screen name="Stack" component={AppStack} />
-      {/* {Object.values(ROUTER_NAME).map(screen => {
+      {/* <Drawer.Screen name="Stack" component={AppStack} /> */}
+      {Object.values(ROUTER_NAME).map(screen => {
         if (screen.isNoStack) return;
         return <Drawer.Screen key={screen.name} {...screen} />;
-      })} */}
+      })}
     </Drawer.Navigator>
   );
 };

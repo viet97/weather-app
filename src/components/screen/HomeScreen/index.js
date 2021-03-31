@@ -17,6 +17,7 @@ import {LineChartCustom, BarChartCustom} from '../../element';
 import {Images} from '../../../themes/Images';
 import {TYPE_IMAGE_RESIZE_MODE} from '../../common/Image';
 import NavigationService from '../../../navigation/NavigationService';
+import WeatherInfo from './component/weather-info';
 
 const exampleData = [15, 21, 23, 12, 24, 28, 29];
 const renderBottomLabel = () => (
@@ -506,6 +507,7 @@ export default class HomeScreen extends BaseScreen {
           {this.renderHourlyChart()}
           {this.renderDailyChart()}
           {this.renderAirQualityIndex()}
+          <WeatherInfo />
         </ScrollView>
       </View>
     );

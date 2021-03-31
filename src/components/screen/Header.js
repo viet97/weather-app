@@ -15,7 +15,6 @@ export const Header = props => {
   return (
     <View
       style={{
-        position: 'absolute',
         flexDirection: 'row',
         alignItems: 'flex-end',
         justifyContent: 'space-between',

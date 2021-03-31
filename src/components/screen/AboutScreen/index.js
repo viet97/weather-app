@@ -1,5 +1,11 @@
 import React from 'react';
-import {FlatList, StyleSheet, View} from 'react-native';
+import {
+  FlatList,
+  ImageBackground,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import BaseScreen from '../BaseScreen';
 import {normalize, widthDevice} from '../../../utils/DeviceUtil';
 import {Header} from '../Header';
@@ -20,6 +26,7 @@ import AppInfoManager from '../../../AppInfoManager';
 import {TouchablePlatform} from '../../../modules/TouchablePlatform';
 import CustomImage from '../../common/Image';
 import {Images} from '../../../themes/Images';
+import {appCreatedBy} from '../../../Define';
 
 const iconFollowSize = {width: normalize(60), height: normalize(60)};
 const paddingHorizontalItem = normalize(30);
@@ -42,7 +49,7 @@ const styles = StyleSheet.create({
   touchIconFollow: {marginRight: normalize(30)},
 });
 
-class FrequencyScreen extends BaseScreen {
+class AboutScreen extends BaseScreen {
   constructor(props) {
     super(props);
     this.state = {
@@ -77,6 +84,7 @@ class FrequencyScreen extends BaseScreen {
     const IconLeft = item.iconLeft;
     return (
       <ItemListSetting
+        customStyle={{width: widthDevice}}
         key={index}
         value={value}
         onPressItem={this.onPressItem}
@@ -108,33 +116,15 @@ class FrequencyScreen extends BaseScreen {
         <CustomText size={32} medium>
           {'Version ' + AppInfoManager.getInstance().getAppInfo().buildVersion}
         </CustomText>
-        <CustomText style={{textAlign: 'center'}} size={28}>
+        <CustomText
+          color={Colors.textDesc}
+          style={{textAlign: 'center'}}
+          size={28}>
           Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
           nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.
           At vero eos et accusam et justo duo dolores et ea rebum. Stet clita
           kasd gubergren, no sea.
         </CustomText>
-        <CustomText
-          size={26}
-          medium
-          style={{marginTop: normalize(40), marginBottom: normalize(25)}}
-          color={Colors.textTitle}>
-          — Follow Us —
-        </CustomText>
-        <View style={{flexDirection: 'row'}}>
-          <TouchablePlatform style={styles.touchIconFollow}>
-            <IconFollowWebSvg {...iconFollowSize} />
-          </TouchablePlatform>
-          <TouchablePlatform style={styles.touchIconFollow}>
-            <IconFollowFacebookSvg {...iconFollowSize} />
-          </TouchablePlatform>
-          <TouchablePlatform style={styles.touchIconFollow}>
-            <IconFollowInstargramSvg {...iconFollowSize} />
-          </TouchablePlatform>
-          <TouchablePlatform style={styles.touchIconFollow}>
-            <IconFollowTwitterSvg {...iconFollowSize} />
-          </TouchablePlatform>
-        </View>
       </View>
     );
   };
@@ -153,28 +143,60 @@ class FrequencyScreen extends BaseScreen {
   };
   renderContent() {
     return (
-      <View
-        style={{
-          backgroundColor: Colors.white,
-          flex: 1,
-          width: widthDevice,
-        }}>
+      <>
         <Header title="About App" />
-        {this.renderHeader()}
-        <FlatList
-          //   style={{position: 'absolute'}}
-          keyExtractor={(item, index) => item.value + index}
-          data={this.listAction}
-          renderItem={this.renderItem}
-          showsVerticalScrollIndicator={false}
-          //   ListHeaderComponent={this.renderHeader}
-          //   ListFooterComponent={this.renderFooter}
-        />
-
-        {this.renderFooter()}
-      </View>
+        <ScrollView
+          invertStickyHeaders={[0]}
+          style={{
+            // backgroundColor: Colors.white,
+            flex: 1,
+            width: widthDevice,
+            backgroundColor: '#F4F5F8',
+          }}>
+          {this.renderHeader()}
+          <ImageBackground
+            style={{
+              width: widthDevice,
+              height: widthDevice * (1 / Images.assets.bg_bottom_about.ratio),
+              alignItems: 'center',
+              backgroundColor: '#F4F5F8',
+            }}
+            source={Images.assets.bg_bottom_about.source}>
+            <CustomText
+              size={26}
+              medium
+              style={{marginTop: normalize(40), marginBottom: normalize(25)}}
+              color={Colors.textTitle}>
+              {'— Follow Us —'.toUpperCase()}
+            </CustomText>
+            <View style={{flexDirection: 'row'}}>
+              <TouchablePlatform style={styles.touchIconFollow}>
+                <IconFollowWebSvg {...iconFollowSize} />
+              </TouchablePlatform>
+              <TouchablePlatform style={styles.touchIconFollow}>
+                <IconFollowFacebookSvg {...iconFollowSize} />
+              </TouchablePlatform>
+              <TouchablePlatform style={styles.touchIconFollow}>
+                <IconFollowInstargramSvg {...iconFollowSize} />
+              </TouchablePlatform>
+              <TouchablePlatform style={styles.touchIconFollow}>
+                <IconFollowTwitterSvg {...iconFollowSize} />
+              </TouchablePlatform>
+            </View>
+            {this.listAction.map((item, index) => {
+              return this.renderItem({item, index});
+            })}
+            <CustomText
+              style={{position: 'absolute', bottom: normalize(26)}}
+              color="#094FB9"
+              size={28}>
+              {appCreatedBy}
+            </CustomText>
+          </ImageBackground>
+        </ScrollView>
+      </>
     );
   }
 }
 
-export default FrequencyScreen;
+export default AboutScreen;

@@ -127,9 +127,8 @@ export default class MenuScreen extends BaseScreen {
           </View>
           <TouchablePlatform
             onPress={() => {
-              NavigationService.getInstance().drawerNavigate({
-                routerName: 'Stack',
-                screenName: ROUTER_NAME.SETTING.name,
+              NavigationService.getInstance().navigate({
+                routerName: ROUTER_NAME.SETTING.name,
               });
             }}>
             <IconSettingSvg width={normalize(64)} height={normalize(64)} />

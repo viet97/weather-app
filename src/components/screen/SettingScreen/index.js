@@ -18,6 +18,7 @@ import IconStarSvg from '../../../../assets/SVGIcon/view-setting/icon_star.svg';
 import IconUpSvg from '../../../../assets/SVGIcon/view-setting/icon_up.svg';
 import IconChoiceSvg from '../../../../assets/SVGIcon/view-frequency/icon_choice.svg';
 import IconUnChoiceSvg from '../../../../assets/SVGIcon/view-frequency/icon_nochoice.svg';
+import IconHeaderBackSvg from '../../../../assets/SVGIcon/view-setting/icon_header_back.svg';
 import {
   normalize,
   STATUS_BAR_HEIGHT,
@@ -31,10 +32,12 @@ import {ROUTER_NAME} from '../../../navigation/NavigationConst';
 import {Header} from '../Header';
 import {temperatureC} from '../../../utils/Util';
 import {Colors} from '../../../themes/Colors';
+import {TouchablePlatform} from '../../../modules/TouchablePlatform';
 
 const borderRadiusBig = normalize(40);
 const borderRadiusSmall = normalize(10);
 const paddingHorizontalItem = normalize(30);
+const paddingTopHeader = normalize(105);
 const textSizeBottom = 36;
 const styles = StyleSheet.create({
   containerItem: {
@@ -60,8 +63,11 @@ const styles = StyleSheet.create({
   wrapTextHeader: {
     position: 'absolute',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     width: widthDevice,
+    flexDirection: 'row',
+    paddingTop: paddingTopHeader,
+    // paddingLeft: normalize(30),
   },
   touchBottom: {
     paddingVertical: normalize(36),
@@ -269,6 +275,11 @@ class SettingScreen extends BaseScreen {
           routerName: ROUTER_NAME.ABOUT.name,
         });
         break;
+      case 'noti':
+        NavigationService.getInstance().navigate({
+          routerName: ROUTER_NAME.Notification.name,
+        });
+        break;
       default:
         break;
     }
@@ -352,14 +363,37 @@ class SettingScreen extends BaseScreen {
           resizeMode={TYPE_IMAGE_RESIZE_MODE.COVER}
         />
         <View style={styles.wrapTextHeader}>
-          <CustomText
-            color="#fff"
-            size={36}
-            style={{
-              marginTop: normalize(105),
+          <TouchablePlatform
+            style={{marginLeft: normalize(30)}}
+            onPress={() => {
+              NavigationService.getInstance().goBack();
             }}>
-            Settings
-          </CustomText>
+            <IconHeaderBackSvg
+              width={normalize(18.36)}
+              height={normalize(34)}
+            />
+          </TouchablePlatform>
+          <View
+            style={{
+              width: widthDevice,
+              justifyContent: 'center',
+              alignItems: 'center',
+              position: 'absolute',
+              top: paddingTopHeader,
+            }}>
+            <CustomText
+              style={
+                {
+                  // marginLeft: -normalize(60),
+                }
+              }
+              color="#fff"
+              semiBold
+              size={36}>
+              Settings
+            </CustomText>
+          </View>
+          <View />
         </View>
       </View>
     );

@@ -28,10 +28,13 @@ export const Colors = {
   activeTitleLineChart: '#094FB9',
   backgroundHome: '#F0F1F5',
   backgroundGray: '#F5F6FA',
+  backgroundGray80: '#F5F6FACC',
   weather_red: '#FF4E4E',
   air_quality_text: '#404040',
   borderRgb: 'rgba(218, 220, 227, 0.6)',
   blackAlpha20: 'rgba(0,0,0,0.2)',
   bgHeaderBottomModal: '#DADCE3',
   shadowHeader: 'rgba(0,0,0,0.1)',
+  textDesc: '#606060',
+  textWeather: '#29B6F6',
 };
