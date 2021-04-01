@@ -1,4 +1,4 @@
-export const checkExistsSpecailChar = (string) => {
+export const checkExistsSpecailChar = string => {
   const format = /^[a-zA-Z0-9]*$/;
   return format.test(string);
 };
@@ -30,3 +30,4 @@ export const MONTH_NAME = [
 ];
 
 export const MOMENT_DATE_FORMAT = 'MM/DD/YY';
+export const appCreatedBy = 'By GOD Team';

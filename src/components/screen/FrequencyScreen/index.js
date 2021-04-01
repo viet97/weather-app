@@ -1,16 +1,10 @@
 import React from 'react';
-import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {FlatList, StyleSheet, View} from 'react-native';
 import BaseScreen from '../BaseScreen';
-import IconChoiceSvg from '../../../../assets/SVGIcon/view-frequency/icon_choice.svg';
-import IconNoChoiceSvg from '../../../../assets/SVGIcon/view-frequency/icon_nochoice.svg';
-import {
-  normalize,
-  STATUS_BAR_HEIGHT,
-  widthDevice,
-} from '../../../utils/DeviceUtil';
-import CustomText from '../../common/Text';
+import {normalize, widthDevice} from '../../../utils/DeviceUtil';
 import {Header} from '../Header';
 import {ItemListSetting} from '../LanguageScreen';
+import {Colors} from '../../../themes/Colors';
 
 const paddingHorizontalItem = normalize(30);
 const styles = StyleSheet.create({
@@ -19,7 +13,7 @@ const styles = StyleSheet.create({
   },
   wrapTouchItem: {
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(218, 220, 227, 0.6)',
+    borderBottomColor: Colors.borderRgb,
     paddingVertical: normalize(41),
   },
   touchItem: {
@@ -77,7 +71,7 @@ class FrequencyScreen extends BaseScreen {
     return (
       <View
         style={{
-          backgroundColor: '#FFFFFF',
+          backgroundColor: Colors.white,
           flex: 1,
           width: widthDevice,
         }}>

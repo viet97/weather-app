@@ -65,6 +65,16 @@ const DEFINE_REQUIRE = {
     source: require('../../assets/images/view-menu/icon_more.png'),
     type: TYPE_IMAGE.PNG,
   },
+  bg_bottom_about: {
+    source: require('../../assets/images/view-about/bg_bottom.png'),
+    type: TYPE_IMAGE.PNG,
+    ratio: 750 / 781,
+  },
+  bg_review_noti: {
+    source: require('../../assets/images/view-noti/bg_review_noti.png'),
+    type: TYPE_IMAGE.PNG,
+    ratio: 750 / 234,
+  },
 };
 
 export const Images = {
