@@ -43,6 +43,8 @@ export const Colors = {
   text_color1: '#202020',
   border_color_3: '#E9EAEE',
   border_color_4: '#C8CAD1',
+  border_color_5: '#CBCDD5',
   sun_rise: '#FADA81',
   sun_set: '#FDF8EB',
+  border_moon: '#F7C22B',
 };
