@@ -5,26 +5,39 @@ import {MenuScreen} from '../../components/screen';
 import {DRAWER_WIDTH} from '../../utils/DeviceUtil';
 import {AppStack} from './StackNavigator';
 import {ROUTER_NAME} from '../NavigationConst';
+import {createStackNavigator} from '@react-navigation/stack';
 
 const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
 
+const StackScreen = () => (
+  <Stack.Navigator
+    headerMode={'none'}
+    mode={'card'}
+    screenOptions={{
+      header: null,
+      cardOverlayEnabled: true,
+      cardShadowEnabled: false,
+      animationEnabled: true,
+      gestureDirection: 'horizontal',
+    }}
+    initialRouteName={ROUTER_NAME.HOME.name}>
+    {Object.values(ROUTER_NAME).map(screen => {
+      return <Stack.Screen key={screen.name} {...screen} />;
+    })}
+  </Stack.Navigator>
+);
 export const AppDraw = () => {
   const containerStyle = {backgroundColor: 'black'};
   return (
     <Drawer.Navigator
       drawerPosition="right"
-      initialRouteName="MyTabs"
       drawerType={'slide'}
       drawerStyle={{width: DRAWER_WIDTH}}
       sceneContainerStyle={containerStyle}
       edgeWidth={0}
       drawerContent={props => <MenuScreen {...props} />}>
-      <Drawer.Screen name="MyTabs" component={AppTab} />
-      {/* <Drawer.Screen name="Stack" component={AppStack} /> */}
-      {Object.values(ROUTER_NAME).map(screen => {
-        if (screen.isNoStack) return;
-        return <Drawer.Screen key={screen.name} {...screen} />;
-      })}
+      <Drawer.Screen name="DrawScreen" component={StackScreen} />
     </Drawer.Navigator>
   );
 };

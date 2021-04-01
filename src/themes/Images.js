@@ -75,6 +75,11 @@ const DEFINE_REQUIRE = {
     type: TYPE_IMAGE.PNG,
     ratio: 750 / 234,
   },
+  background_circle: {
+    source: require('../../assets/images/background_circle.png'),
+    type: TYPE_IMAGE.PNG,
+    ratio: 210 / 354,
+  },
 };
 
 export const Images = {
