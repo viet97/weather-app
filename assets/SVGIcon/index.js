@@ -24,6 +24,7 @@ import covid_active from './covid_active.svg';
 import covid_recover from './covid_recover.svg';
 import covid_death from './covid_death.svg';
 import covid_confirm from './covid_confirm.svg';
+import waqi from './waqi.svg';
 
 export default {
   header_left,
@@ -52,4 +53,5 @@ export default {
   covid_recover,
   covid_death,
   covid_confirm,
+  waqi,
 };

@@ -10,6 +10,8 @@ import {
   MenuScreen,
   AboutScreen,
   NotificationScreen,
+  DailyDetailScreen,
+  AirQualityDetailScreen,
 } from '../components/screen';
 import {AppDraw} from './router/DrawNavigator';
 import {AppTab} from './router/TabNavigator';
@@ -76,5 +78,15 @@ export const ROUTER_NAME = {
     title: 'Notification',
     name: 'NotificationScreen',
     component: NotificationScreen,
+  },
+  DAILY_DETAIL: {
+    title: 'DailyDetail',
+    name: 'DailyDetailScreen',
+    component: DailyDetailScreen,
+  },
+  AIR_QUALITY_DETAIL: {
+    title: 'AirQualityDetail',
+    name: 'AirQualityDetailScreen',
+    component: AirQualityDetailScreen,
   },
 };

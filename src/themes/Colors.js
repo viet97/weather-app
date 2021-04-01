@@ -30,6 +30,7 @@ export const Colors = {
   backgroundGray: '#F5F6FA',
   backgroundGray80: '#F5F6FACC',
   weather_red: '#FF4E4E',
+  weather_red_opacity: '#FF4E4E20',
   air_quality_text: '#404040',
   borderRgb: 'rgba(218, 220, 227, 0.6)',
   blackAlpha20: 'rgba(0,0,0,0.2)',
@@ -47,4 +48,5 @@ export const Colors = {
   sun_rise: '#FADA81',
   sun_set: '#FDF8EB',
   border_moon: '#F7C22B',
+  blue_15: 'rgba(41,182,246,0.15)',
 };
