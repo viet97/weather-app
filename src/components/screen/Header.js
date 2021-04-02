@@ -16,14 +16,10 @@ const paddingBottomTitle = normalize(25);
 export const HEADER_HEIGHT = normalize(109) - getTopSpace() + 60;
 
 export const Header = props => {
+  const {title, iconBack, extraElement} = props;
   return (
     <View
       style={{
-        flexDirection: 'row',
-        alignItems: 'flex-end',
-        justifyContent: 'space-between',
-        paddingHorizontal: normalize(30),
-        paddingBottom: paddingBottomTitle,
         paddingTop: normalize(109) - getTopSpace(),
         width: widthDevice,
         shadowColor: Colors.shadowHeader,
@@ -36,26 +32,44 @@ export const Header = props => {
       }}>
       <View
         style={{
-          position: 'absolute',
-          width: widthDevice,
-          alignItems: 'center',
-          paddingBottom: paddingBottomTitle,
+          flexDirection: 'row',
+          alignItems: 'flex-end',
+          justifyContent: 'space-between',
+          paddingHorizontal: normalize(30),
+          paddingBottom: extraElement ? 3 : paddingBottomTitle,
         }}>
-        <CustomText size={36} semiBold color="#202020">
-          {props.title || 'Screen'}
-        </CustomText>
+        <TouchableOpacity
+          style={{
+            width: 50,
+            height: 50,
+            justifyContent: 'flex-end',
+          }}
+          onPress={() => {
+            NavigationService.getInstance().goBack();
+          }}>
+          {iconBack ? (
+            iconBack
+          ) : (
+            <IconBackSvg width={normalize(18.36)} height={normalize(34)} />
+          )}
+        </TouchableOpacity>
+        <View
+          style={{
+            position: 'absolute',
+            width: widthDevice,
+            alignItems: 'center',
+            paddingBottom: extraElement ? 0 : paddingBottomTitle,
+          }}>
+          <CustomText
+            style={{includePadding: false}}
+            size={36}
+            semiBold
+            color="#202020">
+            {title || 'Screen'}
+          </CustomText>
+        </View>
       </View>
-      <TouchablePlatform
-        style={{
-          width: 50,
-          height: 50,
-          justifyContent: 'flex-end',
-        }}
-        onPress={() => {
-          NavigationService.getInstance().goBack();
-        }}>
-        <IconBackSvg width={normalize(18.36)} height={normalize(34)} />
-      </TouchablePlatform>
+      {extraElement ? extraElement() : null}
     </View>
   );
 };

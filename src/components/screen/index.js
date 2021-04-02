@@ -9,6 +9,7 @@ import CustomLayoutScreen from './CustomLayoutScreen';
 import MenuScreen from './MenuScreen';
 import AboutScreen from './AboutScreen';
 import NotificationScreen from './NotificationScreen';
+import AddLocationScreen from './AddLocationScreen';
 import DailyDetailScreen from './DailyDetailScreen';
 import AirQualityDetailScreen from './AirQualityDetailScreen';
 
@@ -24,6 +25,7 @@ export {
   MenuScreen,
   AboutScreen,
   NotificationScreen,
+  AddLocationScreen,
   DailyDetailScreen,
   AirQualityDetailScreen,
 };

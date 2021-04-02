@@ -122,9 +122,15 @@ export default class MenuScreen extends BaseScreen {
           <IconBackSvg width={normalize(19.44)} height={normalize(36)} />
         </TouchablePlatform>
         <View style={{flexDirection: 'row'}}>
-          <View style={{marginRight: normalize(56)}}>
+          <TouchablePlatform
+            onPress={() => {
+              NavigationService.getInstance().navigate({
+                routerName: ROUTER_NAME.ADD_LOCATION.name,
+              });
+            }}
+            style={{marginRight: normalize(56)}}>
             <IconAddSvg width={normalize(64)} height={normalize(64)} />
-          </View>
+          </TouchablePlatform>
           <TouchablePlatform
             onPress={() => {
               NavigationService.getInstance().navigate({

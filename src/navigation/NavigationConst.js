@@ -10,6 +10,7 @@ import {
   MenuScreen,
   AboutScreen,
   NotificationScreen,
+  AddLocationScreen,
   DailyDetailScreen,
   AirQualityDetailScreen,
 } from '../components/screen';
@@ -78,6 +79,11 @@ export const ROUTER_NAME = {
     title: 'Notification',
     name: 'NotificationScreen',
     component: NotificationScreen,
+  },
+  ADD_LOCATION: {
+    title: 'AddLocation',
+    name: 'AddLocationScreen',
+    component: AddLocationScreen,
   },
   DAILY_DETAIL: {
     title: 'DailyDetail',
