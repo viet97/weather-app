@@ -11,6 +11,8 @@ import {
   AboutScreen,
   NotificationScreen,
   AddLocationScreen,
+  DailyDetailScreen,
+  AirQualityDetailScreen,
 } from '../components/screen';
 import {AppDraw} from './router/DrawNavigator';
 import {AppTab} from './router/TabNavigator';
@@ -82,5 +84,15 @@ export const ROUTER_NAME = {
     title: 'AddLocation',
     name: 'AddLocationScreen',
     component: AddLocationScreen,
+  },
+  DAILY_DETAIL: {
+    title: 'DailyDetail',
+    name: 'DailyDetailScreen',
+    component: DailyDetailScreen,
+  },
+  AIR_QUALITY_DETAIL: {
+    title: 'AirQualityDetail',
+    name: 'AirQualityDetailScreen',
+    component: AirQualityDetailScreen,
   },
 };

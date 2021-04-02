@@ -7,7 +7,6 @@ import {
   FlatList,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import ProgressCircle from 'react-native-progress-circle';
 
 import {Colors} from '../../../themes/Colors';
 import {
@@ -22,11 +21,17 @@ import SVGIcon from '../../../../assets/SVGIcon';
 import {Text} from '../../common';
 import BaseScreen from '../BaseScreen';
 import {TouchablePlatform} from '../../../modules/TouchablePlatform';
-import {LineChartCustom, BarChartCustom} from '../../element';
+import {
+  LineChartCustom,
+  BarChartCustom,
+  AirQualityProgressCircle,
+} from '../../element';
 import {Images} from '../../../themes/Images';
 import {TYPE_IMAGE_RESIZE_MODE} from '../../common/Image';
 import NavigationService from '../../../navigation/NavigationService';
 import WeatherInfo from './component/weather-info';
+import {ROUTER_NAME} from '../../../navigation/NavigationConst';
+import {size} from 'lodash';
 
 const exampleData = [15, 21, 23, 12, 24, 28, 29];
 const renderBottomLabel = () => (
@@ -42,12 +47,15 @@ const renderBottomLabel = () => (
     </Text>
   </View>
 );
+const LEFT_PADDING_SCREEN = normalize(14) + 8;
+const RIGHT_PADDING_SCREEN = 16;
 export default class HomeScreen extends BaseScreen {
   constructor(props) {
     super(props);
     this.state = {
       currentIndexLineChart: 0,
       currentIndexBarChart: 0,
+      currentIndexCovidTab: 0,
     };
     this.displayName = 'HomeScreen';
 
@@ -303,6 +311,37 @@ export default class HomeScreen extends BaseScreen {
         description: 'Visibility',
       },
     ];
+    this.listMoonInfo = [{}, {}, {}];
+    this.covidInfo = [
+      {
+        title: 'Viet Name',
+      },
+      {
+        title: 'Worldwide',
+      },
+    ];
+    this.listCovidGridInfo = [
+      {
+        Icon: SVGIcon.covid_active,
+        value: 549,
+        title: 'Active',
+      },
+      {
+        Icon: SVGIcon.covid_confirm,
+        value: 2482,
+        title: 'Confirmed',
+      },
+      {
+        Icon: SVGIcon.covid_recover,
+        value: 1898,
+        title: 'Recovered',
+      },
+      {
+        Icon: SVGIcon.covid_death,
+        value: 35,
+        title: 'Deaths',
+      },
+    ];
   }
 
   renderHeaderSection = ({title, onPressDetail, hasDetail = true}) => {
@@ -397,8 +436,8 @@ export default class HomeScreen extends BaseScreen {
     return (
       <BarChartCustom
         contentContainerStyle={{
-          paddingLeft: normalize(14) + 8,
-          paddingRight: 16,
+          paddingLeft: LEFT_PADDING_SCREEN,
+          paddingRight: RIGHT_PADDING_SCREEN,
         }}
         style={{marginTop: 24}}
         {...currentBarChartProps}
@@ -410,7 +449,13 @@ export default class HomeScreen extends BaseScreen {
     const {currentIndexBarChart} = this.state;
     return (
       <View style={styles.sectionContainer}>
-        {this.renderHeaderSection({title: 'Daily'})}
+        {this.renderHeaderSection({
+          title: 'Daily',
+          onPressDetail: () =>
+            NavigationService.getInstance().navigate({
+              routerName: ROUTER_NAME.DAILY_DETAIL.name,
+            }),
+        })}
         <ScrollView
           bounces={false}
           horizontal
@@ -502,6 +547,7 @@ export default class HomeScreen extends BaseScreen {
               <View
                 style={{
                   flex: it.value / this.totalAirQualityValue,
+                  height: normalize(10),
                   backgroundColor: it.color,
                 }}
               />
@@ -541,20 +587,14 @@ export default class HomeScreen extends BaseScreen {
               <Text size={36} medium style={{color: Colors.air_quality_text}}>
                 PM2.5
               </Text>
-              <ProgressCircle
+              <AirQualityProgressCircle
                 outerCircleStyle={{marginTop: 12}}
-                percent={30}
+                percentage={30}
                 radius={normalize(80)}
-                borderWidth={normalize(8)}
                 color="green"
-                shadowColor={Colors.border_color}
-                bgColor={Colors.white}>
-                <View style={styles.innerDashedCircle}>
-                  <Text style={{color: Colors.text_color1}} size={54} thin>
-                    119
-                  </Text>
-                </View>
-              </ProgressCircle>
+                innerCircleStyle={styles.innerDashedCircle}
+                value={119}
+              />
               <View style={styles.airQualityBackground}>
                 <Text size={28} style={{color: Colors.weather_red}}>
                   Unhealthy
@@ -570,7 +610,17 @@ export default class HomeScreen extends BaseScreen {
   renderAirQualityIndex = () => {
     return (
       <View style={styles.sectionContainer}>
-        {this.renderHeaderSection({title: 'Air Quality Index'})}
+        {this.renderHeaderSection({
+          title: 'Air Quality Index',
+          onPressDetail: () =>
+            NavigationService.getInstance().navigate({
+              routerName: ROUTER_NAME.AIR_QUALITY_DETAIL.name,
+              params: {
+                renderAirQualityStatus: this.renderAirQualityStatus,
+                renderAirSeekBar: this.renderAirSeekBar,
+              },
+            }),
+        })}
         <View style={styles.sectionContentContainer}>
           {this.renderAirQualityStatus()}
           {this.renderAirSeekBar()}
@@ -724,61 +774,22 @@ export default class HomeScreen extends BaseScreen {
     return (
       <View style={styles.sectionContainer}>
         {this.renderHeaderSection({title: 'Sun', hasDetail: false})}
-        <View
-          style={{
-            flexDirection: 'row',
-            marginTop: 16,
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderBottomWidth: 1,
-            borderBottomColor: Colors.border_color,
-            marginLeft: normalize(14) + 8,
-            marginRight: 16,
-          }}>
+        <View style={styles.sunContentContainer}>
           <View>
             <Text style={{color: Colors.textTitle}}>Sunrise</Text>
             <Text size={36} style={{color: Colors.air_quality_text}}>
               06:22
             </Text>
           </View>
-          <View
-            style={{
-              height: normalize(175),
-              borderTopLeftRadius: normalize(175),
-              borderTopRightRadius: normalize(175),
-              overflow: 'hidden',
-              borderWidth: 1,
-              borderColor: Colors.border_color_4,
-              borderStyle: 'dashed',
-              marginHorizontal: 8,
-            }}>
-            <View
-              style={{
-                width: normalize(350),
-                height: normalize(350),
-                borderTopLeftRadius: normalize(175),
-                borderTopRightRadius: normalize(175),
-                overflow: 'hidden',
-                flexDirection: 'row',
-              }}>
+          <View style={styles.sunCircleContainer}>
+            <View style={styles.sunInnerCircleContainer}>
               <LinearGradient
                 start={{x: 0, y: 0}}
                 end={{x: 0, y: 1.0}}
                 colors={[Colors.sun_rise, Colors.sun_set]}
-                style={{
-                  flex: 0.75,
-                  borderWidth: 1,
-                  borderColor: 'black',
-                  borderRadius: normalize(175) * 0.75,
-                  borderTopRightRadius: 0,
-                }}
+                style={styles.sunInnerBackground}
               />
-              <View
-                style={{
-                  flex: 0.25,
-                  backgroundColor: Colors.white,
-                }}
-              />
+              <View style={styles.sunInnerEmptyBackground} />
             </View>
           </View>
           <View>
@@ -788,6 +799,158 @@ export default class HomeScreen extends BaseScreen {
             </Text>
           </View>
         </View>
+      </View>
+    );
+  };
+
+  renderMoon = () => {
+    return (
+      <View style={styles.moonContainer}>
+        {this.renderHeaderSection({title: 'Moon', hasDetail: false})}
+        <View style={styles.moonContentContainer}>
+          {this.listMoonInfo.map(it => {
+            return (
+              <View style={styles.moonCircleContainer}>
+                <View style={styles.moonCircle} />
+                <Text style={{color: Colors.textTitle, marginTop: 16}}>
+                  Today
+                </Text>
+                <Text
+                  size={30}
+                  style={{color: Colors.air_quality_text, marginTop: 8}}>
+                  Waxing Gibbous
+                </Text>
+              </View>
+            );
+          })}
+        </View>
+      </View>
+    );
+  };
+
+  renderWindPressure = () => {
+    return (
+      <View style={styles.sectionContainer}>
+        {this.renderHeaderSection({title: 'Wind & Pressure', hasDetail: false})}
+        <View style={styles.winPressureContentContainer}>
+          <View style={styles.windIconContainer}>
+            <SVGIcon.wind_pressure width="100%" height="100%" />
+          </View>
+          <View style={styles.wind_pressure}>
+            <View style={styles.winContainer}>
+              <View>
+                <Text style={{color: Colors.textTitle}}>Wind</Text>
+                <Text
+                  size={36}
+                  thin
+                  style={{color: Colors.text_color1, marginTop: 4}}>
+                  3.68 m/s
+                </Text>
+              </View>
+              <SVGIcon.wind_value
+                width={normalize(72)}
+                height={normalize(72)}
+              />
+            </View>
+            <View style={styles.pressureContainer}>
+              <View>
+                <Text style={{color: Colors.textTitle}}>Pressure</Text>
+                <Text
+                  size={36}
+                  thin
+                  style={{color: Colors.text_color1, marginTop: 4}}>
+                  1011 mb
+                </Text>
+              </View>
+              <SVGIcon.pressure_value
+                width={normalize(72)}
+                height={normalize(72)}
+              />
+            </View>
+          </View>
+        </View>
+      </View>
+    );
+  };
+
+  renderCovidTab = () => {
+    const {currentIndexCovidTab} = this.state;
+    return (
+      <View style={styles.covidTabContainer}>
+        {this.covidInfo.map((it, index) => {
+          const isFocus = currentIndexCovidTab === index;
+          return (
+            <TouchablePlatform
+              onPress={() => this.setStateSafe({currentIndexCovidTab: index})}
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                paddingVertical: 12,
+                backgroundColor: isFocus ? Colors.viewDetail : Colors.white,
+              }}>
+              <Text
+                medium
+                style={{color: isFocus ? Colors.white : Colors.textTitle}}>
+                {it.title}
+              </Text>
+            </TouchablePlatform>
+          );
+        })}
+      </View>
+    );
+  };
+
+  renderCovidGridInfoItem = ({item, index}) => {
+    const {Icon, title, value} = item;
+    return (
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'row',
+          marginRight: index % 2 === 0 ? 8 : 0,
+          marginLeft: index % 2 !== 0 ? 8 : 0,
+          marginBottom: 16,
+        }}>
+        <Icon width={normalize(140)} height={normalize(140)} />
+        <View style={styles.covidGridItemContent}>
+          <Text size={30} style={{color: Colors.air_quality_text}}>
+            {title}
+          </Text>
+          <Text
+            size={44}
+            light
+            style={{color: Colors.air_quality_text, marginTop: 4}}>
+            {value}
+          </Text>
+        </View>
+      </View>
+    );
+  };
+
+  renderCovidGridInfo = () => {
+    return (
+      <FlatList
+        style={styles.covidGridInfo}
+        data={this.listCovidGridInfo}
+        numColumns={this.listCovidGridInfo.length / 2}
+        showsVerticalScrollIndicator={false}
+        bounces={false}
+        renderItem={this.renderCovidGridInfoItem}
+      />
+    );
+  };
+
+  renderCovid = () => {
+    return (
+      <View style={styles.sectionContainer}>
+        {this.renderHeaderSection({title: 'Covid', hasDetail: false})}
+        {this.renderCovidTab()}
+        {this.renderCovidGridInfo()}
+        <View style={styles.covidGridBottomLine} />
+        <Text size={26} style={styles.covidDataText}>
+          Data from about-corona.net
+        </Text>
       </View>
     );
   };
@@ -804,6 +967,9 @@ export default class HomeScreen extends BaseScreen {
           {this.renderDailyChart()}
           {this.renderAirQualityIndex()}
           {this.renderSun()}
+          {this.renderMoon()}
+          {this.renderWindPressure()}
+          {this.renderCovid()}
           <WeatherInfo />
         </ScrollView>
       </View>
@@ -812,6 +978,117 @@ export default class HomeScreen extends BaseScreen {
 }
 
 const styles = StyleSheet.create({
+  covidDataText: {
+    alignSelf: 'center',
+    color: Colors.air_quality_text,
+    marginTop: 16,
+  },
+  covidGridBottomLine: {
+    height: 0,
+    borderWidth: 1,
+    borderColor: Colors.border_color_5,
+    borderStyle: 'dashed',
+    marginLeft: LEFT_PADDING_SCREEN,
+    marginRight: RIGHT_PADDING_SCREEN,
+  },
+  covidGridInfo: {
+    marginTop: 16,
+    marginLeft: LEFT_PADDING_SCREEN,
+    marginRight: RIGHT_PADDING_SCREEN,
+  },
+  covidGridItemContent: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingLeft: 16,
+    backgroundColor: Colors.backgroundGray,
+    borderTopRightRadius: normalize(20),
+    borderBottomRightRadius: normalize(20),
+  },
+  covidTabContainer: {
+    marginTop: 16,
+    marginLeft: LEFT_PADDING_SCREEN,
+    marginRight: RIGHT_PADDING_SCREEN,
+    borderRadius: normalize(24),
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: Colors.border,
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  pressureContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+  },
+  winContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderBottomColor: Colors.border_color,
+    borderBottomWidth: 1,
+  },
+  wind_pressure: {flex: 1, marginLeft: 16, paddingVertical: 8},
+  windIconContainer: {flex: 1, aspectRatio: 320 / 235},
+  winPressureContentContainer: {
+    flexDirection: 'row',
+    marginTop: 16,
+    paddingLeft: LEFT_PADDING_SCREEN,
+    paddingRight: RIGHT_PADDING_SCREEN,
+    flex: 1,
+  },
+  moonCircle: {
+    width: normalize(90),
+    height: normalize(90),
+    borderRadius: normalize(45),
+    borderWidth: 1,
+    borderColor: Colors.border_moon,
+  },
+  moonCircleContainer: {flex: 1, alignItems: 'center'},
+  moonContentContainer: {marginTop: 16, flexDirection: 'row', flex: 1},
+  moonContainer: {
+    backgroundColor: Colors.white,
+    paddingVertical: 16,
+  },
+  sunInnerEmptyBackground: {
+    flex: 0.25,
+    backgroundColor: Colors.white,
+  },
+  sunInnerBackground: {
+    flex: 0.75,
+    borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: normalize(175) * 0.75,
+    borderTopRightRadius: 0,
+  },
+  sunInnerCircleContainer: {
+    width: normalize(350),
+    height: normalize(350),
+    borderTopLeftRadius: normalize(175),
+    borderTopRightRadius: normalize(175),
+    overflow: 'hidden',
+    flexDirection: 'row',
+  },
+  sunCircleContainer: {
+    height: normalize(175),
+    borderTopLeftRadius: normalize(175),
+    borderTopRightRadius: normalize(175),
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: Colors.border_color_4,
+    borderStyle: 'dashed',
+    marginHorizontal: 8,
+  },
+  sunContentContainer: {
+    flexDirection: 'row',
+    marginTop: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border_color,
+    marginLeft: LEFT_PADDING_SCREEN,
+    marginRight: RIGHT_PADDING_SCREEN,
+  },
   container: {
     flex: 1,
   },
@@ -830,11 +1107,11 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   tabContentContainer: {
-    paddingLeft: normalize(14) + 8,
+    paddingLeft: LEFT_PADDING_SCREEN,
   },
   sectionContentContainer: {
-    paddingLeft: normalize(14) + 8,
-    paddingRight: 16,
+    paddingLeft: LEFT_PADDING_SCREEN,
+    paddingRight: RIGHT_PADDING_SCREEN,
   },
   headerSectionContainer: {
     flexDirection: 'row',
@@ -867,7 +1144,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginVertical: 12,
     borderRadius: normalize(10),
-    overflow: 'hidden',
   },
   bottomAirSeekBar: {
     flexDirection: 'row',

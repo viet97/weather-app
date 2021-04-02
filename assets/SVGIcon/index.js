@@ -17,6 +17,14 @@ import uv_index from './uv_index.svg';
 import visibility from './visibility.svg';
 import wind from './wind.svg';
 import sun from './sun.svg';
+import wind_pressure from './wind_pressure.svg';
+import wind_value from './wind_value.svg';
+import pressure_value from './pressure_value.svg';
+import covid_active from './covid_active.svg';
+import covid_recover from './covid_recover.svg';
+import covid_death from './covid_death.svg';
+import covid_confirm from './covid_confirm.svg';
+import waqi from './waqi.svg';
 
 export default {
   header_left,
@@ -37,5 +45,13 @@ export default {
   uv_index,
   visibility,
   wind,
-  sun
+  sun,
+  wind_pressure,
+  wind_value,
+  pressure_value,
+  covid_active,
+  covid_recover,
+  covid_death,
+  covid_confirm,
+  waqi,
 };

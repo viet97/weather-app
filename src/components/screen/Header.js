@@ -1,6 +1,7 @@
 import React from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import {
+  getTopSpace,
   normalize,
   STATUS_BAR_HEIGHT,
   widthDevice,
@@ -9,14 +10,17 @@ import IconBackSvg from '../../../assets/SVGIcon/header/icon_back.svg';
 import CustomText from '../common/Text';
 import NavigationService from '../../navigation/NavigationService';
 import {Colors} from '../../themes/Colors';
+import {TouchablePlatform} from '../../modules/TouchablePlatform';
 
 const paddingBottomTitle = normalize(25);
+export const HEADER_HEIGHT = normalize(109) - getTopSpace() + 60;
+
 export const Header = props => {
   const {title, iconBack, extraElement} = props;
   return (
     <View
       style={{
-        paddingTop: normalize(109),
+        paddingTop: normalize(109) - getTopSpace(),
         width: widthDevice,
         shadowColor: Colors.shadowHeader,
         shadowOffset: {width: 0, height: 1},
@@ -24,6 +28,7 @@ export const Header = props => {
         shadowRadius: 3,
         elevation: 5,
         backgroundColor: Colors.white,
+        height: HEADER_HEIGHT,
       }}>
       <View
         style={{
