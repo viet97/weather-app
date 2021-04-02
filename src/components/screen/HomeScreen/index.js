@@ -625,7 +625,14 @@ class HomeScreen extends BaseScreen {
   };
 
   renderCommonInfo = () => {
-    const {weather, current} = this.props;
+    const {weather, current, daily} = this.props;
+    let minTemp = 0,
+      maxTemp = 0;
+    if (size(daily) > 0) {
+      minTemp = Math.floor(getValueFromObjectByKeys(daily[0], ['temp', 'min']));
+      maxTemp = Math.floor(getValueFromObjectByKeys(daily[0], ['temp', 'max']));
+    }
+
     const temp = getValueFromObjectByKeys(current, ['temp']);
     const weatherArray = getValueFromObjectByKeys(current, ['weather']);
     let description = '';
@@ -652,7 +659,7 @@ class HomeScreen extends BaseScreen {
               style={{color: Colors.white, alignSelf: 'flex-start'}}
               size={55}
               thin>
-              38o
+              {maxTemp}
             </Text>
             <Text
               style={{color: Colors.white, alignSelf: 'center'}}
@@ -664,7 +671,7 @@ class HomeScreen extends BaseScreen {
               style={{color: Colors.white, alignSelf: 'flex-end'}}
               size={55}
               thin>
-              25o
+              {minTemp}
             </Text>
           </View>
         </View>
