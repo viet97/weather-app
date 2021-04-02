@@ -32,6 +32,8 @@ PODS:
   - libwebp/webp (1.2.0)
   - Permission-Camera (3.0.0-beta.2):
     - RNPermissions
+  - Permission-LocationWhenInUse (3.0.0-beta.2):
+    - RNPermissions
   - RCTRequired (0.63.3)
   - RCTTypeSafety (0.63.3):
     - FBLazyVector (= 0.63.3)
@@ -326,6 +328,7 @@ DEPENDENCIES:
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - Permission-Camera (from `../node_modules/react-native-permissions/ios/Camera/Permission-Camera.podspec`)
+  - Permission-LocationWhenInUse (from `../node_modules/react-native-permissions/ios/LocationWhenInUse`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
   - React (from `../node_modules/react-native/`)
@@ -397,6 +400,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   Permission-Camera:
     :path: "../node_modules/react-native-permissions/ios/Camera/Permission-Camera.podspec"
+  Permission-LocationWhenInUse:
+    :path: "../node_modules/react-native-permissions/ios/LocationWhenInUse"
   RCTRequired:
     :path: "../node_modules/react-native/Libraries/RCTRequired"
   RCTTypeSafety:
@@ -500,6 +505,7 @@ SPEC CHECKSUMS:
   glog: 40a13f7840415b9a77023fbcae0f1e6f43192af3
   libwebp: e90b9c01d99205d03b6bb8f2c8c415e5a4ef66f0
   Permission-Camera: abef7a26b510c421c101a5e2eee6c82f00ed5cbf
+  Permission-LocationWhenInUse: 36bfc23305894aa8d1e01d278aed9ea6736a2e89
   RCTRequired: 48884c74035a0b5b76dbb7a998bd93bcfc5f2047
   RCTTypeSafety: edf4b618033c2f1c5b7bc3d90d8e085ed95ba2ab
   React: f36e90f3ceb976546e97df3403e37d226f79d0e3
@@ -549,6 +555,6 @@ SPEC CHECKSUMS:
   SDWebImageWebPCoder: d0dac55073088d24b2ac1b191a71a8f8d0adac21
   Yoga: 7d13633d129fd179e01b8953d38d47be90db185a
 
-PODFILE CHECKSUM: 819227190374cfbdbfc084252d4edd81019fd6f2
+PODFILE CHECKSUM: 6b46f5ed0e0c0d3de17e6401d0218963ca8be610
 
 COCOAPODS: 1.10.0

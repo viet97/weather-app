@@ -28,6 +28,16 @@ export const MONTH_NAME = [
   'November',
   'December',
 ];
+export const WEEK_DAY_NAME = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+export const WEEK_FULL_DAY_NAME = [
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+  'Sunday',
+];
 
 export const MOMENT_DATE_FORMAT = 'MM/DD/YY';
 export const appCreatedBy = 'By GOD Team';

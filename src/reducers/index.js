@@ -7,11 +7,13 @@ import tracker from './Tracker';
 import Navigation from './Navigation';
 import Language from './Language';
 import DataSource from './DataSource';
+import Weather from './Weather';
 
 const MainListReducers = {
   Navigation,
   Language,
   DataSource,
+  Weather,
 };
 
 const rootReducerImmutable = (reducers, getDefaultState) => {

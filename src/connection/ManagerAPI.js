@@ -1,12 +1,12 @@
 import Config from '../Config';
-import Connector, { TYPE_METHOD } from './Connector';
+import Connector, {TYPE_METHOD} from './Connector';
 import AppInfoManager from '../AppInfoManager';
 import LocationModule from '../modules/LocationModule';
-import { getValueFromObjectByKeys } from '../utils/Util';
+import {getValueFromObjectByKeys} from '../utils/Util';
 
 export const URL = {
   _tmpUrl: '',
-  getBaseUrl: () => "https://api.openweathermap.org/data/2.5/",
+  getBaseUrl: () => 'https://api.openweathermap.org/data/2.5/',
   customerUrl: Config.serverHostCustomer,
   switchCustomerUrl: function (url) {
     if (url) {
@@ -38,8 +38,8 @@ export const URL = {
       this._tmpUrl = '';
     }
   },
-  allData: "onecall",
-}
+  allData: 'onecall',
+};
 
 export default class ManagerAPI {
   static getInstance() {
@@ -58,7 +58,9 @@ export default class ManagerAPI {
   }
   // 0. GetConnector
   getConnector = (url, customUrl) => {
-    return new Connector().setUrl(customUrl ? customUrl : URL.getBaseUrl() + url);
+    return new Connector().setUrl(
+      customUrl ? customUrl : URL.getBaseUrl() + url,
+    );
   };
   // Create custom request
   requestCustom = ({
@@ -98,10 +100,12 @@ export default class ManagerAPI {
         appid: Config.apiKey,
         lang: 'en',
         lat,
-        lon
+        lon,
+        units: 'metric',
+        exclude: 'minutely',
       })
       .getPromise();
   };
 }
 
-export { ManagerAPI };
+export {ManagerAPI};

@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { Platform, Image, ImageBackground, View } from 'react-native';
+import {Platform, Image, ImageBackground, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Modal from 'react-native-modal';
 
 import BaseCommon from '../BaseCommon';
-import { isArray } from 'lodash';
-import { Images } from '../../../themes/Images';
+import {isArray} from 'lodash';
+import {Images} from '../../../themes/Images';
 import ImageViewer from 'react-native-image-zoom-viewer';
-import { TouchablePlatform } from '../../../modules/TouchablePlatform';
-import { Colors } from '../../../themes/Colors';
-import { getStatusBarHeight } from '../../../utils/DeviceUtil';
-import { Text } from '..';
+import {TouchablePlatform} from '../../../modules/TouchablePlatform';
+import {Colors} from '../../../themes/Colors';
+import {getStatusBarHeight} from '../../../utils/DeviceUtil';
+import {Text} from '..';
 
 export const TYPE_LEVEL_IMAGE = {
   LOW: FastImage.priority.low,
@@ -31,7 +31,7 @@ export const TYPE_IMAGE = {
   VERTICAL: 2,
 };
 
-const getResizeMode = (name) => {
+const getResizeMode = name => {
   switch (name) {
     case TYPE_IMAGE_RESIZE_MODE.COVER:
       return FastImage.resizeMode.cover;
@@ -65,14 +65,16 @@ class CustomImage extends BaseCommon {
   static ResizeMode = TYPE_IMAGE_RESIZE_MODE;
 
   renderPreviewImage = () => {
-    const { usePreview, previewSource, index } = this.props;
-    const { isPreviewing } = this.state;
-    if (!usePreview || !previewSource) { return null; }
+    const {usePreview, previewSource, index} = this.props;
+    const {isPreviewing} = this.state;
+    if (!usePreview || !previewSource) {
+      return null;
+    }
     let imageUrls = [];
     if (isArray(previewSource)) {
-      imageUrls = previewSource.map(it => ({ url: it }));
+      imageUrls = previewSource.map(it => ({url: it}));
     } else {
-      imageUrls = [{ url: previewSource }];
+      imageUrls = [{url: previewSource}];
     }
 
     return (
@@ -81,18 +83,19 @@ class CustomImage extends BaseCommon {
           flex: 1,
           margin: 0,
         }}
-        onBackdropPress={() => this.setStateSafe({ isPreviewing: false })}
-        onBackButtonPress={() => this.setStateSafe({ isPreviewing: false })}
+        onBackdropPress={() => this.setStateSafe({isPreviewing: false})}
+        onBackButtonPress={() => this.setStateSafe({isPreviewing: false})}
         visible={isPreviewing}
         transparent={true}
-        backdropOpacity={0.5}
-      >
+        backdropOpacity={0.5}>
         <ImageViewer
           useNativeDriver
           enablePreload
-          onCancel={() => this.setStateSafe({ isPreviewing: false })}
+          onCancel={() => this.setStateSafe({isPreviewing: false})}
           renderIndicator={(currentIndex, allSize) => {
-            if (allSize === 1) { return null; }
+            if (allSize === 1) {
+              return null;
+            }
             return (
               <Text
                 style={{
@@ -100,7 +103,9 @@ class CustomImage extends BaseCommon {
                   alignSelf: 'center',
                   color: Colors.white,
                   position: 'absolute',
-                }}>{currentIndex} / {allSize}</Text>
+                }}>
+                {currentIndex} / {allSize}
+              </Text>
             );
           }}
           imageUrls={imageUrls}
@@ -115,11 +120,10 @@ class CustomImage extends BaseCommon {
                 right: 0,
                 padding: 16,
               }}
-              onPress={() => this.setStateSafe({ isPreviewing: false })}
-            >
+              onPress={() => this.setStateSafe({isPreviewing: false})}>
               <Image
                 source={Images.assets.close.source}
-                style={{ width: 36, height: 36 }}
+                style={{width: 36, height: 36}}
               />
             </TouchablePlatform>
           )}
@@ -156,8 +160,7 @@ class CustomImage extends BaseCommon {
             style={[style]}
             source={source || sourceDefault}
             resizeMode={resizeMode}
-            {...otherProps}
-          >
+            {...otherProps}>
             {useChildren ? children : null}
           </ImageBackground>
         );
@@ -165,11 +168,10 @@ class CustomImage extends BaseCommon {
       return (
         <Image
           fadeDuration={0}
-          style={[style, { resizeMode }]}
+          style={[style, {resizeMode}]}
           source={source || sourceDefault}
           // resizeMode={resizeMode}
-          {...otherProps}
-        >
+          {...otherProps}>
           {children}
         </Image>
       );
@@ -177,20 +179,19 @@ class CustomImage extends BaseCommon {
 
     const sourceFast = source
       ? {
-        ...source,
-        priority: level,
-      }
+          ...source,
+          priority: level,
+        }
       : {
-        ...sourceDefault,
-        priority: level,
-      };
-    const { stateImage } = this.state;
+          ...sourceDefault,
+          priority: level,
+        };
+    const {stateImage} = this.state;
 
     const styleDefault = {
       backgroundColor: '#00000069',
       flex: 1,
     };
-
     if (stateImage === STATE_IMAGE.LOAD_ERROR) {
       return (
         <Image
@@ -202,28 +203,27 @@ class CustomImage extends BaseCommon {
     }
     const Wrapper = usePreview ? TouchablePlatform : View;
     return (
-      <Wrapper onPress={() => this.setStateSafe({ isPreviewing: true })}>
+      <Wrapper onPress={() => this.setStateSafe({isPreviewing: true})}>
         {stateImage === STATE_IMAGE.START_LOAD ||
-          stateImage === STATE_IMAGE.LOAD_ERROR ? (
+        stateImage === STATE_IMAGE.LOAD_ERROR ? (
           <View style={[style, styleDefault]} />
         ) : null}
         <FastImage
           onLoadStart={() =>
-            this.setStateSafe({ stateImage: STATE_IMAGE.START_LOAD })
+            this.setStateSafe({stateImage: STATE_IMAGE.START_LOAD})
           }
           onLoad={() => {
-            this.setStateSafe({ stateImage: STATE_IMAGE.LOAD_SUCCESS });
+            this.setStateSafe({stateImage: STATE_IMAGE.LOAD_SUCCESS});
           }}
           onError={() =>
-            this.setStateSafe({ stateImage: STATE_IMAGE.LOAD_ERROR })
+            this.setStateSafe({stateImage: STATE_IMAGE.LOAD_ERROR})
           }
           fadeDuration={0}
           fallback={Platform.OS === 'android'}
           style={stateImage === STATE_IMAGE.LOAD_SUCCESS ? style : null}
           source={sourceFast}
           {...otherProps}
-          resizeMode={getResizeMode(resizeMode)}
-        >
+          resizeMode={getResizeMode(resizeMode)}>
           {children}
         </FastImage>
         {this.renderPreviewImage()}
