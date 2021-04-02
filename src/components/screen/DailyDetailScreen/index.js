@@ -9,142 +9,94 @@ import SVGIcon from '../../../../assets/SVGIcon';
 import {TYPE_IMAGE_RESIZE_MODE} from '../../common/Image';
 import {Images} from '../../../themes/Images';
 import Text from '../../common/Text';
+import withImmutablePropsToJS from 'with-immutable-props-to-js';
+import {connect} from 'react-redux';
+import WeatherAction from '../../../actions/WeatherAction';
+import {
+  getDayMonth,
+  getStateForKeys,
+  getValueFromObjectByKeys,
+} from '../../../utils/Util';
+import {size} from 'lodash';
+import {WeatherIcon} from '../../element';
 
 const ITEM_MARGIN = 16;
 class DailyDetailScreen extends BaseScreen {
   constructor(props) {
     super(props);
+    const {daily} = props;
+    let data = [];
+    if (size(daily) > 0) {
+      data = daily.map(it => {
+        const weatherArray = getValueFromObjectByKeys(it, ['weather']);
+
+        return {
+          date: getDayMonth(it.dt * 1000),
+          weatherStatus:
+            size(weatherArray) > 0
+              ? getValueFromObjectByKeys(weatherArray[0], ['main'])
+              : '',
+          IconWeather: () => (
+            <WeatherIcon
+              icon={
+                size(weatherArray) > 0
+                  ? getValueFromObjectByKeys(weatherArray[0], ['icon'])
+                  : ''
+              }
+              style={{
+                width: normalize(85),
+                height: normalize(85),
+              }}
+            />
+          ),
+          gridInfo: [
+            {
+              Icon: SVGIcon.temp,
+              value: getValueFromObjectByKeys(it, ['feels_like', 'day']),
+              unit: 'oC',
+              description: 'Feel Like',
+            },
+            {
+              Icon: SVGIcon.humidity,
+              value: it.humidity,
+              unit: '%',
+              description: 'Humidity',
+            },
+            {
+              Icon: SVGIcon.rain_snow,
+              value: it.rain,
+              unit: 'mm',
+              description: 'Rain/Snow',
+            },
+            {
+              Icon: SVGIcon.wind,
+              value: it.wind_speed,
+              unit: 'km/h',
+              description: 'Wind',
+            },
+            {
+              Icon: SVGIcon.uv_index,
+              value: it.uvi,
+              unit: '',
+              description: 'UV Index',
+            },
+            {
+              Icon: SVGIcon.dew_point,
+              value: it.dew_point,
+              unit: '%',
+              description: 'Dew Point',
+            },
+          ],
+        };
+      });
+    }
+    this._debugLog('DailtDetailConstructor', daily, data);
+
     this.state = {
-      data: [
-        {
-          date: 'Tue, March 16',
-          weatherStatus: 'Partly Cloudy',
-          gridInfo: [
-            {
-              Icon: SVGIcon.temp,
-              value: 36,
-              unit: 'oC',
-              description: 'Feel Like',
-            },
-            {
-              Icon: SVGIcon.humidity,
-              value: 43,
-              unit: '%',
-              description: 'Humidity',
-            },
-            {
-              Icon: SVGIcon.rain_snow,
-              value: 0,
-              unit: 'mm',
-              description: 'Rain/Snow',
-            },
-            {
-              Icon: SVGIcon.wind,
-              value: 3,
-              unit: 'km/h',
-              description: 'Wind',
-            },
-            {
-              Icon: SVGIcon.uv_index,
-              value: 9,
-              unit: '',
-              description: 'UV Index',
-            },
-            {
-              Icon: SVGIcon.dew_point,
-              value: 43,
-              unit: '%',
-              description: 'Dew Point',
-            },
-          ],
-        },
-        {
-          date: 'Tue, March 16',
-          weatherStatus: 'Partly Cloudy',
-          gridInfo: [
-            {
-              Icon: SVGIcon.temp,
-              value: 36,
-              unit: 'oC',
-              description: 'Feel Like',
-            },
-            {
-              Icon: SVGIcon.humidity,
-              value: 43,
-              unit: '%',
-              description: 'Humidity',
-            },
-            {
-              Icon: SVGIcon.rain_snow,
-              value: 0,
-              unit: 'mm',
-              description: 'Rain/Snow',
-            },
-            {
-              Icon: SVGIcon.wind,
-              value: 3,
-              unit: 'km/h',
-              description: 'Wind',
-            },
-            {
-              Icon: SVGIcon.uv_index,
-              value: 9,
-              unit: '',
-              description: 'UV Index',
-            },
-            {
-              Icon: SVGIcon.dew_point,
-              value: 43,
-              unit: '%',
-              description: 'Dew Point',
-            },
-          ],
-        },
-        {
-          date: 'Tue, March 16',
-          weatherStatus: 'Partly Cloudy',
-          gridInfo: [
-            {
-              Icon: SVGIcon.temp,
-              value: 36,
-              unit: 'oC',
-              description: 'Feel Like',
-            },
-            {
-              Icon: SVGIcon.humidity,
-              value: 43,
-              unit: '%',
-              description: 'Humidity',
-            },
-            {
-              Icon: SVGIcon.rain_snow,
-              value: 0,
-              unit: 'mm',
-              description: 'Rain/Snow',
-            },
-            {
-              Icon: SVGIcon.wind,
-              value: 3,
-              unit: 'km/h',
-              description: 'Wind',
-            },
-            {
-              Icon: SVGIcon.uv_index,
-              value: 9,
-              unit: '',
-              description: 'UV Index',
-            },
-            {
-              Icon: SVGIcon.dew_point,
-              value: 43,
-              unit: '%',
-              description: 'Dew Point',
-            },
-          ],
-        },
-      ],
+      data,
     };
   }
+
   renderGridInfoItem = ({item, index}) => {
     const {description, value, unit, Icon} = item;
     return (
@@ -196,7 +148,9 @@ class DailyDetailScreen extends BaseScreen {
   };
 
   renderItem = ({item, index}) => {
-    const {date, weatherStatus, gridInfo} = item;
+    const {date, weatherStatus, gridInfo, IconWeather} = item;
+    this._debugLog('renderGridInfoItem', item);
+
     return (
       <View
         style={{
@@ -227,7 +181,7 @@ class DailyDetailScreen extends BaseScreen {
                 alignItems: 'center',
                 marginLeft: 16,
               }}>
-              <SVGIcon.cloudy width={normalize(52)} height={normalize(52)} />
+              {IconWeather()}
               <Text
                 size={40}
                 medium
@@ -257,5 +211,19 @@ class DailyDetailScreen extends BaseScreen {
     );
   }
 }
+const mapStateToProps = state => {
+  return {
+    daily: getStateForKeys(state, ['Weather', 'daily']),
+  };
+};
 
-export default DailyDetailScreen;
+const mapDispatchToProps = (dispatch, getState) => {
+  return {
+    getAllData: () => dispatch(WeatherAction.getAllData()),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withImmutablePropsToJS(DailyDetailScreen));
