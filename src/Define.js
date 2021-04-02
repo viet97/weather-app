@@ -31,3 +31,8 @@ export const MONTH_NAME = [
 
 export const MOMENT_DATE_FORMAT = 'MM/DD/YY';
 export const appCreatedBy = 'By GOD Team';
+export const DEFINE_DATA_SOURCE = {
+  openWeather: {key: 'openWeather', label: 'Open Weather'},
+  weatherBit: {key: 'weatherBit', label: 'Weather Bit'},
+  foreca: {key: 'foreca', label: 'Foreca'},
+};

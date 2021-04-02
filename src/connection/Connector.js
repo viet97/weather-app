@@ -4,11 +4,11 @@ import axios from 'axios';
 import Config from '../Config';
 import SessionQueue from './SessionQueue';
 import AppInfoManager from '../AppInfoManager';
-import { getValueFromObjectByKeys } from '../utils/Util';
+import {getValueFromObjectByKeys} from '../utils/Util';
 import EnterUtil from '../utils/EnterUtil';
 import NavigationService from '../navigation/NavigationService';
-import { ROUTER_NAME } from '../navigation/NavigationConst';
-import { NetworkModule } from '../modules/NetworkStateModule';
+import {ROUTER_NAME} from '../navigation/NavigationConst';
+import {NetworkModule} from '../modules/NetworkStateModule';
 
 const myLog = (...args) => {
   if (Config.debug) {
@@ -18,7 +18,7 @@ const myLog = (...args) => {
 
 const ConfigAxiosDefault = {
   timeout: 30000,
-  validateStatus: (status) => {
+  validateStatus: status => {
     return status >= 200 && status <= 600;
   },
 };
@@ -50,11 +50,11 @@ export const STATUS_CODE = {
 };
 
 export const ERROR_CODE = {
-  AXIOS: { errorCode: 1, errorNameCS: 'AXIOS' },
-  SERVER: { errorCode: 2, errorNameCS: 'SERVER' },
-  PARSE_DATA: { errorCode: 3, errorNameCS: 'PARSE_DATA' },
-  NO_INTERNET: { errorCode: 4, errorNameCS: 'NO_INTERNET' },
-  OTHER: { errorCode: 5, errorNameCS: 'OTHER' },
+  AXIOS: {errorCode: 1, errorNameCS: 'AXIOS'},
+  SERVER: {errorCode: 2, errorNameCS: 'SERVER'},
+  PARSE_DATA: {errorCode: 3, errorNameCS: 'PARSE_DATA'},
+  NO_INTERNET: {errorCode: 4, errorNameCS: 'NO_INTERNET'},
+  OTHER: {errorCode: 5, errorNameCS: 'OTHER'},
   TIMEOUT: 'ECONNABORTED',
 };
 
@@ -77,7 +77,7 @@ export default class Connector {
   }
 
   _init() {
-    Object.keys(ConfigDefault).map((row) => {
+    Object.keys(ConfigDefault).map(row => {
       this[row] = ConfigDefault[row];
     });
   }
@@ -92,12 +92,12 @@ export default class Connector {
     return this;
   }
 
-  setAcceptType = (accept) => {
+  setAcceptType = accept => {
     this.accept = accept;
     return this;
   };
 
-  setResponseType = (responseType) => {
+  setResponseType = responseType => {
     this.responseType = responseType;
     return this;
   };
@@ -162,24 +162,24 @@ export default class Connector {
     };
 
     const accessToken = AppInfoManager.getInstance().getAccessToken();
-    const uid = AppInfoManager.getInstance().getUid();
-    const tokenType = AppInfoManager.getInstance().getTokenType();
-    const client = AppInfoManager.getInstance().getClient();
+    // const uid = AppInfoManager.getInstance().getUid();
+    // const tokenType = AppInfoManager.getInstance().getTokenType();
+    // const client = AppInfoManager.getInstance().getClient();
     if (accessToken) {
       headers['access-token'] = accessToken;
     }
-    if (uid) {
-      headers.uid = uid;
-    }
-    if (tokenType) {
-      headers['token-type'] = tokenType;
-    }
+    // if (uid) {
+    //   headers.uid = uid;
+    // }
+    // if (tokenType) {
+    //   headers['token-type'] = tokenType;
+    // }
 
-    if (client) {
-      headers.client = client;
-    }
+    // if (client) {
+    //   headers.client = client;
+    // }
 
-    headers['mobile-version'] = Config.versionApp;
+    // headers['mobile-version'] = Config.versionApp;
 
     return headers;
   };
@@ -227,28 +227,6 @@ export default class Connector {
       const response = await axios(inputData);
       myLog('---response---', response);
       const data = getValueFromObjectByKeys(response, ['data']);
-
-      //login API
-      if (!AppInfoManager.getInstance().getAccessToken()) {
-        const accessToken = getValueFromObjectByKeys(response, [
-          'headers',
-          'access-token',
-        ]);
-        const uid = getValueFromObjectByKeys(response, ['headers', 'uid']);
-        const tokenType = getValueFromObjectByKeys(response, [
-          'headers',
-          'token-type',
-        ]);
-        const client = getValueFromObjectByKeys(response, [
-          'headers',
-          'client',
-        ]);
-
-        data.accessToken = accessToken;
-        data.tokenType = tokenType;
-        data.uid = uid;
-        data.client = client;
-      }
 
       myLog('---data after encode--', data, inputData, this.query, this.params);
       if (data === null) {

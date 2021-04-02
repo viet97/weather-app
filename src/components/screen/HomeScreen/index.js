@@ -799,11 +799,10 @@ export default class HomeScreen extends BaseScreen {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.contentContainerStyle}
           style={styles.scrollContainer}>
-          {/* {this.renderHomeInformation()}
+          {this.renderHomeInformation()}
           {this.renderHourlyChart()}
           {this.renderDailyChart()}
           {this.renderAirQualityIndex()}
-          {this.renderAirQualityIndex()} */}
           {this.renderSun()}
           <WeatherInfo />
         </ScrollView>

@@ -10,6 +10,7 @@ import {
   MenuScreen,
   AboutScreen,
   NotificationScreen,
+  AddLocationScreen,
 } from '../components/screen';
 import {AppDraw} from './router/DrawNavigator';
 import {AppTab} from './router/TabNavigator';
@@ -76,5 +77,10 @@ export const ROUTER_NAME = {
     title: 'Notification',
     name: 'NotificationScreen',
     component: NotificationScreen,
+  },
+  ADD_LOCATION: {
+    title: 'AddLocation',
+    name: 'AddLocationScreen',
+    component: AddLocationScreen,
   },
 };

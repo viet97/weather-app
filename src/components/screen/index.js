@@ -9,6 +9,7 @@ import CustomLayoutScreen from './CustomLayoutScreen';
 import MenuScreen from './MenuScreen';
 import AboutScreen from './AboutScreen';
 import NotificationScreen from './NotificationScreen';
+import AddLocationScreen from './AddLocationScreen';
 
 export {
   HomeScreen,
@@ -22,4 +23,5 @@ export {
   MenuScreen,
   AboutScreen,
   NotificationScreen,
+  AddLocationScreen,
 };

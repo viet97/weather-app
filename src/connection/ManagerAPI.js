@@ -1,11 +1,11 @@
 import Config from '../Config';
-import Connector, { TYPE_METHOD } from './Connector';
-import { md5 } from '../modules/CryptoJS';
+import Connector, {TYPE_METHOD} from './Connector';
+import {md5} from '../modules/CryptoJS';
 import AppInfoManager from '../AppInfoManager';
-import { TYPE_MENU_HOME } from '../Define';
-import { Platform } from 'react-native';
-import { createSignature, getParamsEnterGuest } from '../utils/Util';
-import { myLog } from '../Debug';
+import {TYPE_MENU_HOME} from '../Define';
+import {Platform} from 'react-native';
+import {createSignature, getParamsEnterGuest} from '../utils/Util';
+import {myLog} from '../Debug';
 
 export const URL = {
   _tmpUrl: '',
@@ -178,9 +178,9 @@ export default class ManagerAPI {
   getPrivacy = () => {
     return this.getConnector(URL.getPrivacy).getPromise();
   };
-  getResultSuggest = ({ q, limit, offset }) => {
+  getResultSuggest = ({q, limit, offset}) => {
     return this.getConnector(URL.searchMetadata)
-      .setQuery({ q, limit, offset })
+      .setQuery({q, limit, offset})
       .getPromise();
   };
   //   Guest login
@@ -196,7 +196,7 @@ export default class ManagerAPI {
       .getPromise();
   };
   // Enter phone
-  postUserEnter = ({ username }) => {
+  postUserEnter = ({username}) => {
     const deviceId = AppInfoManager.getInstance().getDeviceId();
     const params = {
       username,
@@ -222,7 +222,7 @@ export default class ManagerAPI {
       .getPromise();
   };
 
-  verifyOTPRegister = async ({ username, otp }) => {
+  verifyOTPRegister = async ({username, otp}) => {
     const deviceId = AppInfoManager.getInstance().getDeviceId();
     const otpSession = await AppInfoManager.getInstance().getOTPSession();
     const params = {
@@ -253,7 +253,7 @@ export default class ManagerAPI {
       .getPromise();
   };
 
-  verifyOTPChangePassword = async ({ username, otp }) => {
+  verifyOTPChangePassword = async ({username, otp}) => {
     const deviceId = AppInfoManager.getInstance().getDeviceId();
     const otpSession = await AppInfoManager.getInstance().getOTPSession();
     const params = {
@@ -284,7 +284,7 @@ export default class ManagerAPI {
       .getPromise();
   };
 
-  registerUser = async ({ username, password }) => {
+  registerUser = async ({username, password}) => {
     const deviceId = AppInfoManager.getInstance().getDeviceId();
     const deviceName = AppInfoManager.getInstance().getDeviceName();
     const otpToken = await AppInfoManager.getInstance().getOTP();
@@ -318,7 +318,7 @@ export default class ManagerAPI {
       .setUseRefreshToken(false)
       .getPromise();
   };
-  loginViaSocialNetwork = ({ idToken, name, avatar }) => {
+  loginViaSocialNetwork = ({idToken, name, avatar}) => {
     let objSignature = {
       deviceType: appInfo.deviceType,
       token: idToken,
@@ -356,7 +356,7 @@ export default class ManagerAPI {
       .setUseFcmToken(true)
       .getPromise();
   };
-  login = ({ username, password }) => {
+  login = ({username, password}) => {
     const deviceId = AppInfoManager.getInstance().getDeviceId();
     const deviceName = AppInfoManager.getInstance().getDeviceName();
     const params = {
@@ -387,7 +387,7 @@ export default class ManagerAPI {
       .getPromise();
   };
 
-  loginOTP = async ({ username, otp }) => {
+  loginOTP = async ({username, otp}) => {
     const deviceId = AppInfoManager.getInstance().getDeviceId();
     const deviceName = AppInfoManager.getInstance().getDeviceName();
     const otpSession = await AppInfoManager.getInstance().getOTPSession();
@@ -420,7 +420,7 @@ export default class ManagerAPI {
       .getPromise();
   };
 
-  forgetPassword = ({ username }) => {
+  forgetPassword = ({username}) => {
     const deviceId = AppInfoManager.getInstance().getDeviceId();
     let params = {
       username,
@@ -446,7 +446,7 @@ export default class ManagerAPI {
       .getPromise();
   };
 
-  changePassword = async ({ username, password }) => {
+  changePassword = async ({username, password}) => {
     const deviceId = AppInfoManager.getInstance().getDeviceId();
     const deviceName = AppInfoManager.getInstance().getDeviceName();
     const otpToken = await AppInfoManager.getInstance().getOTP();
@@ -481,10 +481,10 @@ export default class ManagerAPI {
   };
 
   // USER
-  logout = ({ deviceId }) => {
+  logout = ({deviceId}) => {
     return this.getConnector(URL.postLogout)
       .setMethod(TYPE_METHOD.POST)
-      .setParams({ deviceId })
+      .setParams({deviceId})
       .getPromise();
   };
 
@@ -498,10 +498,10 @@ export default class ManagerAPI {
     return this.getConnector(URL.getTransactionHistory).getPromise();
   };
 
-  activeCode = ({ code }) => {
+  activeCode = ({code}) => {
     return this.getConnector(URL.activeCode)
       .setMethod(TYPE_METHOD.POST)
-      .setParams({ code })
+      .setParams({code})
       .getPromise();
   };
 
@@ -515,13 +515,13 @@ export default class ManagerAPI {
     );
   };
 
-  getChannelProgram = ({ channelId, date }) => {
+  getChannelProgram = ({channelId, date}) => {
     return this.getConnector(`${URL.getChannelProgram}/${channelId}/${date}`)
-      .setParams({ channelId, date })
+      .setParams({channelId, date})
       .getPromise();
   };
 
-  getSourceChannelDefault = ({ resolution } = {}) => {
+  getSourceChannelDefault = ({resolution} = {}) => {
     let codec = [];
     return this.getConnector(URL.getSourceChannelDefault)
       .setQuery({
@@ -532,13 +532,13 @@ export default class ManagerAPI {
       .getPromise();
   };
   // VOD
-  getMenuHomeList = ({ items }) => {
+  getMenuHomeList = ({items}) => {
     return this.getConnector(URL.getMenuHomeList)
-      .setQuery({ items })
+      .setQuery({items})
       .getPromise();
   };
 
-  getMenuVod = ({ id, offset, limit, type, mixData }) => {
+  getMenuVod = ({id, offset, limit, type, mixData}) => {
     return this.getConnector(
       type === TYPE_MENU_HOME.MENU_MIX ? URL.getMenuHomeMix : URL.getMenuHome,
     )
@@ -551,7 +551,7 @@ export default class ManagerAPI {
       .getPromise();
   };
 
-  getListVod = ({ id, limit, offset, type, mixData }) => {
+  getListVod = ({id, limit, offset, type, mixData}) => {
     return this.getConnector(
       type === TYPE_MENU_HOME.MENU_MIX ? URL.getMenuHomeMix : URL.getList,
     )
@@ -564,7 +564,7 @@ export default class ManagerAPI {
       .getPromise();
   };
   // Content
-  getSource = ({ id, type, session }) => {
+  getSource = ({id, type, session}) => {
     return this.getConnector(URL.getSource)
       .setQuery({
         id,
@@ -575,53 +575,49 @@ export default class ManagerAPI {
       .getPromise();
   };
   //
-  getVodDetail = ({ id }) => {
+  getVodDetail = ({id}) => {
     // let filter = {};{ filter: JSON.stringify(filter), id}
     return this.getConnector(URL.getVodDetail + '/' + id).getPromise();
   };
 
-  getVodEpisodeList = ({ id, limit, offset }) => {
+  getVodEpisodeList = ({id, limit, offset}) => {
     // let filter = {};{ filter: JSON.stringify(filter), id}
     return this.getConnector(URL.getVodEpisodeList + '/' + id)
-      .setQuery({ limit, offset })
+      .setQuery({limit, offset})
       .getPromise();
   };
 
-  getVodRelate = ({ id, type, offset }) => {
+  getVodRelate = ({id, type, offset}) => {
     return this.getConnector(URL.getVodRelate + '/' + id)
-      .setQuery({ type, offset })
+      .setQuery({type, offset})
       .getPromise();
   };
 
-  setVodState = ({ id, time }) => {
+  setVodState = ({id, time}) => {
     return this.getConnector(URL.setVodState)
       .setMethod(TYPE_METHOD.POST)
-      .setParams({ id, time })
+      .setParams({id, time})
       .getPromise();
   };
 
-  getVodState = ({ id }) => {
-    return this.getConnector(URL.getVodState)
-      .setQuery({ id })
-      .getPromise();
+  getVodState = ({id}) => {
+    return this.getConnector(URL.getVodState).setQuery({id}).getPromise();
   };
   getMenuVodHome = () => {
     return this.getConnector(URL.getMenuVodHome).getPromise();
   };
-  getVodByNodeId = ({ id, limit, offset, displayChildren }) => {
-    const paramsGetData = { nodeId: id, limit, offset, displayChildren };
+  getVodByNodeId = ({id, limit, offset, displayChildren}) => {
+    const paramsGetData = {nodeId: id, limit, offset, displayChildren};
     if (!limit) {
       delete paramsGetData.limit;
     }
-    return this.getConnector(URL.metadata)
-      .setQuery(paramsGetData)
-      .getPromise();
+    return this.getConnector(URL.metadata).setQuery(paramsGetData).getPromise();
   };
 
-  changeMovieLanguage = ({ languages }) => {
+  changeMovieLanguage = ({languages}) => {
     return this.getConnector(URL.changeMovieLanguage)
       .setMethod(TYPE_METHOD.POST)
-      .setParams({ languages })
+      .setParams({languages})
       .getPromise();
   };
 
@@ -638,27 +634,27 @@ export default class ManagerAPI {
     return this.getConnector(URL.getListPackageRent).getPromise();
   };
 
-  getBankLink = ({ packageCode, time, deviceNumber, username }) => {
+  getBankLink = ({packageCode, time, deviceNumber, username}) => {
     return this.getConnector(URL.getBankLink)
-      .setQuery({ packageCode, time, deviceNumber, username })
+      .setQuery({packageCode, time, deviceNumber, username})
       .getPromise();
   };
 
-  getMomoLink = ({ packageCode, time, deviceNumber, username }) => {
+  getMomoLink = ({packageCode, time, deviceNumber, username}) => {
     return this.getConnector(URL.getMomoLink)
-      .setQuery({ packageCode, time, deviceNumber, username })
+      .setQuery({packageCode, time, deviceNumber, username})
       .getPromise();
   };
 
-  getBankLinkRent = ({ amount }) => {
+  getBankLinkRent = ({amount}) => {
     return this.getConnector(URL.getBankLinkRent)
-      .setQuery({ amount })
+      .setQuery({amount})
       .getPromise();
   };
 
-  getMomoLinkRent = ({ amount }) => {
+  getMomoLinkRent = ({amount}) => {
     return this.getConnector(URL.getMomoLinkRent)
-      .setQuery({ amount })
+      .setQuery({amount})
       .getPromise();
   };
 
@@ -688,7 +684,7 @@ export default class ManagerAPI {
       .getPromise();
   };
 
-  payVerifyCardMoney = async ({ amount, serial, cardCode, extra, username }) => {
+  payVerifyCardMoney = async ({amount, serial, cardCode, extra, username}) => {
     const realUsername = username
       ? username
       : await AppInfoManager.getInstance().getUsername();
@@ -704,13 +700,13 @@ export default class ManagerAPI {
       .getPromise();
   };
 
-  buyItemVod({ id }) {
+  buyItemVod({id}) {
     return this.getConnector(URL.buyItemVod)
       .setMethod(TYPE_METHOD.POST)
-      .setParams({ id: id })
+      .setParams({id: id})
       .getPromise();
   }
-  payIap = ({ packageCode, time, deviceNumber, receipt }) => {
+  payIap = ({packageCode, time, deviceNumber, receipt}) => {
     return this.getConnector(URL.payIap)
       .setParams({
         packageCode,
@@ -723,7 +719,7 @@ export default class ManagerAPI {
   };
   //
   //Ping
-  pingServer = ({ url }) => {
+  pingServer = ({url}) => {
     return this.getConnector('', url)
       .setUseToken(true)
       .setAcceptCancelRequest(false)
@@ -747,4 +743,4 @@ export default class ManagerAPI {
   };
 }
 
-export { ManagerAPI };
+export {ManagerAPI};

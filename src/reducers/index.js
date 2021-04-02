@@ -6,10 +6,12 @@ import {
 import tracker from './Tracker';
 import Navigation from './Navigation';
 import Language from './Language';
+import DataSource from './DataSource';
 
 const MainListReducers = {
   Navigation,
   Language,
+  DataSource,
 };
 
 const rootReducerImmutable = (reducers, getDefaultState) => {
