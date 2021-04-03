@@ -71,8 +71,8 @@ export default class LineChartCustom extends BaseElement {
             style={style}
             withHorizontalLabels={false}
             withVerticalLabels={false}
-            renderBottomLabel={({index}) => {
-              return renderBottomLabel && renderBottomLabel({index});
+            renderBottomLabel={({index, isFocus}) => {
+              return renderBottomLabel && renderBottomLabel({index, isFocus});
             }}
           />
         </ScrollView>

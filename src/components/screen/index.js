@@ -12,6 +12,7 @@ import NotificationScreen from './NotificationScreen';
 import AddLocationScreen from './AddLocationScreen';
 import DailyDetailScreen from './DailyDetailScreen';
 import AirQualityDetailScreen from './AirQualityDetailScreen';
+import HourlyDetailScreen from './HourlyDetailScreen';
 
 export {
   HomeScreen,
@@ -28,4 +29,5 @@ export {
   AddLocationScreen,
   DailyDetailScreen,
   AirQualityDetailScreen,
+  HourlyDetailScreen,
 };

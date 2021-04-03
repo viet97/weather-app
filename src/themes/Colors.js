@@ -49,4 +49,7 @@ export const Colors = {
   sun_set: '#FDF8EB',
   border_moon: '#F7C22B',
   blue_15: 'rgba(41,182,246,0.15)',
+  visibility_dot: '#4465A7',
+  visibility_line: '#6178A7',
+  title_background: '#D4F0FD',
 };

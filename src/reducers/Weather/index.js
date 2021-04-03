@@ -100,7 +100,6 @@ export default (state = initState, action) => {
             .setIn(['daily'], daily)
             .setIn(['current'], current)
             .setIn(['hourly'], hourly);
-          break;
         default:
           return state;
       }
@@ -121,7 +120,6 @@ export default (state = initState, action) => {
           return state.setIn(['listAirObj'], listAirObj).setIn(['aqi'], aqi);
         default:
           return state;
-          break;
       }
     default:
       return state;

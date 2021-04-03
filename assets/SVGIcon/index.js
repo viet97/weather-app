@@ -24,7 +24,18 @@ import covid_active from './covid_active.svg';
 import covid_recover from './covid_recover.svg';
 import covid_death from './covid_death.svg';
 import covid_confirm from './covid_confirm.svg';
+import full_moon from './full_moon.svg';
+import new_moon from './new_moon.svg';
+import waxing_gibbous from './waxing_gibbous.svg';
 import waqi from './waqi.svg';
+import cloud_cover from './cloud_cover.svg';
+import wind_trans from './wind_trans.svg';
+import uvi_trans from './uvi_trans.svg';
+import temp_trans from './temp_trans.svg';
+import dew_point_trans from './dew_point_trans.svg';
+import pressure_trans from './pressure_trans.svg';
+import visibility_trans from './visibility_trans.svg';
+import humidity_trans from './humidity_trans.svg';
 
 export default {
   header_left,
@@ -54,4 +65,15 @@ export default {
   covid_death,
   covid_confirm,
   waqi,
+  full_moon,
+  new_moon,
+  waxing_gibbous,
+  cloud_cover,
+  wind_trans,
+  uvi_trans,
+  temp_trans,
+  dew_point_trans,
+  pressure_trans,
+  visibility_trans,
+  humidity_trans,
 };

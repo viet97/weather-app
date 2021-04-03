@@ -19,6 +19,7 @@ import {
   Rect,
   Svg,
 } from "react-native-svg";
+import LinearGradient from "react-native-linear-gradient";
 
 import AbstractChart, {
   AbstractChartConfig,
@@ -228,6 +229,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
 
   state = {
     scrollableDotHorizontalOffset: new Animated.Value(0),
+    currentIndex: -1,
   };
 
   getColor = (dataset: Dataset, opacity: number) => {
@@ -279,7 +281,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
       },
       pointDistance,
     } = this.props;
-
+    const { currentIndex } = this.state;
     data.forEach((dataset) => {
       if (dataset.withDots == false) return;
 
@@ -293,6 +295,12 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
         const cy = height * (1 - x / 100) + paddingTop;
 
         const onPress = () => {
+          if (currentIndex === i) {
+            this.setState({ currentIndex: -1 });
+          } else {
+            this.setState({ currentIndex: i });
+          }
+
           if (!onDataPointClick || hidePointsAtIndex.includes(i)) {
             return;
           }
@@ -347,17 +355,80 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
     pointDistance,
   }) => {
     const content = [];
+    const { currentIndex } = this.state;
     data.forEach((dataset) => {
       dataset.data.forEach((x, i) => {
         const cx = i * pointDistance + pointDistance / 2;
 
         const cy = height * (1 - x / 100) + paddingTop;
-        content.push(
+
+        const isCurrent = currentIndex >= 0 && i === currentIndex;
+
+        const contentLabel = isCurrent ? (
+          <View
+            style={{
+              flexDirection: "row",
+              position: "absolute",
+              top: cy - 40,
+              left: cx - this.props.pointDistance / 2,
+              width: this.props.pointDistance,
+              justifyContent: "center",
+            }}
+          >
+            <View>
+              <LinearGradient
+                start={{ x: 0, y: 0.1 }}
+                end={{ x: 0, y: 1.0 }}
+                colors={[
+                  this.props.getDotColor(),
+                  this.props.chartConfig.color(),
+                ]}
+                style={{
+                  paddingHorizontal: 6,
+                  paddingVertical: 2,
+                  borderRadius: 4,
+                  alignItem: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily:
+                      Platform.OS === "android"
+                        ? "SF-Pro-Display-Light"
+                        : "SFProDisplay-Light",
+                    color: "white",
+                  }}
+                >
+                  {dataValue[i]}
+                </Text>
+              </LinearGradient>
+              <View
+                style={{
+                  width: 0,
+                  height: 0,
+                  backgroundColor: "transparent",
+                  borderStyle: "solid",
+                  borderTopWidth: 10,
+                  borderRightWidth: 3,
+                  borderBottomWidth: 0,
+                  borderLeftWidth: 3,
+                  overflow: "hidden",
+                  borderBottomColor: "transparent",
+                  borderRightColor: "transparent",
+                  borderTopColor: this.props.chartConfig.color(),
+                  borderLeftColor: "transparent",
+                  alignSelf: "center",
+                }}
+              />
+            </View>
+          </View>
+        ) : (
           <View
             style={{
               position: "absolute",
-              top: cy - 24,
-              left: cx - 10,
+              top: cy - 28,
+              left: cx - this.props.pointDistance / 2,
+              width: this.props.pointDistance,
             }}
           >
             <Text
@@ -366,12 +437,15 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
                   Platform.OS === "android"
                     ? "SF-Pro-Display-Light"
                     : "SFProDisplay-Light",
+                textAlign: "center",
               }}
             >
               {dataValue[i]}
             </Text>
           </View>
         );
+
+        content.push(contentLabel);
       });
     });
     return content.map((it) => it);
@@ -387,6 +461,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
   }) => {
     const content = [];
     const { renderBottomLabel } = this.props;
+    const { currentIndex } = this.state;
     data.forEach((dataset) => {
       dataset.data.forEach((x, i) => {
         content.push(
@@ -397,7 +472,8 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
               alignSelf: "center",
             }}
           >
-            {renderBottomLabel && renderBottomLabel({ index: i })}
+            {renderBottomLabel &&
+              renderBottomLabel({ index: i, isFocus: currentIndex === i })}
           </View>
         );
       });
@@ -915,7 +991,12 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
     return (
       <View style={style}>
         <Svg
-          height={height + (paddingBottom as number) + legendOffset}
+          height={
+            height +
+            (paddingBottom as number) +
+            legendOffset +
+            this.props.chartConfig.propsForDots.r * 4
+          }
           width={width - (margin as number) * 2 - (marginRight as number)}
         >
           <Rect
