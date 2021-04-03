@@ -20,7 +20,7 @@ import {
 import SVGIcon from '../../../../assets/SVGIcon';
 import {Text} from '../../common';
 import BaseScreen from '../BaseScreen';
-import {TouchablePlatform} from '../../../modules/TouchablePlatform';
+import AppStateModule from '../../../modules/AppStateModule';
 import {
   LineChartCustom,
   BarChartCustom,
@@ -32,20 +32,22 @@ import {TYPE_IMAGE_RESIZE_MODE} from '../../common/Image';
 import NavigationService from '../../../navigation/NavigationService';
 import WeatherInfo from './component/weather-info';
 import {ROUTER_NAME} from '../../../navigation/NavigationConst';
-import {size} from 'lodash';
-import LocationModule from '../../../modules/LocationModule';
+import {isEmpty, size} from 'lodash';
+import {TouchablePlatform} from '../../../modules/TouchablePlatform';
 import WeatherAction from '../../../actions/WeatherAction';
 import {connect} from 'react-redux';
 import withImmutablePropsToJS from 'with-immutable-props-to-js';
 import {
   getDateTimeString,
   getDayMonth,
+  getGreetingTime,
   getHourString,
   getStateForKeys,
   getValueFromObjectByKeys,
 } from '../../../utils/Util';
+import {AIR_LIST} from '../../../Define';
+import {EmitterManager} from '../../../modules/EmitterManager';
 
-const exampleData = [15, 21, 23, 12, 24, 28, 29];
 const LEFT_PADDING_SCREEN = normalize(14) + 8;
 const RIGHT_PADDING_SCREEN = 16;
 class HomeScreen extends BaseScreen {
@@ -55,24 +57,25 @@ class HomeScreen extends BaseScreen {
       currentIndexLineChart: 0,
       currentIndexBarChart: 0,
       currentIndexCovidTab: 0,
+      greeting: getGreetingTime(moment()),
     };
     this.displayName = 'HomeScreen';
 
     this.listQualityIndex = [
       {
-        status: 'Good',
         color: 'green',
         value: 50,
+        ...AIR_LIST.SO2,
       },
       {
-        status: 'Normal',
         color: 'yellow',
         value: 100,
+        ...AIR_LIST.CO,
       },
       {
-        status: 'Unsafe',
         color: 'red',
         value: 500,
+        ...AIR_LIST.O3,
       },
     ];
 
@@ -256,7 +259,15 @@ class HomeScreen extends BaseScreen {
   }
 
   _componentDidMount() {
-    this.props.getAllData();
+    const {getAllData, getAirPollution} = this.props;
+    getAllData();
+    getAirPollution();
+    EmitterManager.getInstance().on(
+      EmitterManager.listEvent.APP_STATE_CHANGE,
+      () => {
+        this.setStateSafe({greeting: getGreetingTime(moment())});
+      },
+    );
   }
   renderBottomLabel = (dateTimeStr, icon) => (
     <View
@@ -572,13 +583,17 @@ class HomeScreen extends BaseScreen {
   };
 
   renderPMCircleProgress = () => {
+    const {listAirObj} = this.props;
+    if (isEmpty(listAirObj)) return null;
     return (
       <View style={styles.pmCircleContainer}>
         {this.listQualityIndex.map(airQuality => {
+          const {name, key} = airQuality;
+          const value = listAirObj[key];
           return (
             <View style={styles.circleContainer}>
               <Text size={36} medium style={{color: Colors.air_quality_text}}>
-                PM2.5
+                {name}
               </Text>
               <AirQualityProgressCircle
                 outerCircleStyle={{marginTop: 12}}
@@ -586,7 +601,7 @@ class HomeScreen extends BaseScreen {
                 radius={normalize(80)}
                 color="green"
                 innerCircleStyle={styles.innerDashedCircle}
-                value={119}
+                value={value && value.toFixed(2)}
               />
               <View style={styles.airQualityBackground}>
                 <Text size={28} style={{color: Colors.weather_red}}>
@@ -760,7 +775,7 @@ class HomeScreen extends BaseScreen {
               size={36}
               style={{color: Colors.white, flex: 1, alignSelf: 'center'}}
               medium>
-              Good Morning!
+              Good {this.state.greeting}!
             </Text>
             <View style={styles.iconsContainer}>
               <TouchablePlatform style={{padding: 8}}>
@@ -1266,12 +1281,14 @@ const mapStateToProps = state => {
     listGridInfo: getStateForKeys(state, ['Weather', 'listGridInfo']),
     hourly: getStateForKeys(state, ['Weather', 'hourly']),
     daily: getStateForKeys(state, ['Weather', 'daily']),
+    listAirObj: getStateForKeys(state, ['Weather', 'listAirObj']),
   };
 };
 
 const mapDispatchToProps = (dispatch, getState) => {
   return {
     getAllData: () => dispatch(WeatherAction.getAllData()),
+    getAirPollution: () => dispatch(WeatherAction.getAirPollution()),
   };
 };
 

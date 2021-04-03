@@ -9,6 +9,7 @@ export const REQUEST_TYPE = {
   //About
   GET_PRIVACY: encodeString('GET_PRIVACY'),
   GET_ALL_DATA: encodeString('GET_ALL_DATA'),
+  GET_AIR_POLLUTION: encodeString('GET_AIR_POLLUTION'),
 };
 
 export const REQUEST_SUBTYPE = {

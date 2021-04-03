@@ -1,4 +1,5 @@
 import Immutable from 'immutable';
+import {size} from 'lodash';
 import SVGIcon from '../../../assets/SVGIcon';
 import {
   NORMAL_TYPE,
@@ -102,6 +103,25 @@ export default (state = initState, action) => {
           break;
         default:
           return state;
+      }
+
+    case REQUEST_TYPE.GET_AIR_POLLUTION:
+      switch (action.subType) {
+        case REQUEST_SUBTYPE.SUCCESS:
+          const data = getValueFromObjectByKeys(action, ['data', 'data']);
+          const list = getValueFromObjectByKeys(data, ['list']);
+          let listAirObj = {};
+          let aqi = 0;
+          if (size(list) > 0) {
+            listAirObj = getValueFromObjectByKeys(list[0], ['components']);
+            aqi = getValueFromObjectByKeys(list[0], ['main', 'aqi']);
+          }
+          myLog('REQUEST_TYPE.GET_AIR_POLLUTION', list);
+
+          return state.setIn(['listAirObj'], listAirObj).setIn(['aqi'], aqi);
+        default:
+          return state;
+          break;
       }
     default:
       return state;

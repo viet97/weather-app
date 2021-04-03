@@ -38,21 +38,6 @@ export const Header = props => {
           paddingHorizontal: normalize(30),
           paddingBottom: extraElement ? 3 : paddingBottomTitle,
         }}>
-        <TouchableOpacity
-          style={{
-            width: 50,
-            height: 50,
-            justifyContent: 'flex-end',
-          }}
-          onPress={() => {
-            NavigationService.getInstance().goBack();
-          }}>
-          {iconBack ? (
-            iconBack
-          ) : (
-            <IconBackSvg width={normalize(18.36)} height={normalize(34)} />
-          )}
-        </TouchableOpacity>
         <View
           style={{
             position: 'absolute',
@@ -68,6 +53,21 @@ export const Header = props => {
             {title || 'Screen'}
           </CustomText>
         </View>
+        <TouchablePlatform
+          style={{
+            width: 50,
+            height: 50,
+            justifyContent: 'flex-end',
+          }}
+          onPress={() => {
+            NavigationService.getInstance().goBack();
+          }}>
+          {iconBack ? (
+            iconBack
+          ) : (
+            <IconBackSvg width={normalize(18.36)} height={normalize(34)} />
+          )}
+        </TouchablePlatform>
       </View>
       {extraElement ? extraElement() : null}
     </View>
