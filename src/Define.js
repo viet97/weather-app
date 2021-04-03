@@ -142,11 +142,11 @@ export const DEFINE_UNIT_FREQUENCY = {
 export const DEFINE_UNITS_TEMP = {
   c: {
     value: 'c',
-    label: temperatureC,
+    label: '°C',
   },
   f: {
     value: 'f',
-    label: temperatureF,
+    label: '°F',
   },
 };
 export const DEFINE_UNITS_RAIN_SNOW = {
@@ -285,42 +285,61 @@ export const DEFINE_LAYOUT = {
 export const DEFINE_LANGUAGE = {
   eng: {
     label: 'English : English',
+    txtSub: 'English',
     value: 'eng',
   },
   vi: {
     label: 'Vietnamese: Tiếng Việt',
+    txtSub: 'Tiếng Việt',
     value: 'vi',
   },
   ca: {
     label: 'Catalan : Català',
+    txtSub: 'Català',
     value: 'ca',
   },
   we: {
     label: 'Welsh : Cymraeg',
+    txtSub: 'Cymraeg',
     value: 'we',
   },
   sv: {
     label: 'Swedish : Svenska',
+    txtSub: 'Svenska',
     value: 'sv',
   },
   sl: {
     label: 'Sloval : Slovenský',
+    txtSub: 'Slovenský',
     value: 'sl',
   },
   pt: {
     label: 'Portuguese : Português',
+    txtSub: 'Português',
     value: 'pt',
   },
   pl: {
     label: 'Polish : Polskie',
+    txtSub: 'Polskie',
     value: 'pl',
   },
   it: {
     label: 'Italian : Italiano',
+    txtSub: 'Italiano',
     value: 'it',
   },
   de: {
     label: 'German : Deutsch',
+    txtSub: 'Deutsch',
     value: 'de',
+  },
+};
+
+export const unitsQuery = {
+  openWeather: {
+    temp: {
+      [DEFINE_UNITS_TEMP.c.value]: 'metric',
+      [DEFINE_UNITS_TEMP.f.value]: 'imperial',
+    },
   },
 };

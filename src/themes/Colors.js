@@ -50,4 +50,5 @@ export const Colors = {
   sun_set: '#FDF8EB',
   border_moon: '#F7C22B',
   blue_15: 'rgba(41,182,246,0.15)',
+  txtSub: '#aaaaaa',
 };

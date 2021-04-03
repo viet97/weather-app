@@ -35,6 +35,7 @@ import {Colors} from '../../../themes/Colors';
 import {TouchablePlatform} from '../../../modules/TouchablePlatform';
 import {
   DEFINE_DATA_SOURCE,
+  DEFINE_LANGUAGE,
   DEFINE_THEME_COLOR,
   DEFINE_TIME_FORMAT,
   DEFINE_UNITS_DISTANCE,
@@ -50,7 +51,7 @@ import {NORMAL_TYPE} from '../../../actions/ActionTypes';
 import {myLog} from '../../../Debug';
 import AppInfoManager from '../../../AppInfoManager';
 import {languagesKeys} from '../../../modules/i18n/defined';
-import withI18n from '../../../modules/i18n/HOC';
+import withI18n, {typeStringAfterTranslation} from '../../../modules/i18n/HOC';
 
 const modalKey = {
   time: 'time',
@@ -207,7 +208,6 @@ class SettingScreen extends BaseScreen {
       {
         label: 'Language',
         iconLeft: IconLanguageSvg,
-        txtRight: 'English',
         iconRight: IconRightSvg,
         onClick: () => {},
         key: itemKey.language,
@@ -342,6 +342,7 @@ class SettingScreen extends BaseScreen {
       unitRainSnow,
       unitWindSpeed,
       t,
+      language,
     } = this.props;
     let txtRight = item.txtRight || '';
     if (!item.txtRight) {
@@ -364,6 +365,11 @@ class SettingScreen extends BaseScreen {
         case itemKey.theme:
           txtRight = DEFINE_THEME_COLOR[themeColor]
             ? DEFINE_THEME_COLOR[themeColor].label
+            : '';
+          break;
+        case itemKey.language:
+          txtRight = DEFINE_LANGUAGE[language]
+            ? DEFINE_LANGUAGE[language].txtSub
             : '';
           break;
         case itemKey.unit:
@@ -422,7 +428,9 @@ class SettingScreen extends BaseScreen {
                   numberOfLines={1}
                   style={labelStyle}
                   color={Colors.air_quality_text}>
-                  {t(item.languageKey)}
+                  {t(item.languageKey, {
+                    type: typeStringAfterTranslation.capitalize,
+                  })}
                 </CustomText>
               ) : item.label ? (
                 <CustomText

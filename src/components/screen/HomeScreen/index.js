@@ -32,7 +32,6 @@ import {TYPE_IMAGE_RESIZE_MODE} from '../../common/Image';
 import NavigationService from '../../../navigation/NavigationService';
 import WeatherInfo from './component/weather-info';
 import {ROUTER_NAME} from '../../../navigation/NavigationConst';
-import {size} from 'lodash';
 import {AppSettingManager} from '../../../modules/AppSettingManager';
 import {isEmpty, size} from 'lodash';
 import {TouchablePlatform} from '../../../modules/TouchablePlatform';

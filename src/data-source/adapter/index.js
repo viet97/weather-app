@@ -1,3 +1,4 @@
+import {myLog} from '../../Debug';
 import {DEFINE_DATA_SOURCE} from '../../Define';
 
 export class AdapterManager {
@@ -11,8 +12,9 @@ export class AdapterManager {
     return this.instance;
   };
   convertLocationData = ({data, source}) => {
+    myLog('---convertLocationData--->', data, source);
     switch (source) {
-      case DEFINE_DATA_SOURCE.openWeather:
+      case DEFINE_DATA_SOURCE.openWeather.key:
         return data;
       default:
         return null;

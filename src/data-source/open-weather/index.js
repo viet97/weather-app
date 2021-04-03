@@ -1,11 +1,13 @@
 import Connector from '../../connection/Connector';
 import {myLog} from '../../Debug';
+import {DEFINE_UNITS_TEMP} from '../../Define';
 
 const openWeatherAppId = '55ef21e63e49a17721cee8a48a64bad8';
 const apiUrl = 'https://api.openweathermap.org/data/2.5/';
 const apiEndPoint = {
   oneCall: 'onecall',
   weather: 'weather',
+  find: 'find',
 };
 
 export class openWeatherManager {
@@ -25,8 +27,13 @@ export class openWeatherManager {
   getLocationByName = ({query = {}}) => {
     myLog('getLocationByName-->', query);
     return this.getConnector()
-      .setUrl(apiUrl + apiEndPoint.weather)
-      .setQuery({...this.defaultQuery, ...query})
+      .setUrl(apiUrl + apiEndPoint.find)
+      .setQuery({
+        ...this.defaultQuery,
+        ...query,
+        type: 'like',
+        sort: 'population',
+      })
       .getPromise();
   };
 }

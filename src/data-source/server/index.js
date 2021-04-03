@@ -18,8 +18,8 @@ export class MyServer {
   };
   getKeyDataSource = () => {
     return getStateForKeys(ConfigStore().store.getState(), [
-      'DataSource',
-      'source',
+      'Setting',
+      'dataSource',
     ]);
   };
   getLocationByName = async ({query = {}}) => {

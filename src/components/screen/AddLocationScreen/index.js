@@ -24,11 +24,15 @@ import {
 import CustomText from '../../common/Text';
 import {Header} from '../Header';
 import {CityList} from '../../../utils/CityList';
-import {temperatureC} from '../../../utils/Util';
+import {getStateForKeys, temperatureC} from '../../../utils/Util';
 import {KEY_FONT} from '../../../themes/Fonts';
 import {Colors} from '../../../themes/Colors';
 import {myLog} from '../../../Debug';
 import {MyServer} from '../../../data-source/server';
+import {debounce, throttle} from '../../../modules/Lodash';
+import {DEFINE_UNITS_TEMP, unitsQuery} from '../../../Define';
+import {connect} from 'react-redux';
+import withI18n from '../../../modules/i18n/HOC';
 
 const sizeIconLeft = {
   width: normalize(44),
@@ -50,12 +54,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    flex: 1,
   },
   labelItem: {
     marginLeft: paddingHorizontalItem,
     // marginBottom: distanceVerticalTxtLeft,
     includeFontPadding: false,
-    fontFamily: KEY_FONT.bold,
   },
   txtDataSource: {
     marginLeft: paddingHorizontalItem,
@@ -72,6 +77,7 @@ class AddLocationScreen extends BaseScreen {
     super(props);
     this.state = {
       value: 'eng',
+      dataSearch: [],
     };
     this.listProvider = [
       {
@@ -97,6 +103,10 @@ class AddLocationScreen extends BaseScreen {
         temperatureSuffix: 'f',
       },
     ];
+    this.onChangeText = debounce(this.onChangeText, 500, {
+      leading: false,
+      trailing: true,
+    });
   }
   onPressItem = item => {
     this.setState({
@@ -105,7 +115,7 @@ class AddLocationScreen extends BaseScreen {
   };
   renderItem = params => {
     const {item, index} = params;
-    const {value} = this.state;
+    const {unitTemp} = this.props;
     return (
       <View key={index} style={styles.containerItem}>
         <View style={styles.wrapTouchItem}>
@@ -114,19 +124,35 @@ class AddLocationScreen extends BaseScreen {
               this.onPressItem(item);
             }}
             style={styles.touchItem}>
-            <View style={{flexDirection: 'row'}}>
+            <View
+              style={{
+                flexDirection: 'row',
+                flex: 3,
+                // maxWidth:
+                //   widthDevice -
+                //   normalize(27) -
+                //   normalize(9.75) -
+                //   normalize(52.01) -
+                //   normalize(56) -
+                //   3 * paddingHorizontalItem -
+                //   normalize(100),
+              }}>
               <IconLocationSvg width={normalize(76)} height={normalize(76)} />
               <View style={{}}>
                 <CustomText
                   medium
+                  numberOfLines={1}
                   size={34}
                   style={styles.labelItem}
                   color={Colors.air_quality_text}>
-                  {item.label}
+                  {item.name}
                 </CustomText>
-                {item.sub ? (
-                  <CustomText size={28} style={styles.txtSub} color="#808080">
-                    {item.sub}
+                {item.sys && item.sys.country ? (
+                  <CustomText
+                    size={28}
+                    style={styles.txtSub}
+                    color={Colors.txtSub}>
+                    {item.sys.country}
                   </CustomText>
                 ) : null}
               </View>
@@ -135,23 +161,27 @@ class AddLocationScreen extends BaseScreen {
               style={{
                 flexDirection: 'row',
                 justifyContent: 'flex-end',
+                flex: 2,
               }}>
               <CustomText
-                size={56}
-                style={{includeFontPadding: false, marginTop: -normalize(7)}}
+                size={46}
+                style={{
+                  includeFontPadding: false,
+                  marginTop: -normalize(7),
+                }}
                 thin
                 color={Colors.air_quality_text}>
-                {item.temperatureValue}
+                {item.main.temp}
               </CustomText>
               <CustomText
                 style={{
                   includeFontPadding: false,
-                  marginRight: normalize(9.75),
+                  marginRight: paddingHorizontalItem,
                 }}
                 size={27}
                 light
                 color={Colors.air_quality_text}>
-                {temperatureC}
+                {DEFINE_UNITS_TEMP[unitTemp].label}
               </CustomText>
               <IconWeatherSvg width={normalize(52.01)} height={normalize(52)} />
             </View>
@@ -160,29 +190,43 @@ class AddLocationScreen extends BaseScreen {
       </View>
     );
   };
+  onChangeText = async text => {
+    const {unitTemp} = this.props;
+    myLog('onchange search location--->', text, unitTemp);
+    if (text.length > 2) {
+      const resLocation = await MyServer.getInstance().getLocationByName({
+        query: {q: text, units: unitsQuery.openWeather.temp[unitTemp]},
+      });
+      myLog('resLocation--->', resLocation);
+      if (resLocation && resLocation.data && resLocation.data.count) {
+        this.setState({
+          dataSearch: resLocation.data.list,
+        });
+      } else {
+        this.setState({
+          dataSearch: [],
+        });
+      }
+      // const resLocation = CityList.filter((x) => x.name.indexOf(text) !== -1);
+      // myLog('resLocation--->', resLocation);
+    } else {
+      this.setState({
+        dataSearch: [],
+      });
+    }
+  };
   renderHeader = () => {
     return (
       <View
         style={{
           paddingVertical: normalize(20),
           paddingHorizontal: normalize(30),
-          backgroundColor: '#fff',
           width: widthDevice,
           flexDirection: 'row',
           alignItems: 'center',
         }}>
         <TextInput
-          onChangeText={async text => {
-            myLog('onchange search location--->', text);
-            if (text.length > 2) {
-              const resLocation = await MyServer.getInstance().getLocationByName(
-                {query: {q: text, type: 'like'}},
-              );
-              myLog('resLocation--->', resLocation);
-              // const resLocation = CityList.filter((x) => x.name.indexOf(text) !== -1);
-              // myLog('resLocation--->', resLocation);
-            }
-          }}
+          onChangeText={this.onChangeText}
           style={{
             backgroundColor: Colors.backgroundGray,
             borderRadius: normalize(60),
@@ -192,13 +236,18 @@ class AddLocationScreen extends BaseScreen {
           }}
         />
         <View
-          style={{position: 'absolute', left: normalize(34) + normalize(30)}}>
+          style={{
+            position: 'absolute',
+            left: normalize(34) + normalize(30),
+            zIndex: 999,
+          }}>
           <IconSearchSvg width={normalize(34)} height={normalize(34)} />
         </View>
       </View>
     );
   };
   renderContent() {
+    const {dataSearch} = this.state;
     return (
       <View
         style={{
@@ -214,8 +263,8 @@ class AddLocationScreen extends BaseScreen {
           extraElement={this.renderHeader}
         />
         <FlatList
-          keyExtractor={(item, index) => item.value + index}
-          data={this.listProvider}
+          keyExtractor={(item, index) => item.id + index}
+          data={dataSearch}
           renderItem={this.renderItem}
           // ListHeaderComponent={this.renderHeader}
           showsVerticalScrollIndicator={false}
@@ -225,4 +274,15 @@ class AddLocationScreen extends BaseScreen {
   }
 }
 
-export default AddLocationScreen;
+const mapStateToProps = state => {
+  return {
+    unitTemp: getStateForKeys(state, ['Setting', 'unitTemp']),
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {};
+};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withI18n(AddLocationScreen));
