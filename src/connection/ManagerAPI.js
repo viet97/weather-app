@@ -39,6 +39,7 @@ export const URL = {
     }
   },
   allData: 'onecall',
+  airPollution: 'air_pollution',
 };
 
 export default class ManagerAPI {
@@ -93,8 +94,13 @@ export default class ManagerAPI {
   // Get Home (Menu+Slide+Config)
   getAllData = async () => {
     const location = await LocationModule.getCurrentPosition();
-    const lat = getValueFromObjectByKeys(location, ['latitude']);
-    const lon = getValueFromObjectByKeys(location, ['longitude']);
+
+    let lat = getValueFromObjectByKeys(location, ['latitude']);
+    let lon = getValueFromObjectByKeys(location, ['longitude']);
+    if (Config.debug) {
+      lat = 30;
+      lon = -100;
+    }
     return this.getConnector(URL.allData)
       .setQuery({
         appid: Config.apiKey,
@@ -103,6 +109,23 @@ export default class ManagerAPI {
         lon,
         units: 'metric',
         exclude: 'minutely',
+      })
+      .getPromise();
+  };
+  getAirPollution = async () => {
+    const location = await LocationModule.getCurrentPosition();
+
+    let lat = getValueFromObjectByKeys(location, ['latitude']);
+    let lon = getValueFromObjectByKeys(location, ['longitude']);
+    if (Config.debug) {
+      lat = 30;
+      lon = -100;
+    }
+    return this.getConnector(URL.airPollution)
+      .setQuery({
+        lat,
+        lon,
+        appid: Config.apiKey,
       })
       .getPromise();
   };

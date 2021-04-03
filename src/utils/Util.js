@@ -256,6 +256,28 @@ export const getDayMonth = timeStamp => {
   return `${dayStr}, ${monthNameStr} ${dateStr}`;
 };
 
+export const getGreetingTime = m => {
+  let g = null; //return g
+
+  if (!m || !m.isValid()) {
+    return;
+  } //if we can't find a valid or filled moment, we return.
+
+  const split_afternoon = 12; //24hr time to split the afternoon
+  const split_evening = 17; //24hr time to split the evening
+  const currentHour = parseFloat(m.format('HH'));
+
+  if (currentHour >= split_afternoon && currentHour <= split_evening) {
+    g = 'afternoon';
+  } else if (currentHour >= split_evening) {
+    g = 'evening';
+  } else {
+    g = 'morning';
+  }
+
+  return g;
+};
+
 export const temperatureC = '°C';
 export const temperatureF = '°F';
 
