@@ -7,11 +7,15 @@ import tracker from './Tracker';
 import Navigation from './Navigation';
 import Language from './Language';
 import DataSource from './DataSource';
+import Layout from './Layout';
+import Frequency from './Frequency';
+import Notification from './Notification';
+import Setting from './Setting';
 
 const MainListReducers = {
   Navigation,
+  Setting,
   Language,
-  DataSource,
 };
 
 const rootReducerImmutable = (reducers, getDefaultState) => {

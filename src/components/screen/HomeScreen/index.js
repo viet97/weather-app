@@ -32,6 +32,7 @@ import NavigationService from '../../../navigation/NavigationService';
 import WeatherInfo from './component/weather-info';
 import {ROUTER_NAME} from '../../../navigation/NavigationConst';
 import {size} from 'lodash';
+import {AppSettingManager} from '../../../modules/AppSettingManager';
 
 const exampleData = [15, 21, 23, 12, 24, 28, 29];
 const renderBottomLabel = () => (
@@ -343,7 +344,9 @@ export default class HomeScreen extends BaseScreen {
       },
     ];
   }
-
+  componentWillMount = async () => {
+    await AppSettingManager.getInstance().setDataSettingFromLocal();
+  };
   renderHeaderSection = ({title, onPressDetail, hasDetail = true}) => {
     return (
       <View style={styles.headerSectionContainer}>

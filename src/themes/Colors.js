@@ -29,6 +29,7 @@ export const Colors = {
   backgroundHome: '#F0F1F5',
   backgroundGray: '#F5F6FA',
   backgroundGray80: '#F5F6FACC',
+  backgroundGray85: '#F5F6FAD9',
   weather_red: '#FF4E4E',
   weather_red_opacity: '#FF4E4E20',
   air_quality_text: '#404040',

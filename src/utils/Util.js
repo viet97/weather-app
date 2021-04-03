@@ -40,7 +40,9 @@ export const getStateForKeys = (state = {}, keys = []) => {
   for (let i = 0; i < length; i++) {
     output = output.get(keys[i]);
   }
-  return output;
+  return output && output.toJS && typeof output.toJS === 'function'
+    ? output.toJS()
+    : output;
 };
 
 export const checkKeyExistObject = (obj = {}, keys = []) => {

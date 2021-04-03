@@ -5,6 +5,12 @@ import {normalize, widthDevice} from '../../../utils/DeviceUtil';
 import {Header} from '../Header';
 import {ItemListSetting} from '../LanguageScreen';
 import {Colors} from '../../../themes/Colors';
+import {DEFINE_UNIT_FREQUENCY} from '../../../Define';
+import {connect} from 'react-redux';
+import {getStateForKeys} from '../../../utils/Util';
+import SettingAction from '../../../actions/SettingAction';
+import {NORMAL_TYPE} from '../../../actions/ActionTypes';
+import withI18n from '../../../modules/i18n/HOC';
 
 const paddingHorizontalItem = normalize(30);
 const styles = StyleSheet.create({
@@ -31,37 +37,22 @@ class FrequencyScreen extends BaseScreen {
     this.state = {
       value: '30p',
     };
-    this.listTime = [
-      {
-        label: '30 minutes',
-        value: '30p',
-      },
-      {
-        label: '1 hour',
-        value: '1h',
-      },
-      {
-        label: '2 hours',
-        value: '2h',
-      },
-      {
-        label: '12 hours',
-        value: '12h',
-      },
-    ];
+    this.listTime = Object.values(DEFINE_UNIT_FREQUENCY);
   }
   onPressItem = item => {
-    this.setState({
-      value: item.value,
-    });
+    const {changeValueFrequency, frequencyValue} = this.props;
+    if (item.value !== frequencyValue) {
+      changeValueFrequency(item.value);
+    }
   };
   renderItem = params => {
     const {item, index} = params;
     const {value} = this.state;
+    const {frequencyValue} = this.props;
     return (
       <ItemListSetting
         key={index}
-        value={value}
+        value={frequencyValue}
         onPressItem={this.onPressItem}
         item={item}
       />
@@ -87,4 +78,26 @@ class FrequencyScreen extends BaseScreen {
   }
 }
 
-export default FrequencyScreen;
+const mapStateToProps = state => {
+  return {
+    frequencyValue: getStateForKeys(state, ['Setting', 'frequencyValue']),
+    language: getStateForKeys(state, ['Language', 'language']),
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    changeValueFrequency: value => {
+      return dispatch(
+        SettingAction.changeOneValueSetting({
+          frequencyValue: value,
+          subKey: NORMAL_TYPE.CHANGE_VALUE_FREQUENCY,
+        }),
+      );
+    },
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withI18n(FrequencyScreen));

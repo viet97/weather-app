@@ -44,6 +44,24 @@ export const DEFINE_KEY = {
   CHAT_INFO: md5Key('chatInfo' + server.secret),
   //request
   CANCEL_REQUEST: md5Key('cancelRequest' + server.secret),
+  // setting app
+  SETTING_APP: {
+    VALUE_FREQUENCY: md5Key('valueFrequency'),
+    WEATHER_PROVIDER: md5Key('weatherProvider'),
+    CUSTOM_LAYOUT: md5Key('customLayout'),
+    DAILY_NOTIFICATION: md5Key('dailyNotification'),
+    DAILY_RECEIVE_TIME: md5('dailyReceiveTime'),
+    SEVERE_ALERT: md5('severeAlert'),
+    ALARM_RAIN_SNOW: md5('rainSnowAlarm'),
+    TIME_FORMAT: md5('timeFormat'),
+    UNIT_TEMP: md5('unitTemp'),
+    UNIT_RAIN_SNOW: md5('unitRainSnow'),
+    UNIT_DISTANCE: md5('unitDistance'),
+    UNIT_WIND_SPEED: md5('unitWindSpeed'),
+    UNIT_PRESSURE: md5('unitPressure'),
+    THEME_COLOR: md5('themeColor'),
+    TIME_FORMAT: md5('timeFormat'),
+  },
 };
 
 const isExist = async key => {
@@ -70,6 +88,17 @@ const getItem = async key => {
     return '';
   } catch (e) {
     return '';
+  }
+};
+const getMultiItem = async key => {
+  try {
+    const value = await AsyncStorage.multiGet(key);
+    if (value !== null) {
+      return value;
+    }
+    return [];
+  } catch (e) {
+    return [];
   }
 };
 
@@ -100,6 +129,7 @@ export const LocalStorage = {
   removeItem,
   DEFINE_KEY,
   isExist,
+  getMultiItem,
 };
 
 export default LocalStorage;
