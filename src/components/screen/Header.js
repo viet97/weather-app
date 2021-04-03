@@ -61,7 +61,7 @@ export const Header = props => {
             paddingBottom: extraElement ? 0 : paddingBottomTitle,
           }}>
           <CustomText
-            style={{includePadding: false}}
+            style={{includeFontPadding: false}}
             size={36}
             semiBold
             color="#202020">

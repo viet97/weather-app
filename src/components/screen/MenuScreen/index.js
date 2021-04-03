@@ -15,6 +15,7 @@ import {TouchablePlatform} from '../../../modules/TouchablePlatform';
 import NavigationService from '../../../navigation/NavigationService';
 import {ROUTER_NAME} from '../../../navigation/NavigationConst';
 import {Colors} from '../../../themes/Colors';
+import {temperatureC} from '../../../utils/Util';
 
 export default class MenuScreen extends BaseScreen {
   constructor(props) {
@@ -39,7 +40,7 @@ export default class MenuScreen extends BaseScreen {
       <View style={{paddingHorizontal: normalize(9)}} key={index}>
         <CustomImage
           source={item.background}
-          style={{width: normalize(543), height: normalize(271.5)}}
+          style={{width: normalize(544), height: normalize(271.5)}}
         />
         <View
           style={{
@@ -56,7 +57,7 @@ export default class MenuScreen extends BaseScreen {
             position: 'absolute',
             top: 0,
             left: normalize(9),
-            width: normalize(543),
+            width: normalize(544),
             height: normalize(271.5),
             paddingHorizontal: normalize(30),
             justifyContent: 'space-between',
@@ -85,15 +86,38 @@ export default class MenuScreen extends BaseScreen {
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
-              alignItems: 'center',
+              alignItems: 'flex-end',
             }}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <CustomText color={Colors.white} size={80}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'flex-start',
+              }}>
+              <CustomText
+                style={{includeFontPadding: false, marginTop: 5}}
+                thin
+                color={Colors.white}
+                size={80}>
                 {item.temperature}
               </CustomText>
-              <IconTempCSvg width={normalize(42)} height={normalize(33)} />
+              <CustomText
+                style={{
+                  includeFontPadding: false,
+                  marginTop: 10,
+                }}
+                thin
+                color={Colors.white}
+                size={50}>
+                {temperatureC}
+              </CustomText>
+              {/* <IconTempCSvg width={normalize(42)} height={normalize(33)} /> */}
             </View>
-            <IconWeatherSvg width={normalize(58)} height={normalize(58)} />
+            <View
+              style={{
+                height: normalize(58) + 6,
+              }}>
+              <IconWeatherSvg width={normalize(58)} height={normalize(58)} />
+            </View>
           </View>
         </View>
       </View>

@@ -179,12 +179,12 @@ class AddLocationScreen extends BaseScreen {
                 {query: {q: text, type: 'like'}},
               );
               myLog('resLocation--->', resLocation);
-							// const resLocation = CityList.filter((x) => x.name.indexOf(text) !== -1);
+              // const resLocation = CityList.filter((x) => x.name.indexOf(text) !== -1);
               // myLog('resLocation--->', resLocation);
             }
           }}
           style={{
-            backgroundColor: '#F5F6FA',
+            backgroundColor: Colors.backgroundGray,
             borderRadius: normalize(60),
             paddingHorizontal: normalize(30),
             width: widthDevice - 2 * normalize(30),

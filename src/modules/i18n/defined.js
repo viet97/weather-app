@@ -56,6 +56,7 @@ export const languagesKeys = {
   aboutUs: 'aboutUs',
   searchEmpty: 'searchEmpty',
   setting: 'setting',
+  //new app
   unit: 'unit',
   themeColor: 'themeColor',
   weatherProvider: 'weatherProvider',

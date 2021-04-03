@@ -212,4 +212,32 @@ export const DEFINE_LANGUAGE = {
     label: 'Catalan : Català',
     value: 'ca',
   },
+  we: {
+    label: 'Welsh : Cymraeg',
+    value: 'we',
+  },
+  sv: {
+    label: 'Swedish : Svenska',
+    value: 'sv',
+  },
+  sl: {
+    label: 'Sloval : Slovenský',
+    value: 'sl',
+  },
+  pt: {
+    label: 'Portuguese : Português',
+    value: 'pt',
+  },
+  pl: {
+    label: 'Polish : Polskie',
+    value: 'pl',
+  },
+  it: {
+    label: 'Italian : Italiano',
+    value: 'it',
+  },
+  de: {
+    label: 'German : Deutsch',
+    value: 'de',
+  },
 };
