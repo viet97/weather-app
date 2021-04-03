@@ -3,7 +3,7 @@ import {myLog} from '../Debug';
 import {md5} from '../modules/CryptoJS';
 import {getConfigDevice} from '../ConfigDevice';
 import Config from '../Config';
-
+import {MONTH_NAME, WEEK_DAY_NAME, WEEK_FULL_DAY_NAME} from '../Define';
 const appInfo = {
   deviceId: getConfigDevice().deviceId,
   deviceType: getConfigDevice().deviceType,
@@ -226,6 +226,60 @@ export const addQueryToUrl = (url, query = {}) => {
   return urlReturn;
 };
 
+export const getHourString = timeStamp => {
+  if (!timeStamp) return '';
+  const hour = new Date(timeStamp * 1000).getHours();
+  let dateTimeStr = '';
+  if (hour <= 12) {
+    dateTimeStr = hour + ' am';
+  } else {
+    dateTimeStr = hour - 12 + ' pm';
+  }
+  return dateTimeStr;
+};
+
+export const getDateTimeString = timeStamp => {
+  if (!timeStamp) return '';
+  const dateTime = new Date(timeStamp * 1000);
+  const day = dateTime.getDay();
+  const dayStr = WEEK_DAY_NAME[day];
+  const date = dateTime.getDate();
+  return `${dayStr} ${date < 10 ? '0' + date : date}`;
+};
+
+export const getDayMonth = timeStamp => {
+  if (!timeStamp) return '';
+  const dateTime = new Date(timeStamp);
+  const day = dateTime.getDay();
+  const dayStr = WEEK_FULL_DAY_NAME[day];
+  const monthNameStr = MONTH_NAME[dateTime.getMonth()];
+  const date = dateTime.getDate();
+  const dateStr = date < 10 ? '0' + date : date;
+  return `${dayStr}, ${monthNameStr} ${dateStr}`;
+};
+
+export const getGreetingTime = m => {
+  let g = null; //return g
+
+  if (!m || !m.isValid()) {
+    return;
+  } //if we can't find a valid or filled moment, we return.
+
+  const split_afternoon = 12; //24hr time to split the afternoon
+  const split_evening = 17; //24hr time to split the evening
+  const currentHour = parseFloat(m.format('HH'));
+
+  if (currentHour >= split_afternoon && currentHour <= split_evening) {
+    g = 'afternoon';
+  } else if (currentHour >= split_evening) {
+    g = 'evening';
+  } else {
+    g = 'morning';
+  }
+
+  return g;
+};
+
 export const temperatureC = '°C';
 export const temperatureF = '°F';
 
@@ -235,6 +289,9 @@ const Util = {
   getValueFromObjectByKeys,
   createSignature,
   convertToNumber,
+  getHourString,
+  getDateTimeString,
+  getDayMonth,
 };
 
 export default Util;

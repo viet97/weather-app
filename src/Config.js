@@ -12,6 +12,7 @@ const serverHostCustomer = {
 };
 
 const Config = {
+  apiKey: '62b38348b454df9bda79c5a6a144a07d',
   versionCode: '20201107',
   versionApi: 'appserver/',
   platformConfig: 1,
@@ -26,13 +27,13 @@ const Config = {
   serverHost: BuildRelease
     ? serverHost.release
     : BuildServerTest
-    ? serverHost.test
-    : serverHost.release,
+      ? serverHost.test
+      : serverHost.release,
   serverHostCustomer: BuildRelease
     ? serverHostCustomer.release
     : BuildServerTest
-    ? serverHostCustomer.test
-    : serverHostCustomer.release,
+      ? serverHostCustomer.test
+      : serverHostCustomer.release,
 };
 
 export default Config;

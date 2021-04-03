@@ -11,11 +11,14 @@ import Layout from './Layout';
 import Frequency from './Frequency';
 import Notification from './Notification';
 import Setting from './Setting';
+import Weather from './Weather';
 
 const MainListReducers = {
   Navigation,
   Setting,
   Language,
+  DataSource,
+  Weather,
 };
 
 const rootReducerImmutable = (reducers, getDefaultState) => {

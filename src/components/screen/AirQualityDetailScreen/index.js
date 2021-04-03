@@ -16,7 +16,10 @@ import {Images} from '../../../themes/Images';
 import Text from '../../common/Text';
 import NavigationService from '../../../navigation/NavigationService';
 import {AirQualityProgressCircle} from '../../element';
-
+import {AIR_LIST} from '../../../Define';
+import {connect} from 'react-redux';
+import withImmutablePropsToJS from 'with-immutable-props-to-js';
+import {getStateForKeys} from '../../../utils/Util';
 class AirQualityDetailScreen extends BaseScreen {
   constructor(props) {
     super(props);
@@ -31,40 +34,34 @@ class AirQualityDetailScreen extends BaseScreen {
     );
     this.listQualityIndex = [
       {
-        status: 'Good',
         color: 'green',
         value: 50,
-        title: 'PM2.5',
+        ...AIR_LIST.PM2_5,
       },
       {
-        status: 'Normal',
         color: 'yellow',
         value: 100,
-        title: 'PM2.5',
+        ...AIR_LIST.PM10,
       },
       {
-        status: 'Unsafe',
         color: 'red',
         value: 500,
-        title: 'PM2.5',
+        ...AIR_LIST.NO2,
       },
       {
-        status: 'Good',
         color: 'green',
         value: 50,
-        title: 'PM2.5',
+        ...AIR_LIST.SO2,
       },
       {
-        status: 'Normal',
         color: 'yellow',
         value: 100,
-        title: 'PM2.5',
+        ...AIR_LIST.CO,
       },
       {
-        status: 'Unsafe',
         color: 'red',
         value: 500,
-        title: 'PM2.5',
+        ...AIR_LIST.O3,
       },
     ];
   }
@@ -81,7 +78,11 @@ class AirQualityDetailScreen extends BaseScreen {
   };
 
   renderCircle = ({item, index}) => {
-    const {value, status, title, color} = item;
+    const {name, fullName, color, key} = item;
+    const {listAirObj} = this.props;
+    if (!listAirObj) return null;
+
+    const value = listAirObj[key];
     return (
       <ImageBackground
         source={Images.assets.background_circle.source}
@@ -99,13 +100,13 @@ class AirQualityDetailScreen extends BaseScreen {
           radius={normalize(80)}
           color={color}
           innerCircleStyle={styles.innerCircleStyle}
-          value={value}
+          value={value && value.toFixed(2)}
         />
         <Text
           size={36}
           medium
           style={{color: Colors.air_quality_text, marginTop: 8}}>
-          {title}
+          {name}
         </Text>
         <Text
           size={26}
@@ -116,7 +117,7 @@ class AirQualityDetailScreen extends BaseScreen {
             textAlign: 'center',
             width: normalize(354) * Images.assets.background_circle.ratio,
           }}>
-          Sulfur Dioxide
+          {fullName}
         </Text>
       </ImageBackground>
     );
@@ -206,7 +207,16 @@ class AirQualityDetailScreen extends BaseScreen {
   }
 }
 
-export default AirQualityDetailScreen;
+const mapStateToProps = state => {
+  return {
+    listAirObj: getStateForKeys(state, ['Weather', 'listAirObj']),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  null,
+)(withImmutablePropsToJS(AirQualityDetailScreen));
 
 const styles = StyleSheet.create({
   valueReferenceContainer: {

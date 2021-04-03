@@ -78,5 +78,11 @@
 		<string>SF-Pro-Display-Semibold.otf</string>
 		<string>SF-Pro-Display-Regular.otf</string>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app needs to get your location to get weather information</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This app needs to get your location to get weather information</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This app needs to get your location to get weather information</string>
 </dict>
 </plist>
