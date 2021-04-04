@@ -259,6 +259,17 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
     return { r: "4", ...propsForDots };
   };
 
+  componentWillReceiveProps(nextProps) {
+    const { currentIndex } = nextProps;
+    if (
+      this.state.currentIndex !== currentIndex &&
+      currentIndex !== null &&
+      currentIndex !== undefined
+    ) {
+      this.setState({ currentIndex });
+    }
+  }
+
   renderDots = ({
     data,
     width,
@@ -280,6 +291,7 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
         return null;
       },
       pointDistance,
+      onChangeCurrentIndex,
     } = this.props;
     const { currentIndex } = this.state;
     data.forEach((dataset) => {
@@ -296,9 +308,15 @@ class LineChart extends AbstractChart<LineChartProps, LineChartState> {
 
         const onPress = () => {
           if (currentIndex === i) {
-            this.setState({ currentIndex: -1 });
+            this.setState(
+              { currentIndex: -1 },
+              () => onChangeCurrentIndex && onChangeCurrentIndex(-1)
+            );
           } else {
-            this.setState({ currentIndex: i });
+            this.setState(
+              { currentIndex: i },
+              () => onChangeCurrentIndex && onChangeCurrentIndex(i)
+            );
           }
 
           if (!onDataPointClick || hidePointsAtIndex.includes(i)) {

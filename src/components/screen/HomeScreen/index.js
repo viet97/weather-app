@@ -48,6 +48,7 @@ import {
 import {AIR_LIST} from '../../../Define';
 import {EmitterManager} from '../../../modules/EmitterManager';
 import LocationModule from '../../../modules/LocationModule';
+import Svg from 'react-native-svg';
 
 const LEFT_PADDING_SCREEN = normalize(14) + 8;
 const RIGHT_PADDING_SCREEN = 16;
@@ -838,17 +839,13 @@ class HomeScreen extends BaseScreen {
               {moment(new Date(sunrise * 1000)).format('HH:ss')}
             </Text>
           </View>
-          <View style={styles.sunCircleContainer}>
-            <View style={styles.sunInnerCircleContainer}>
-              <LinearGradient
-                start={{x: 0, y: 0}}
-                end={{x: 0, y: 1.0}}
-                colors={[Colors.sun_rise, Colors.sun_set]}
-                style={styles.sunInnerBackground}
-              />
-              <View style={styles.sunInnerEmptyBackground} />
-            </View>
-          </View>
+          <Svg height={normalize(175)} width={normalize(350)}>
+            <SVGIcon.sun_circle
+              width={normalize(350)}
+              height={normalize(175)}
+            />
+          </Svg>
+
           <View>
             <Text style={{color: Colors.textTitle}}>Sunset</Text>
             <Text size={36} style={{color: Colors.air_quality_text}}>
@@ -1116,7 +1113,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
   },
   sunInnerBackground: {
-    flex: 0.75,
+    flex: 0.2,
     borderWidth: 1,
     borderColor: 'black',
     borderRadius: normalize(175) * 0.75,
@@ -1134,7 +1131,6 @@ const styles = StyleSheet.create({
     height: normalize(175),
     borderTopLeftRadius: normalize(175),
     borderTopRightRadius: normalize(175),
-    overflow: 'hidden',
     borderWidth: 1,
     borderColor: Colors.border_color_4,
     borderStyle: 'dashed',
