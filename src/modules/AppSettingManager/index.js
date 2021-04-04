@@ -9,6 +9,7 @@ export class AppSettingManager {
   constructor(store) {
     this.instance = null;
     this.stateSettingApp = ConfigStore().store.getState();
+    this.setFirstValueLocal = false;
   }
   static getInstance = () => {
     if (!this.instance) {
@@ -112,5 +113,6 @@ export class AppSettingManager {
         }),
       );
     }
+    this.setFirstValueLocal = true;
   };
 }

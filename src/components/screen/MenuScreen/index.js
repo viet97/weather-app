@@ -1,5 +1,5 @@
 import React from 'react';
-import {FlatList, View} from 'react-native';
+import {FlatList, View, ActivityIndicator, RefreshControl} from 'react-native';
 import BaseScreen from '../BaseScreen';
 import IconWeatherSvg from '../../../../assets/SVGIcon/view-menu/icon_weather.svg';
 import {Images} from '../../../themes/Images';
@@ -34,6 +34,7 @@ import {DEFINE_UNITS_TEMP, unitsQuery} from '../../../Define';
 import Axios from 'axios';
 import Modal from 'react-native-modal';
 import {LocationAction} from '../../../actions';
+import {AppSettingManager} from '../../../modules/AppSettingManager';
 
 class MenuScreen extends BaseScreen {
   constructor(props) {
@@ -42,11 +43,14 @@ class MenuScreen extends BaseScreen {
       data: [],
       isShowModalRemove: false,
       locationSelected: null,
+      loadingData: false,
     };
   }
   getWeatherDetail = async (props = this.props) => {
     try {
+      if (!AppSettingManager.getInstance().setFirstValueLocal) return;
       myLog('getWeatherDetail--->', props);
+      this.setState({loadingData: true});
       const {myLocations, unitTemp} = props;
       if (myLocations && myLocations.length) {
         let arrDetail = [];
@@ -66,7 +70,9 @@ class MenuScreen extends BaseScreen {
           let tmpDataLocation = [];
           resAllDetail.map(resDetail => {
             const resDetailData =
-              resDetail && resDetail.data ? resDetail.data : null;
+              resDetail && resDetail.data && Object.keys(resDetail.data).length
+                ? resDetail.data
+                : null;
             if (resDetailData) {
               tmpDataLocation.push({
                 label: resDetailData.name,
@@ -78,11 +84,15 @@ class MenuScreen extends BaseScreen {
           });
           this.setState({
             data: tmpDataLocation,
+            loadingData: false,
           });
         }
       }
     } catch (error) {
       myLog('getWeatherDetail--->', error);
+      this.setState({
+        loadingData: false,
+      });
     }
   };
   componentDidMount() {
@@ -94,7 +104,8 @@ class MenuScreen extends BaseScreen {
       JSON.stringify(nextProps.myLocations) !==
         JSON.stringify(this.props.myLocations) ||
       nextProps.unitTemp !== this.props.unitTemp ||
-      nextProps.language !== this.props.language
+      nextProps.language !== this.props.language ||
+      nextProps.dataSource !== this.props.dataSource
     ) {
       this.getWeatherDetail(nextProps);
     }
@@ -104,7 +115,10 @@ class MenuScreen extends BaseScreen {
     const {unitTemp} = this.props;
     return (
       <View
-        style={{paddingHorizontal: normalize(9), marginBottom: normalize(9)}}
+        style={{
+          paddingHorizontal: normalize(9),
+          marginBottom: normalize(9),
+        }}
         key={index}>
         <CustomImage
           source={item.background || Images.assets.bg_menu.source}
@@ -117,7 +131,7 @@ class MenuScreen extends BaseScreen {
             height: normalize(271.5),
             top: 0,
             left: normalize(9),
-            backgroundColor: Colors.blackAlpha20,
+            backgroundColor: Colors.TRANSPARENT,
           }}
         />
         <View
@@ -202,11 +216,12 @@ class MenuScreen extends BaseScreen {
       <View
         style={{
           flexDirection: 'row',
-          marginTop: normalize(104) + STATUS_BAR_HEIGHT,
+          paddingTop: normalize(104) + STATUS_BAR_HEIGHT,
           alignItems: 'center',
           justifyContent: 'space-between',
           paddingHorizontal: normalize(30),
-          marginBottom: normalize(40),
+          paddingBottom: normalize(40),
+          backgroundColor: Colors.white,
         }}>
         <TouchablePlatform
           onPress={() => {
@@ -263,15 +278,32 @@ class MenuScreen extends BaseScreen {
     }
   };
   renderContent() {
-    const {data, isShowModalRemove} = this.state;
+    const {data, isShowModalRemove, loadingData} = this.state;
     const {myLocations} = this.props;
+    myLog('--render menu---', data);
     return (
-      <>
+      <View style={{backgroundColor: Colors.white}}>
         <FlatList
           keyExtractor={(item, index) => item.key + index}
           data={data}
           renderItem={this.renderItem}
+          stickyHeaderIndices={[0]}
           ListHeaderComponent={this.renderHeader}
+          refreshControl={
+            <RefreshControl
+              refreshing={false}
+              onRefresh={this.getWeatherDetail}
+            />
+          }
+          ListEmptyComponent={() => {
+            return loadingData ? (
+              <ActivityIndicator
+                style={{marginTop: normalize(30)}}
+                size="large"
+                color={Colors.viewDetail}
+              />
+            ) : null;
+          }}
         />
         <Modal
           onBackButtonPress={this.hideModalRemove}
@@ -317,7 +349,7 @@ class MenuScreen extends BaseScreen {
             </View>
           </View>
         </Modal>
-      </>
+      </View>
     );
   }
 }
@@ -326,6 +358,7 @@ const mapStateToProps = state => {
   return {
     myLocations: getStateForKeys(state, ['Location', 'myLocations']),
     unitTemp: getStateForKeys(state, ['Setting', 'unitTemp']),
+    dataSource: getStateForKeys(state, ['Setting', 'dataSource']),
     language: getStateForKeys(state, ['Language', 'language']),
   };
 };

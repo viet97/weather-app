@@ -66,6 +66,16 @@ export const languagesKeys = {
   privacy: 'privacy',
   aboutApp: 'aboutApp',
   rateUs: 'rateUs',
+  time12h: 'time12h',
+  time24h: 'time24h',
+  lightMode: 'lightMode',
+  darkMode: 'darkMode',
+  minutes: 'minutes',
+  hour: 'hour',
+  second: 'second',
+  time30m: 'time30m',
+  time1h: 'time1h',
+  time2h: 'time2h',
 };
 
 export default {

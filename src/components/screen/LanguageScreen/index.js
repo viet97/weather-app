@@ -12,7 +12,7 @@ import CustomText from '../../common/Text';
 import {Header} from '../Header';
 import {Colors} from '../../../themes/Colors';
 import {DEFINE_LANGUAGE} from '../../../Define';
-import withI18n from '../../../modules/i18n/HOC';
+import withI18n, {typeStringAfterTranslation} from '../../../modules/i18n/HOC';
 import {NORMAL_TYPE} from '../../../actions/ActionTypes';
 import {getStateForKeys} from '../../../utils/Util';
 import {LanguageAction} from '../../../actions';
@@ -47,6 +47,7 @@ export const ItemListSetting = props => {
     customStyle = {},
     txtRight = '',
     noBorder = false,
+    t = str => str,
   } = props;
   return (
     <View style={[styles.containerItem, customStyle]}>
@@ -73,7 +74,11 @@ export const ItemListSetting = props => {
               size={32}
               style={styles.labelItem}
               color={Colors.air_quality_text}>
-              {item.label}
+              {item.languageKey
+                ? t(item.languageKey, {
+                    type: typeStringAfterTranslation.capitalize,
+                  })
+                : item.label}
             </CustomText>
           </View>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>

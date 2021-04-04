@@ -48,13 +48,14 @@ class FrequencyScreen extends BaseScreen {
   renderItem = params => {
     const {item, index} = params;
     const {value} = this.state;
-    const {frequencyValue} = this.props;
+    const {frequencyValue, t} = this.props;
     return (
       <ItemListSetting
         key={index}
         value={frequencyValue}
         onPressItem={this.onPressItem}
         item={item}
+        t={t}
       />
     );
   };

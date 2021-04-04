@@ -349,7 +349,11 @@ class SettingScreen extends BaseScreen {
       switch (item.key) {
         case itemKey.frequency:
           txtRight = DEFINE_UNIT_FREQUENCY[frequencyValue]
-            ? DEFINE_UNIT_FREQUENCY[frequencyValue].label
+            ? DEFINE_UNIT_FREQUENCY[frequencyValue].languageKey
+              ? t(DEFINE_UNIT_FREQUENCY[frequencyValue].languageKey, {
+                  type: typeStringAfterTranslation.capitalize,
+                })
+              : DEFINE_UNIT_FREQUENCY[frequencyValue].label
             : '';
           break;
         case itemKey.provider:
@@ -359,7 +363,11 @@ class SettingScreen extends BaseScreen {
           break;
         case itemKey.time:
           txtRight = DEFINE_TIME_FORMAT[timeFormat]
-            ? DEFINE_TIME_FORMAT[timeFormat].label
+            ? DEFINE_TIME_FORMAT[timeFormat].languageKey
+              ? t(DEFINE_TIME_FORMAT[timeFormat].languageKey, {
+                  type: typeStringAfterTranslation.capitalize,
+                })
+              : DEFINE_TIME_FORMAT[timeFormat].label
             : '';
           break;
         case itemKey.theme:

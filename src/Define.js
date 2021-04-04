@@ -1,6 +1,7 @@
 import {temperatureC, temperatureF} from './utils/Util';
 import {getBootloader} from 'react-native-device-info';
 import {Colors} from './themes/Colors';
+import {languagesKeys} from './modules/i18n/defined';
 
 export const checkExistsSpecailChar = string => {
   const format = /^[a-zA-Z0-9]*$/;
@@ -117,26 +118,34 @@ export const AIR_LIST = {
 export const MOMENT_DATE_FORMAT = 'MM/DD/YY';
 export const appCreatedBy = 'By GOD Team';
 export const DEFINE_DATA_SOURCE = {
-  openWeather: {key: 'openWeather', label: 'Open Weather'},
-  weatherBit: {key: 'weatherBit', label: 'Weather Bit'},
-  foreca: {key: 'foreca', label: 'Foreca'},
+  openWeather: {
+    key: 'openWeather',
+    value: 'openWeather',
+    label: 'Open Weather',
+  },
+  weatherBit: {key: 'weatherBit', value: 'weatherBit', label: 'Weather Bit'},
+  foreca: {key: 'foreca', value: 'foreca', label: 'Foreca'},
 };
 export const DEFINE_UNIT_FREQUENCY = {
   '30m': {
     value: '30m',
     label: '30 minutes',
+    languageKey: languagesKeys.time30m,
   },
   '1h': {
     value: '1h',
     label: '1 hour',
+    languageKey: languagesKeys.time1h,
   },
   '2h': {
     value: '2h',
     label: '2 hour',
+    languageKey: languagesKeys.time2h,
   },
   '12h': {
     value: '12h',
     label: '12 hour',
+    languageKey: languagesKeys.time12h,
   },
 };
 export const DEFINE_UNITS_TEMP = {
@@ -224,12 +233,20 @@ export const DEFINE_NOTIFICATION = {
   },
 };
 export const DEFINE_THEME_COLOR = {
-  light: {value: 'light', label: 'Light Mode'},
-  dark: {value: 'dark', label: 'Dark Mode'},
+  light: {
+    value: 'light',
+    label: 'Light Mode',
+    languageKey: languagesKeys.lightMode,
+  },
+  dark: {
+    value: 'dark',
+    label: 'Dark Mode',
+    languageKey: languagesKeys.darkMode,
+  },
 };
 export const DEFINE_TIME_FORMAT = {
-  '24h': {value: '24h', label: '24 hours'},
-  '12h': {value: '12h', label: '12 hours'},
+  '24h': {value: '24h', label: '24 hours', languageKey: languagesKeys.time24h},
+  '12h': {value: '12h', label: '12 hours', languageKey: languagesKeys.time12h},
 };
 export const DEFINE_LAYOUT = {
   status: {
@@ -340,6 +357,12 @@ export const unitsQuery = {
     temp: {
       [DEFINE_UNITS_TEMP.c.value]: 'metric',
       [DEFINE_UNITS_TEMP.f.value]: 'imperial',
+    },
+  },
+  weatherBit: {
+    temp: {
+      [DEFINE_UNITS_TEMP.c.value]: 'M',
+      [DEFINE_UNITS_TEMP.f.value]: 'I',
     },
   },
 };
