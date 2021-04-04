@@ -9,7 +9,7 @@ import Language from './Language';
 import DataSource from './DataSource';
 import Layout from './Layout';
 import Frequency from './Frequency';
-import Notification from './Notification';
+import Location from './Location';
 import Setting from './Setting';
 import Weather from './Weather';
 
@@ -19,6 +19,7 @@ const MainListReducers = {
   Language,
   DataSource,
   Weather,
+  Location,
 };
 
 const rootReducerImmutable = (reducers, getDefaultState) => {

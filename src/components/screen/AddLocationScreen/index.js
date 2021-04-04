@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  ActivityIndicator,
 } from 'react-native';
 import BaseScreen from '../BaseScreen';
 import IconChoiceSvg from '../../../../assets/SVGIcon/view-frequency/icon_choice.svg';
@@ -32,7 +33,9 @@ import {MyServer} from '../../../data-source/server';
 import {debounce, throttle} from '../../../modules/Lodash';
 import {DEFINE_UNITS_TEMP, unitsQuery} from '../../../Define';
 import {connect} from 'react-redux';
-import withI18n from '../../../modules/i18n/HOC';
+import withI18n, {typeStringAfterTranslation} from '../../../modules/i18n/HOC';
+import {languagesKeys} from '../../../modules/i18n/defined';
+import {LocationAction} from '../../../actions';
 
 const sizeIconLeft = {
   width: normalize(44),
@@ -78,6 +81,8 @@ class AddLocationScreen extends BaseScreen {
     this.state = {
       value: 'eng',
       dataSearch: [],
+      loadingData: false,
+      isFirstRender: true,
     };
     this.listProvider = [
       {
@@ -103,15 +108,24 @@ class AddLocationScreen extends BaseScreen {
         temperatureSuffix: 'f',
       },
     ];
-    this.onChangeText = debounce(this.onChangeText, 500, {
+    this.onChangeText = debounce(this.onChangeText, 300, {
       leading: false,
       trailing: true,
     });
   }
   onPressItem = item => {
-    this.setState({
-      value: item.value,
-    });
+    const {myLocations, changeLocation} = this.props;
+    myLog('onPressItem--->', myLocations, item);
+    const isChoiced = myLocations.find(x => x.id === item.id);
+    if (!isChoiced) {
+      let tmpLocation = [...myLocations];
+      tmpLocation.unshift({
+        label: item.name,
+        key: item.id,
+        id: item.id,
+      });
+      changeLocation(tmpLocation);
+    }
   };
   renderItem = params => {
     const {item, index} = params;
@@ -194,17 +208,22 @@ class AddLocationScreen extends BaseScreen {
     const {unitTemp} = this.props;
     myLog('onchange search location--->', text, unitTemp);
     if (text.length > 2) {
+      this.setState({loadingData: true});
       const resLocation = await MyServer.getInstance().getLocationByName({
-        query: {q: text, units: unitsQuery.openWeather.temp[unitTemp]},
+        query: {q: text},
       });
       myLog('resLocation--->', resLocation);
       if (resLocation && resLocation.data && resLocation.data.count) {
         this.setState({
           dataSearch: resLocation.data.list,
+          loadingData: false,
+          isFirstRender: false,
         });
       } else {
         this.setState({
           dataSearch: [],
+          loadingData: false,
+          isFirstRender: false,
         });
       }
       // const resLocation = CityList.filter((x) => x.name.indexOf(text) !== -1);
@@ -212,6 +231,8 @@ class AddLocationScreen extends BaseScreen {
     } else {
       this.setState({
         dataSearch: [],
+        loadingData: false,
+        isFirstRender: true,
       });
     }
   };
@@ -247,7 +268,8 @@ class AddLocationScreen extends BaseScreen {
     );
   };
   renderContent() {
-    const {dataSearch} = this.state;
+    const {dataSearch, loadingData, isFirstRender} = this.state;
+    const {t} = this.props;
     return (
       <View
         style={{
@@ -262,11 +284,34 @@ class AddLocationScreen extends BaseScreen {
           title="Add location"
           extraElement={this.renderHeader}
         />
+        {loadingData ? (
+          <ActivityIndicator
+            style={{marginTop: normalize(30)}}
+            size="large"
+            color={Colors.viewDetail}
+          />
+        ) : null}
         <FlatList
           keyExtractor={(item, index) => item.id + index}
           data={dataSearch}
           renderItem={this.renderItem}
           // ListHeaderComponent={this.renderHeader}
+          ListEmptyComponent={() => {
+            return !loadingData && !isFirstRender ? (
+              <View
+                style={{
+                  flex: 1,
+                  paddingVertical: normalize(30),
+                  alignItems: 'center',
+                }}>
+                <CustomText color="#f00">
+                  {t(languagesKeys.emptyData, {
+                    type: typeStringAfterTranslation.capitalize,
+                  })}
+                </CustomText>
+              </View>
+            ) : null;
+          }}
           showsVerticalScrollIndicator={false}
         />
       </View>
@@ -277,10 +322,15 @@ class AddLocationScreen extends BaseScreen {
 const mapStateToProps = state => {
   return {
     unitTemp: getStateForKeys(state, ['Setting', 'unitTemp']),
+    myLocations: getStateForKeys(state, ['Location', 'myLocations']),
   };
 };
 const mapDispatchToProps = dispatch => {
-  return {};
+  return {
+    changeLocation: data => {
+      return dispatch(LocationAction.changeLocation(data));
+    },
+  };
 };
 export default connect(
   mapStateToProps,

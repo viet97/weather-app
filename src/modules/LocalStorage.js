@@ -62,6 +62,7 @@ export const DEFINE_KEY = {
     THEME_COLOR: md5('themeColor'),
     TIME_FORMAT: md5('timeFormat'),
   },
+  LOCATION: md5('LOCATION'),
 };
 
 const isExist = async key => {

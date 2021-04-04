@@ -41,4 +41,24 @@ export class MyServer {
       throw error;
     }
   };
+  getWeatherByCityId = async ({query = {}}) => {
+    try {
+      myLog('getWeatherByCityId--->', query);
+      const keyDataSource = this.getKeyDataSource();
+      switch (keyDataSource) {
+        case DEFINE_DATA_SOURCE.openWeather.key:
+          return AdapterManager.getInstance().convertWeatherDetailData({
+            data: await openWeatherManager
+              .getInstance()
+              .getWeatherByCityId({query}),
+            source: keyDataSource,
+          });
+        default:
+          break;
+      }
+    } catch (error) {
+      myLog('--getWeatherByCityId error---', error);
+      throw error;
+    }
+  };
 }

@@ -116,7 +116,7 @@ export default ca = {
   [requireLoginToViewContent]: 'You need login to see more!',
   [loginSuccess]: 'Login success.',
   [doubleBackToExitApp]: 'Press back 2 times to exit!',
-  [emptyData]: 'No data!',
+  [emptyData]: 'no hi ha dades',
   [loginFail]: 'Login failed. Please retry later!',
   [contentNotFound]: 'Content not found!',
   [errorConnect]: 'Error Connect!',

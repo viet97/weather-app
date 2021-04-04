@@ -282,6 +282,15 @@ export const getGreetingTime = m => {
 
 export const temperatureC = '°C';
 export const temperatureF = '°F';
+export const temperatureNne = '°';
+
+export const deepCopyObject = (obj = {}) => {
+  try {
+    return JSON.parse(JSON.stringify(obj));
+  } catch (error) {
+    return obj;
+  }
+};
 
 const Util = {
   getStateForKeys,

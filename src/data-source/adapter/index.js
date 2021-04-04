@@ -20,4 +20,13 @@ export class AdapterManager {
         return null;
     }
   };
+  convertWeatherDetailData = ({data, source}) => {
+    myLog('---convertLocationData--->', data, source);
+    switch (source) {
+      case DEFINE_DATA_SOURCE.openWeather.key:
+        return data;
+      default:
+        return null;
+    }
+  };
 }

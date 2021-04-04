@@ -1,3 +1,4 @@
+import {LocationAction} from '../../actions';
 import SettingAction from '../../actions/SettingAction';
 import ConfigStore from '../../container/ConfigStore';
 import {myLog} from '../../Debug';
@@ -30,7 +31,19 @@ export class AppSettingManager {
     }
     await LocalStorage.setItem(key, finalValue);
   };
+  setDataLocationFromLocal = async () => {
+    const dataLocation = await LocalStorage.getItem(
+      LocalStorage.DEFINE_KEY.LOCATION,
+    );
+    myLog('---setDataLocationFromLocal---', dataLocation);
+    if (dataLocation) {
+      ConfigStore().store.dispatch(
+        LocationAction.changeLocation(JSON.parse(dataLocation)),
+      );
+    }
+  };
   setDataSettingFromLocal = async () => {
+    this.setDataLocationFromLocal();
     const dataSetting = await LocalStorage.getMultiItem(
       Object.values(LocalStorage.DEFINE_KEY.SETTING_APP),
     );
