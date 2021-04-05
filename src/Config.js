@@ -32,13 +32,13 @@ const Config = {
   serverHost: BuildRelease
     ? serverHost.release
     : BuildServerTest
-      ? serverHost.test
-      : serverHost.release,
+    ? serverHost.test
+    : serverHost.release,
   serverHostCustomer: BuildRelease
     ? serverHostCustomer.release
     : BuildServerTest
-      ? serverHostCustomer.test
-      : serverHostCustomer.release,
+    ? serverHostCustomer.test
+    : serverHostCustomer.release,
 };
 
 export default Config;

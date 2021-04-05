@@ -47,6 +47,7 @@ import {
 } from '../../../utils/Util';
 import {AIR_LIST} from '../../../Define';
 import {EmitterManager} from '../../../modules/EmitterManager';
+import LocationModule from '../../../modules/LocationModule';
 
 const LEFT_PADDING_SCREEN = normalize(14) + 8;
 const RIGHT_PADDING_SCREEN = 16;
@@ -58,6 +59,7 @@ class HomeScreen extends BaseScreen {
       currentIndexBarChart: 0,
       currentIndexCovidTab: 0,
       greeting: getGreetingTime(moment()),
+      address: '',
     };
     this.displayName = 'HomeScreen';
 
@@ -258,18 +260,24 @@ class HomeScreen extends BaseScreen {
     ];
   }
 
-  _componentDidMount() {
+  async _componentDidMount() {
     const {getAllData, getAirPollution} = this.props;
     getAllData();
     getAirPollution();
+    LocationModule.getCurrentAddress().then(address =>
+      this.setStateSafe({address}),
+    );
     EmitterManager.getInstance().on(
       EmitterManager.listEvent.APP_STATE_CHANGE,
       () => {
         this.setStateSafe({greeting: getGreetingTime(moment())});
+        LocationModule.getCurrentAddress().then(address =>
+          this.setStateSafe({address}),
+        );
       },
     );
   }
-  renderBottomLabel = (dateTimeStr, icon) => (
+  renderBottomLabel = (dateTimeStr, icon, isFocus) => (
     <View
       style={{
         alignItems: 'center',
@@ -277,7 +285,12 @@ class HomeScreen extends BaseScreen {
         flex: 1,
       }}>
       <WeatherIcon icon={icon} style={{width: 40, height: 40}} />
-      <Text size={24} style={{marginTop: 4, color: Colors.textTitle}}>
+      <Text
+        size={24}
+        style={{
+          marginTop: 4,
+          color: isFocus ? Colors.text_color1 : Colors.textTitle,
+        }}>
         {dateTimeStr}
       </Text>
     </View>
@@ -324,7 +337,7 @@ class HomeScreen extends BaseScreen {
           chartHeight={150}
           {...currentLineChartProps}
           data={data}
-          renderBottomLabel={({index}) => {
+          renderBottomLabel={({index, isFocus}) => {
             const currentData = hourly[index];
             if (!currentData) return null;
             const {dt} = currentData;
@@ -336,7 +349,7 @@ class HomeScreen extends BaseScreen {
               icon = weatherArray[0].icon;
             }
 
-            return this.renderBottomLabel(getHourString(dt), icon);
+            return this.renderBottomLabel(getHourString(dt), icon, isFocus);
           }}
         />
       );
@@ -348,7 +361,13 @@ class HomeScreen extends BaseScreen {
     const {hourly} = this.props;
     return (
       <View style={styles.sectionContainer}>
-        {this.renderHeaderSection({title: 'Hourly'})}
+        {this.renderHeaderSection({
+          title: 'Hourly',
+          onPressDetail: () =>
+            NavigationService.getInstance().navigate({
+              routerName: ROUTER_NAME.HOURLY_DETAIL.name,
+            }),
+        })}
         {size(hourly) > 0 ? (
           <View>
             <ScrollView
@@ -791,7 +810,7 @@ class HomeScreen extends BaseScreen {
             </View>
           </View>
           <Text size={38} style={styles.locationText} semiBold>
-            Tan Binh, Ho Chi Minh
+            {this.state.address}
           </Text>
           <Text size={28} style={styles.dateText}>
             {getDayMonth(new Date().getTime())}
