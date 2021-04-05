@@ -849,6 +849,7 @@ class HomeScreen extends BaseScreen {
     if (!dt) return null;
     let percentage = (dt - sunrise) / (sunset - sunrise);
     if (percentage > 1) percentage = 1;
+    if (percentage < 0) percentage = 0;
     this.sunX =
       (widthDevice -
         LEFT_PADDING_SCREEN -
