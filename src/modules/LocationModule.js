@@ -2,10 +2,10 @@ import GetLocation from 'react-native-get-location';
 import Geocoder from 'react-native-geocoder';
 
 import Config from '../Config';
-import {myLog} from '../Debug';
+import { myLog } from '../Debug';
 import NavigationService from '../navigation/NavigationService';
-import {getValueFromObjectByKeys} from '../utils/Util';
-import {size} from 'lodash';
+import { getValueFromObjectByKeys } from '../utils/Util';
+import { size } from 'lodash';
 
 const ERROR_CODE = {
   CANCELLED: 'CANCELLED',
@@ -16,6 +16,12 @@ const ERROR_CODE = {
 
 const LocationModule = {
   getCurrentPosition: async () => {
+    if (Config.debug) {
+      return {
+        latitude: 21.027763,
+        longitude: 105.834160,
+      };
+    }
     try {
       const location = await GetLocation.getCurrentPosition({
         enableHighAccuracy: true,
@@ -33,9 +39,9 @@ const LocationModule = {
       return location;
     } catch (error) {
       myLog('getCurrentPositionError', error);
-      const {message} = error;
+      const { message } = error;
       if (message) {
-        NavigationService.getInstance().showToast({message: message});
+        NavigationService.getInstance().showToast({ message: message });
       }
     }
   },
@@ -56,8 +62,8 @@ const LocationModule = {
     let addressStr = '';
     const addressArray = await Geocoder.geocodePosition(geoObject);
     if (size(addressArray) > 0) {
-      const {country, locality} = addressArray[0];
-      addressStr = `${country}, ${locality}`;
+      const { country, locality } = addressArray[0];
+      addressStr = `${locality}, ${country}`;
     }
     myLog('getCurrentAddress', addressStr);
     return addressStr;

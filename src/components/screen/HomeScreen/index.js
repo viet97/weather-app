@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import moment from 'moment';
-import {Colors} from '../../../themes/Colors';
+import { Colors } from '../../../themes/Colors';
 import {
   getBottomSpace,
   getStatusBarHeight,
@@ -18,7 +18,7 @@ import {
   widthDevice,
 } from '../../../utils/DeviceUtil';
 import SVGIcon from '../../../../assets/SVGIcon';
-import {Text} from '../../common';
+import { Text } from '../../common';
 import BaseScreen from '../BaseScreen';
 import AppStateModule from '../../../modules/AppStateModule';
 import {
@@ -27,15 +27,15 @@ import {
   AirQualityProgressCircle,
   WeatherIcon,
 } from '../../element';
-import {Images} from '../../../themes/Images';
-import {TYPE_IMAGE_RESIZE_MODE} from '../../common/Image';
+import { Images } from '../../../themes/Images';
+import { TYPE_IMAGE_RESIZE_MODE } from '../../common/Image';
 import NavigationService from '../../../navigation/NavigationService';
 import WeatherInfo from './component/weather-info';
-import {ROUTER_NAME} from '../../../navigation/NavigationConst';
-import {isEmpty, size} from 'lodash';
-import {TouchablePlatform} from '../../../modules/TouchablePlatform';
+import { ROUTER_NAME } from '../../../navigation/NavigationConst';
+import { isEmpty, size } from 'lodash';
+import { TouchablePlatform } from '../../../modules/TouchablePlatform';
 import WeatherAction from '../../../actions/WeatherAction';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import withImmutablePropsToJS from 'with-immutable-props-to-js';
 import {
   getDateTimeString,
@@ -45,8 +45,8 @@ import {
   getStateForKeys,
   getValueFromObjectByKeys,
 } from '../../../utils/Util';
-import {AIR_LIST} from '../../../Define';
-import {EmitterManager} from '../../../modules/EmitterManager';
+import { AIR_LIST } from '../../../Define';
+import { EmitterManager } from '../../../modules/EmitterManager';
 import LocationModule from '../../../modules/LocationModule';
 
 const LEFT_PADDING_SCREEN = normalize(14) + 8;
@@ -62,7 +62,9 @@ class HomeScreen extends BaseScreen {
       address: '',
     };
     this.displayName = 'HomeScreen';
-
+    this.sunCircleR = normalize(175);
+    this.sunCircleCenterX = (widthDevice - LEFT_PADDING_SCREEN - RIGHT_PADDING_SCREEN) / 2;
+    this.sunCircleCenterY = normalize(175);
     this.listQualityIndex = [
       {
         color: 'green',
@@ -168,7 +170,7 @@ class HomeScreen extends BaseScreen {
       {
         title: 'Wind',
         key: 'wind_speed',
-        renderContentBar: ({value, ratio}) => {
+        renderContentBar: ({ value, ratio }) => {
           return (
             <View
               style={{
@@ -186,10 +188,10 @@ class HomeScreen extends BaseScreen {
                 {value}
               </Text>
               <LinearGradient
-                start={{x: 0, y: 0.1}}
-                end={{x: 0, y: 1.0}}
+                start={{ x: 0, y: 0.1 }}
+                end={{ x: 0, y: 1.0 }}
                 colors={['#89D378', '#EAF7E6']}
-                style={{flex: ratio}}
+                style={{ flex: ratio }}
               />
             </View>
           );
@@ -198,7 +200,7 @@ class HomeScreen extends BaseScreen {
       {
         title: 'Pressure',
         key: 'pressure',
-        renderContentBar: ({value, ratio}) => {
+        renderContentBar: ({ value, ratio }) => {
           return (
             <View
               style={{
@@ -216,10 +218,10 @@ class HomeScreen extends BaseScreen {
                 {value}
               </Text>
               <LinearGradient
-                start={{x: 0, y: 0.1}}
-                end={{x: 0, y: 1.0}}
+                start={{ x: 0, y: 0.1 }}
+                end={{ x: 0, y: 1.0 }}
                 colors={['#9C94ED', '#F4F4FD']}
-                style={{flex: ratio}}
+                style={{ flex: ratio }}
               />
             </View>
           );
@@ -261,18 +263,18 @@ class HomeScreen extends BaseScreen {
   }
 
   async _componentDidMount() {
-    const {getAllData, getAirPollution} = this.props;
+    const { getAllData, getAirPollution } = this.props;
     getAllData();
     getAirPollution();
     LocationModule.getCurrentAddress().then(address =>
-      this.setStateSafe({address}),
+      this.setStateSafe({ address }),
     );
     EmitterManager.getInstance().on(
       EmitterManager.listEvent.APP_STATE_CHANGE,
       () => {
-        this.setStateSafe({greeting: getGreetingTime(moment())});
+        this.setStateSafe({ greeting: getGreetingTime(moment()) });
         LocationModule.getCurrentAddress().then(address =>
-          this.setStateSafe({address}),
+          this.setStateSafe({ address }),
         );
       },
     );
@@ -284,7 +286,7 @@ class HomeScreen extends BaseScreen {
         justifyContent: 'center',
         flex: 1,
       }}>
-      <WeatherIcon icon={icon} style={{width: 40, height: 40}} />
+      <WeatherIcon icon={icon} style={{ width: 40, height: 40 }} />
       <Text
         size={24}
         style={{
@@ -296,7 +298,7 @@ class HomeScreen extends BaseScreen {
     </View>
   );
 
-  renderHeaderSection = ({title, onPressDetail, hasDetail = true}) => {
+  renderHeaderSection = ({ title, onPressDetail, hasDetail = true }) => {
     return (
       <View style={styles.headerSectionContainer}>
         <View style={styles.leftHeaderSection}>
@@ -309,7 +311,7 @@ class HomeScreen extends BaseScreen {
           <TouchablePlatform
             style={styles.detailButton}
             onPress={() => onPressDetail && onPressDetail()}>
-            <Text size={30} style={{color: Colors.viewDetail}} semiBold>
+            <Text size={30} style={{ color: Colors.viewDetail }} semiBold>
               View detail →
             </Text>
           </TouchablePlatform>
@@ -321,8 +323,8 @@ class HomeScreen extends BaseScreen {
   };
 
   renderLineChart = () => {
-    const {currentIndexLineChart} = this.state;
-    const {hourly} = this.props;
+    const { currentIndexLineChart } = this.state;
+    const { hourly } = this.props;
     if (size(hourly) > 0) {
       const currentLineChartProps = this.listLineChart[currentIndexLineChart];
       const data = hourly.map(it => {
@@ -333,14 +335,14 @@ class HomeScreen extends BaseScreen {
       });
       return (
         <LineChartCustom
-          style={{marginTop: 48}}
+          style={{ marginTop: 48 }}
           chartHeight={150}
           {...currentLineChartProps}
           data={data}
-          renderBottomLabel={({index, isFocus}) => {
+          renderBottomLabel={({ index, isFocus }) => {
             const currentData = hourly[index];
             if (!currentData) return null;
-            const {dt} = currentData;
+            const { dt } = currentData;
             const weatherArray = getValueFromObjectByKeys(currentData, [
               'weather',
             ]);
@@ -357,8 +359,8 @@ class HomeScreen extends BaseScreen {
   };
 
   renderHourlyChart = () => {
-    const {currentIndexLineChart} = this.state;
-    const {hourly} = this.props;
+    const { currentIndexLineChart } = this.state;
+    const { hourly } = this.props;
     return (
       <View style={styles.sectionContainer}>
         {this.renderHeaderSection({
@@ -381,7 +383,7 @@ class HomeScreen extends BaseScreen {
                 return (
                   <TouchablePlatform
                     onPress={() => {
-                      this.setStateSafe({currentIndexLineChart: index});
+                      this.setStateSafe({ currentIndexLineChart: index });
                     }}
                     style={{
                       padding: 8,
@@ -423,8 +425,8 @@ class HomeScreen extends BaseScreen {
   };
 
   renderBarChart = () => {
-    const {currentIndexBarChart} = this.state;
-    const {daily} = this.props;
+    const { currentIndexBarChart } = this.state;
+    const { daily } = this.props;
     if (size(daily) > 0) {
       const currentBarChartProps = this.listBarChart[currentIndexBarChart];
 
@@ -437,13 +439,13 @@ class HomeScreen extends BaseScreen {
             paddingLeft: LEFT_PADDING_SCREEN,
             paddingRight: RIGHT_PADDING_SCREEN,
           }}
-          style={{marginTop: 24}}
+          style={{ marginTop: 24 }}
           {...currentBarChartProps}
           data={data}
-          renderBottomLabel={({index}) => {
+          renderBottomLabel={({ index }) => {
             const currentData = daily[index];
             if (!currentData) return null;
-            const {dt} = currentData;
+            const { dt } = currentData;
             const weatherArray = getValueFromObjectByKeys(currentData, [
               'weather',
             ]);
@@ -459,8 +461,8 @@ class HomeScreen extends BaseScreen {
   };
 
   renderDailyChart = () => {
-    const {currentIndexBarChart} = this.state;
-    const {daily} = this.props;
+    const { currentIndexBarChart } = this.state;
+    const { daily } = this.props;
     return (
       <View style={styles.sectionContainer}>
         {this.renderHeaderSection({
@@ -483,7 +485,7 @@ class HomeScreen extends BaseScreen {
                 return (
                   <TouchablePlatform
                     onPress={() => {
-                      this.setStateSafe({currentIndexBarChart: index});
+                      this.setStateSafe({ currentIndexBarChart: index });
                     }}
                     style={{
                       padding: 8,
@@ -528,7 +530,7 @@ class HomeScreen extends BaseScreen {
     return (
       <View style={styles.airStatusContainer}>
         <View style={styles.airIndexContainer}>
-          <Text thin style={{color: Colors.text_color1}} size={78}>
+          <Text thin style={{ color: Colors.text_color1 }} size={78}>
             160
           </Text>
           <SVGIcon.air_quality_status
@@ -583,7 +585,7 @@ class HomeScreen extends BaseScreen {
             <Text
               size={30}
               medium
-              style={{color: Colors.air_quality_text, marginLeft: 4}}>
+              style={{ color: Colors.air_quality_text, marginLeft: 4 }}>
               Good
             </Text>
           </View>
@@ -592,7 +594,7 @@ class HomeScreen extends BaseScreen {
             <Text
               size={30}
               medium
-              style={{color: Colors.air_quality_text, marginLeft: 4}}>
+              style={{ color: Colors.air_quality_text, marginLeft: 4 }}>
               Unsafe
             </Text>
           </View>
@@ -602,20 +604,20 @@ class HomeScreen extends BaseScreen {
   };
 
   renderPMCircleProgress = () => {
-    const {listAirObj} = this.props;
+    const { listAirObj } = this.props;
     if (isEmpty(listAirObj)) return null;
     return (
       <View style={styles.pmCircleContainer}>
         {this.listQualityIndex.map(airQuality => {
-          const {name, key} = airQuality;
+          const { name, key } = airQuality;
           const value = listAirObj[key];
           return (
             <View style={styles.circleContainer}>
-              <Text size={36} medium style={{color: Colors.air_quality_text}}>
+              <Text size={36} medium style={{ color: Colors.air_quality_text }}>
                 {name}
               </Text>
               <AirQualityProgressCircle
-                outerCircleStyle={{marginTop: 12}}
+                outerCircleStyle={{ marginTop: 12 }}
                 percentage={30}
                 radius={normalize(80)}
                 color="green"
@@ -623,7 +625,7 @@ class HomeScreen extends BaseScreen {
                 value={value && value.toFixed(2)}
               />
               <View style={styles.airQualityBackground}>
-                <Text size={28} style={{color: Colors.weather_red}}>
+                <Text size={28} style={{ color: Colors.weather_red }}>
                   Unhealthy
                 </Text>
               </View>
@@ -659,7 +661,7 @@ class HomeScreen extends BaseScreen {
   };
 
   renderCommonInfo = () => {
-    const {weather, current, daily} = this.props;
+    const { weather, current, daily } = this.props;
     let minTemp = 0,
       maxTemp = 0;
     if (size(daily) > 0) {
@@ -682,7 +684,7 @@ class HomeScreen extends BaseScreen {
     return (
       <View style={styles.commonContainer}>
         <View style={styles.weatherToday}>
-          <Text style={{color: Colors.white}} size={160} thin>
+          <Text style={{ color: Colors.white }} size={160} thin>
             {Math.floor(temp)}
             <Text size={80} light>
               oC
@@ -690,19 +692,19 @@ class HomeScreen extends BaseScreen {
           </Text>
           <View style={styles.tempRange}>
             <Text
-              style={{color: Colors.white, alignSelf: 'flex-start'}}
+              style={{ color: Colors.white, alignSelf: 'flex-start' }}
               size={55}
               thin>
               {maxTemp}
             </Text>
             <Text
-              style={{color: Colors.white, alignSelf: 'center'}}
+              style={{ color: Colors.white, alignSelf: 'center' }}
               size={55}
               thin>
               /
             </Text>
             <Text
-              style={{color: Colors.white, alignSelf: 'flex-end'}}
+              style={{ color: Colors.white, alignSelf: 'flex-end' }}
               size={55}
               thin>
               {minTemp}
@@ -724,10 +726,10 @@ class HomeScreen extends BaseScreen {
         <Text size={32} style={styles.weatherSuggest}>
           {description}
         </Text>
-        <View style={{flexDirection: 'row'}}>
+        <View style={{ flexDirection: 'row' }}>
           <View style={styles.networkStatus}>
             <SVGIcon.offline width={normalize(24)} height={normalize(24)} />
-            <Text light size={26} style={{marginLeft: 6}}>
+            <Text light size={26} style={{ marginLeft: 6 }}>
               Offline Mode - last update 2 hours ago
             </Text>
           </View>
@@ -736,8 +738,8 @@ class HomeScreen extends BaseScreen {
     );
   };
 
-  renderGridInfoItem = ({item, index}) => {
-    const {description, value, unit, Icon} = item;
+  renderGridInfoItem = ({ item, index }) => {
+    const { description, value, unit, Icon } = item;
     return (
       <View
         style={{
@@ -750,15 +752,15 @@ class HomeScreen extends BaseScreen {
           borderBottomWidth: 1,
         }}>
         <Icon width={normalize(90)} height={normalize(90)} />
-        <View style={{marginLeft: 6, flex: 1}}>
-          <Text style={{color: Colors.text_color1}} size={44}>
+        <View style={{ marginLeft: 6, flex: 1 }}>
+          <Text style={{ color: Colors.text_color1 }} size={44}>
             {value}{' '}
-            <Text style={{color: Colors.text_color1}} size={34}>
+            <Text style={{ color: Colors.text_color1 }} size={34}>
               {unit}
             </Text>
           </Text>
           <View style={styles.gridInfoItemDes}>
-            <Text style={{color: Colors.textTitle}}>{description}</Text>
+            <Text style={{ color: Colors.textTitle }}>{description}</Text>
           </View>
         </View>
       </View>
@@ -766,7 +768,7 @@ class HomeScreen extends BaseScreen {
   };
 
   renderGridInfo = () => {
-    const {listGridInfo} = this.props;
+    const { listGridInfo } = this.props;
     return (
       <View style={styles.gridInfoContainer}>
         <FlatList
@@ -788,23 +790,23 @@ class HomeScreen extends BaseScreen {
         }}
         source={Images.assets.home_background.source}
         style={styles.homeImageBackground}>
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <View style={styles.homeHeader}>
             <Text
               size={36}
-              style={{color: Colors.white, flex: 1, alignSelf: 'center'}}
+              style={{ color: Colors.white, flex: 1, alignSelf: 'center' }}
               medium>
               Good {this.state.greeting}!
             </Text>
             <View style={styles.iconsContainer}>
-              <TouchablePlatform style={{padding: 8}}>
+              <TouchablePlatform style={{ padding: 8 }}>
                 <SVGIcon.share width={normalize(42)} height={normalize(42)} />
               </TouchablePlatform>
               <TouchablePlatform
                 onPress={() => {
                   NavigationService.getInstance().openDrawer();
                 }}
-                style={{padding: 8}}>
+                style={{ padding: 8 }}>
                 <SVGIcon.menu width={normalize(42)} height={normalize(42)} />
               </TouchablePlatform>
             </View>
@@ -824,34 +826,45 @@ class HomeScreen extends BaseScreen {
     );
   };
 
+  getCirclePointY = (x) => {
+    return -Math.sqrt(Math.pow(this.sunCircleR, 2) - Math.pow(x - this.sunCircleCenterX, 2)) + this.sunCircleCenterY;
+  }
+
   renderSun = () => {
-    const {current} = this.props;
+    const { current } = this.props;
     const sunrise = getValueFromObjectByKeys(current, ['sunrise']);
     const sunset = getValueFromObjectByKeys(current, ['sunset']);
     return (
       <View style={styles.sectionContainer}>
-        {this.renderHeaderSection({title: 'Sun', hasDetail: false})}
+        {this.renderHeaderSection({ title: 'Sun', hasDetail: false })}
         <View style={styles.sunContentContainer}>
           <View>
-            <Text style={{color: Colors.textTitle}}>Sunrise</Text>
-            <Text size={36} style={{color: Colors.air_quality_text}}>
+            <Text style={{ color: Colors.textTitle }}>Sunrise</Text>
+            <Text size={36} style={{ color: Colors.air_quality_text }}>
               {moment(new Date(sunrise * 1000)).format('HH:ss')}
             </Text>
           </View>
           <View style={styles.sunCircleContainer}>
             <View style={styles.sunInnerCircleContainer}>
               <LinearGradient
-                start={{x: 0, y: 0}}
-                end={{x: 0, y: 1.0}}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 0, y: 1.0 }}
                 colors={[Colors.sun_rise, Colors.sun_set]}
                 style={styles.sunInnerBackground}
               />
               <View style={styles.sunInnerEmptyBackground} />
             </View>
           </View>
+          <SVGIcon.sun
+            style={{
+              position: 'absolute',
+              top: this.getCirclePointY(240),
+              left: 240,
+            }}
+            width={normalize(40)} height={normalize(40)} />
           <View>
-            <Text style={{color: Colors.textTitle}}>Sunset</Text>
-            <Text size={36} style={{color: Colors.air_quality_text}}>
+            <Text style={{ color: Colors.textTitle }}>Sunset</Text>
+            <Text size={36} style={{ color: Colors.air_quality_text }}>
               {moment(new Date(sunset * 1000)).format('HH:ss')}
             </Text>
           </View>
@@ -863,18 +876,18 @@ class HomeScreen extends BaseScreen {
   renderMoon = () => {
     return (
       <View style={styles.moonContainer}>
-        {this.renderHeaderSection({title: 'Moon', hasDetail: false})}
+        {this.renderHeaderSection({ title: 'Moon', hasDetail: false })}
         <View style={styles.moonContentContainer}>
           {this.listMoonInfo.map(it => {
             return (
               <View style={styles.moonCircleContainer}>
                 <View style={styles.moonCircle} />
-                <Text style={{color: Colors.textTitle, marginTop: 16}}>
+                <Text style={{ color: Colors.textTitle, marginTop: 16 }}>
                   Today
                 </Text>
                 <Text
                   size={30}
-                  style={{color: Colors.air_quality_text, marginTop: 8}}>
+                  style={{ color: Colors.air_quality_text, marginTop: 8 }}>
                   Waxing Gibbous
                 </Text>
               </View>
@@ -886,13 +899,13 @@ class HomeScreen extends BaseScreen {
   };
 
   renderWindPressure = () => {
-    const {current} = this.props;
+    const { current } = this.props;
     const wind_deg = getValueFromObjectByKeys(current, ['wind_deg']);
     const wind_speed = getValueFromObjectByKeys(current, ['wind_speed']);
     const pressure = getValueFromObjectByKeys(current, ['pressure']);
     return (
       <View style={styles.sectionContainer}>
-        {this.renderHeaderSection({title: 'Wind & Pressure', hasDetail: false})}
+        {this.renderHeaderSection({ title: 'Wind & Pressure', hasDetail: false })}
         <View style={styles.winPressureContentContainer}>
           <View style={styles.windIconContainer}>
             <SVGIcon.wind_pressure width="100%" height="100%" />
@@ -900,11 +913,11 @@ class HomeScreen extends BaseScreen {
           <View style={styles.wind_pressure}>
             <View style={styles.winContainer}>
               <View>
-                <Text style={{color: Colors.textTitle}}>Wind</Text>
+                <Text style={{ color: Colors.textTitle }}>Wind</Text>
                 <Text
                   size={36}
                   thin
-                  style={{color: Colors.text_color1, marginTop: 4}}>
+                  style={{ color: Colors.text_color1, marginTop: 4 }}>
                   {wind_speed} m/s
                 </Text>
               </View>
@@ -915,11 +928,11 @@ class HomeScreen extends BaseScreen {
             </View>
             <View style={styles.pressureContainer}>
               <View>
-                <Text style={{color: Colors.textTitle}}>Pressure</Text>
+                <Text style={{ color: Colors.textTitle }}>Pressure</Text>
                 <Text
                   size={36}
                   thin
-                  style={{color: Colors.text_color1, marginTop: 4}}>
+                  style={{ color: Colors.text_color1, marginTop: 4 }}>
                   {pressure} mb
                 </Text>
               </View>
@@ -935,14 +948,14 @@ class HomeScreen extends BaseScreen {
   };
 
   renderCovidTab = () => {
-    const {currentIndexCovidTab} = this.state;
+    const { currentIndexCovidTab } = this.state;
     return (
       <View style={styles.covidTabContainer}>
         {this.covidInfo.map((it, index) => {
           const isFocus = currentIndexCovidTab === index;
           return (
             <TouchablePlatform
-              onPress={() => this.setStateSafe({currentIndexCovidTab: index})}
+              onPress={() => this.setStateSafe({ currentIndexCovidTab: index })}
               style={{
                 flex: 1,
                 alignItems: 'center',
@@ -952,7 +965,7 @@ class HomeScreen extends BaseScreen {
               }}>
               <Text
                 medium
-                style={{color: isFocus ? Colors.white : Colors.textTitle}}>
+                style={{ color: isFocus ? Colors.white : Colors.textTitle }}>
                 {it.title}
               </Text>
             </TouchablePlatform>
@@ -962,8 +975,8 @@ class HomeScreen extends BaseScreen {
     );
   };
 
-  renderCovidGridInfoItem = ({item, index}) => {
-    const {Icon, title, value} = item;
+  renderCovidGridInfoItem = ({ item, index }) => {
+    const { Icon, title, value } = item;
     return (
       <View
         style={{
@@ -975,13 +988,13 @@ class HomeScreen extends BaseScreen {
         }}>
         <Icon width={normalize(140)} height={normalize(140)} />
         <View style={styles.covidGridItemContent}>
-          <Text size={30} style={{color: Colors.air_quality_text}}>
+          <Text size={30} style={{ color: Colors.air_quality_text }}>
             {title}
           </Text>
           <Text
             size={44}
             light
-            style={{color: Colors.air_quality_text, marginTop: 4}}>
+            style={{ color: Colors.air_quality_text, marginTop: 4 }}>
             {value}
           </Text>
         </View>
@@ -1005,7 +1018,7 @@ class HomeScreen extends BaseScreen {
   renderCovid = () => {
     return (
       <View style={styles.sectionContainer}>
-        {this.renderHeaderSection({title: 'Covid', hasDetail: false})}
+        {this.renderHeaderSection({ title: 'Covid', hasDetail: false })}
         {this.renderCovidTab()}
         {this.renderCovidGridInfo()}
         <View style={styles.covidGridBottomLine} />
@@ -1089,8 +1102,8 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.border_color,
     borderBottomWidth: 1,
   },
-  wind_pressure: {flex: 1, marginLeft: 16, paddingVertical: 8},
-  windIconContainer: {flex: 1, aspectRatio: 320 / 235},
+  wind_pressure: { flex: 1, marginLeft: 16, paddingVertical: 8 },
+  windIconContainer: { flex: 1, aspectRatio: 320 / 235 },
   winPressureContentContainer: {
     flexDirection: 'row',
     marginTop: 16,
@@ -1105,8 +1118,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.border_moon,
   },
-  moonCircleContainer: {flex: 1, alignItems: 'center'},
-  moonContentContainer: {marginTop: 16, flexDirection: 'row', flex: 1},
+  moonCircleContainer: { flex: 1, alignItems: 'center' },
+  moonContentContainer: { marginTop: 16, flexDirection: 'row', flex: 1 },
   moonContainer: {
     backgroundColor: Colors.white,
     paddingVertical: 16,
@@ -1160,7 +1173,7 @@ const styles = StyleSheet.create({
   contentContainerStyle: {
     paddingBottom: insets.bottom,
   },
-  chartScrollView: {marginTop: 8},
+  chartScrollView: { marginTop: 8 },
   sectionContainer: {
     flex: 1,
     backgroundColor: 'white',
@@ -1180,10 +1193,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
-  leftHeaderSection: {flexDirection: 'row', alignItems: 'center'},
-  headerSectionTitle: {marginLeft: 8, color: Colors.black},
-  detailButton: {padding: 16},
-  airStatusContainer: {flexDirection: 'row', marginTop: 16},
+  leftHeaderSection: { flexDirection: 'row', alignItems: 'center' },
+  headerSectionTitle: { marginLeft: 8, color: Colors.black },
+  detailButton: { padding: 16 },
+  airStatusContainer: { flexDirection: 'row', marginTop: 16 },
   airIndexContainer: {
     width: normalize(210),
     height: normalize(129),
@@ -1192,12 +1205,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-end',
   },
-  air_status_icon: {position: 'absolute', top: -normalize(66) / 2},
+  air_status_icon: { position: 'absolute', top: -normalize(66) / 2 },
   airWarnContainer: {
     flex: 1,
     marginLeft: 16,
   },
-  airWarnContent: {flex: 1, justifyContent: 'flex-end'},
+  airWarnContent: { flex: 1, justifyContent: 'flex-end' },
   airSeekBar: {
     width: '100%',
     height: normalize(10),
@@ -1228,7 +1241,7 @@ const styles = StyleSheet.create({
     marginTop: 24,
     flexDirection: 'row',
   },
-  circleContainer: {flex: 1, alignItems: 'center'},
+  circleContainer: { flex: 1, alignItems: 'center' },
   innerDashedCircle: {
     width: normalize(130),
     height: normalize(130),
@@ -1253,25 +1266,25 @@ const styles = StyleSheet.create({
     height: heightDevice,
     paddingTop: getStatusBarHeight() + 16,
   },
-  homeHeader: {flexDirection: 'row', paddingHorizontal: 12},
-  iconsContainer: {flexDirection: 'row', alignItems: 'center'},
-  locationText: {color: Colors.white, marginTop: 4, paddingHorizontal: 12},
-  dateText: {color: Colors.white, marginTop: 2, paddingHorizontal: 12},
+  homeHeader: { flexDirection: 'row', paddingHorizontal: 12 },
+  iconsContainer: { flexDirection: 'row', alignItems: 'center' },
+  locationText: { color: Colors.white, marginTop: 4, paddingHorizontal: 12 },
+  dateText: { color: Colors.white, marginTop: 2, paddingHorizontal: 12 },
   infoContainer: {
     flex: 1,
     justifyContent: 'flex-end',
   },
-  commonContainer: {paddingHorizontal: 12},
-  weatherToday: {flexDirection: 'row', alignItems: 'flex-end'},
+  commonContainer: { paddingHorizontal: 12 },
+  weatherToday: { flexDirection: 'row', alignItems: 'flex-end' },
   tempRange: {
     flexDirection: 'row',
     height: normalize(100),
     marginLeft: 4,
     marginBottom: 12,
   },
-  partyCloud: {flexDirection: 'row', alignItems: 'center'},
-  partyCloudText: {color: Colors.white, marginLeft: 8},
-  weatherSuggest: {color: Colors.white, marginTop: 4},
+  partyCloud: { flexDirection: 'row', alignItems: 'center' },
+  partyCloudText: { color: Colors.white, marginLeft: 8 },
+  weatherSuggest: { color: Colors.white, marginTop: 4 },
   networkStatus: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -1290,7 +1303,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: normalize(40),
     overflow: 'hidden',
   },
-  gridInfoItemDes: {flex: 1, justifyContent: 'flex-end'},
+  gridInfoItemDes: { flex: 1, justifyContent: 'flex-end' },
 });
 
 const mapStateToProps = state => {

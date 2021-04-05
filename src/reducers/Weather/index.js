@@ -1,13 +1,13 @@
 import Immutable from 'immutable';
-import {size} from 'lodash';
+import { size } from 'lodash';
 import SVGIcon from '../../../assets/SVGIcon';
 import {
   NORMAL_TYPE,
   REQUEST_SUBTYPE,
   REQUEST_TYPE,
 } from '../../actions/ActionTypes';
-import {myLog} from '../../Debug';
-import {getValueFromObjectByKeys} from '../../utils/Util';
+import { myLog } from '../../Debug';
+import { getValueFromObjectByKeys } from '../../utils/Util';
 
 const initState = Immutable.fromJS({
   weather: {},
@@ -28,7 +28,7 @@ export default (state = initState, action) => {
           const humidity = getValueFromObjectByKeys(currentWeather, [
             'humidity',
           ]);
-          const rain = getValueFromObjectByKeys(currentWeather, ['rain']);
+          const rain = getValueFromObjectByKeys(currentWeather, ['rain', '1h']);
           const wind_speed = getValueFromObjectByKeys(currentWeather, [
             'wind_speed',
           ]);
