@@ -32,6 +32,7 @@ import {TYPE_IMAGE_RESIZE_MODE} from '../../common/Image';
 import NavigationService from '../../../navigation/NavigationService';
 import WeatherInfo from './component/weather-info';
 import {ROUTER_NAME} from '../../../navigation/NavigationConst';
+import {AppSettingManager} from '../../../modules/AppSettingManager';
 import {isEmpty, size} from 'lodash';
 import {TouchablePlatform} from '../../../modules/TouchablePlatform';
 import WeatherAction from '../../../actions/WeatherAction';
@@ -259,6 +260,9 @@ class HomeScreen extends BaseScreen {
       },
     ];
   }
+  componentWillMount = async () => {
+    await AppSettingManager.getInstance().setDataSettingFromLocal();
+  };
 
   async _componentDidMount() {
     const {getAllData, getAirPollution} = this.props;

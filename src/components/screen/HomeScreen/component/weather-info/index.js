@@ -20,6 +20,8 @@ import {Images} from '../../../../../themes/Images';
 import {appCreatedBy} from '../../../../../Define';
 import {ROUTER_NAME} from '../../../../../navigation/NavigationConst';
 import NavigationService from '../../../../../navigation/NavigationService';
+import withI18n from '../../../../../modules/i18n/HOC';
+import {languagesKeys} from '../../../../../modules/i18n/defined';
 
 const iconFollowSize = {width: normalize(60), height: normalize(60)};
 const paddingHorizontalItem = normalize(30);
@@ -56,12 +58,14 @@ class WeatherInfo extends React.Component {
         txtRight:
           'Version ' + AppInfoManager.getInstance().getAppInfo().buildVersion,
         iconLeft: IconInfoSvg,
+        languageKey: languagesKeys.aboutApp,
       },
       {
         label: 'Settings',
         value: 'setting',
         router: ROUTER_NAME.SETTING.name,
         iconLeft: IconSettingSvg,
+        languageKey: languagesKeys.setting,
       },
       {
         label: 'Weather Provider',
@@ -69,6 +73,7 @@ class WeatherInfo extends React.Component {
         router: ROUTER_NAME.WEATHER_PROVIDER.name,
         txtRight: 'TheWeatherChannel',
         iconLeft: IconWeatherProviderSvg,
+        languageKey: languagesKeys.weatherProvider,
       },
     ];
   }
@@ -82,6 +87,7 @@ class WeatherInfo extends React.Component {
   renderItem = params => {
     const {item, index} = params;
     const {value} = this.state;
+    const {t} = this.props;
     const IconLeft = item.iconLeft;
     return (
       <ItemListSetting
@@ -91,10 +97,14 @@ class WeatherInfo extends React.Component {
         onPressItem={this.onPressItem}
         item={item}
         txtRight={
-          <CustomText style={{marginRight: normalize(30)}} size={28}>
+          <CustomText
+            color={Colors.textTitle}
+            style={{marginRight: normalize(30)}}
+            size={28}>
             {item.txtRight}
           </CustomText>
         }
+        t={t}
         noBorder={index === this.listAction.length - 1}
         iconLeft={<IconLeft width={normalize(56)} height={normalize(56)} />}
         iconRight={
@@ -143,4 +153,4 @@ class WeatherInfo extends React.Component {
   }
 }
 
-export default WeatherInfo;
+export default withI18n(WeatherInfo);

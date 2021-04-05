@@ -10,6 +10,11 @@ import CustomText from '../../common/Text';
 import {Header} from '../Header';
 import {normalize, widthDevice} from '../../../utils/DeviceUtil';
 import {Colors} from '../../../themes/Colors';
+import {connect} from 'react-redux';
+import {NORMAL_TYPE} from '../../../actions/ActionTypes';
+import {getStateForKeys} from '../../../utils/Util';
+import {myLog} from '../../../Debug';
+import SettingAction from '../../../actions/SettingAction';
 
 const styles = StyleSheet.create({
   containerView: {flex: 1, backgroundColor: Colors.white},
@@ -21,53 +26,12 @@ class CustomLayoutScreen extends BaseScreen {
   constructor(props) {
     super(props);
     this.state = {
-      data: [
-        {
-          label: 'Status',
-          key: 'status',
-          isActive: true,
-        },
-        {
-          label: 'Detail',
-          key: 'Detail',
-          isActive: true,
-        },
-        {
-          label: 'Hourly',
-          key: 'Hourly',
-          isActive: true,
-        },
-        {
-          label: 'Air Quality',
-          key: 'AirQuality',
-          isActive: true,
-        },
-        {
-          label: 'Sun and Moon',
-          key: 'SunandMoon',
-          isActive: true,
-        },
-        {
-          label: 'Wind and Pressure',
-          key: 'WindandPressure',
-          isActive: true,
-        },
-        {
-          label: 'Radar',
-          key: 'Radar',
-          isActive: false,
-        },
-        {
-          label: 'Covid',
-          key: 'Covid',
-          isActive: false,
-        },
-      ],
+      data: this.props.layout,
     };
   }
   onPressItem = ({item, index}) => {
     let tmpData = [...this.state.data];
-    let indexFinal = tmpData.findIndex(x => x.key === item.key);
+    let indexFinal = tmpData.findIndex(x => x.value === item.value);
     tmpData[indexFinal] = {
       ...item,
       isActive: !item.isActive,
@@ -106,7 +70,7 @@ class CustomLayoutScreen extends BaseScreen {
                 onPress={() => {
                   this.onPressItem({item, index});
                 }}>
-                {item.isActive ? (
+                {item.active ? (
                   <IconCheckedSvg {...iconCheckboxSize} />
                 ) : (
                   <IconUnCheckedSvg {...iconCheckboxSize} />
@@ -134,8 +98,10 @@ class CustomLayoutScreen extends BaseScreen {
       <ImageHeaderSvg width={widthDevice} height={widthDevice * (134 / 750)} />
     );
   };
-  render() {
+  renderContent() {
     const {data} = this.state;
+    const {changeLayout} = this.props;
+    myLog('----custom layout---', this.props);
     return (
       <View style={styles.containerView}>
         <Header title="Customize Layout" />
@@ -144,12 +110,38 @@ class CustomLayoutScreen extends BaseScreen {
           extraData={data}
           ListHeaderComponent={this.renderHeader}
           renderItem={this.renderItem}
-          keyExtractor={(item, index) => `draggable-item-${item.key}`}
-          onDragEnd={({data}) => this.setState({data})}
+          keyExtractor={(item, index) => `draggable-item-${item.value}`}
+          onDragEnd={({data}) => {
+            let tmpData = [];
+            data.map((item, index) => {
+              tmpData.push({...item, index: index + 1});
+            });
+            this.setState({data: tmpData}, () => {
+              myLog('onDragEnd-->', tmpData);
+              changeLayout(tmpData);
+            });
+          }}
         />
       </View>
     );
   }
 }
 
-export default CustomLayoutScreen;
+const mapStateToProps = state => {
+  return {
+    layout: getStateForKeys(state, ['Setting', 'layout']),
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    changeLayout: data => {
+      return dispatch(
+        SettingAction.changeOneValueSetting({
+          layout: data,
+          subKey: NORMAL_TYPE.CHANGE_LAYOUT,
+        }),
+      );
+    },
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(CustomLayoutScreen);

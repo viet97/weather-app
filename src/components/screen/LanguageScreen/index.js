@@ -11,6 +11,13 @@ import {
 import CustomText from '../../common/Text';
 import {Header} from '../Header';
 import {Colors} from '../../../themes/Colors';
+import {DEFINE_LANGUAGE} from '../../../Define';
+import withI18n, {typeStringAfterTranslation} from '../../../modules/i18n/HOC';
+import {NORMAL_TYPE} from '../../../actions/ActionTypes';
+import {getStateForKeys} from '../../../utils/Util';
+import {LanguageAction} from '../../../actions';
+import {connect} from 'react-redux';
+import {myLog} from '../../../Debug';
 
 const paddingHorizontalItem = normalize(30);
 const styles = StyleSheet.create({
@@ -40,6 +47,7 @@ export const ItemListSetting = props => {
     customStyle = {},
     txtRight = '',
     noBorder = false,
+    t = str => str,
   } = props;
   return (
     <View style={[styles.containerItem, customStyle]}>
@@ -66,7 +74,11 @@ export const ItemListSetting = props => {
               size={32}
               style={styles.labelItem}
               color={Colors.air_quality_text}>
-              {item.label}
+              {item.languageKey
+                ? t(item.languageKey, {
+                    type: typeStringAfterTranslation.capitalize,
+                  })
+                : item.label}
             </CustomText>
           </View>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -84,39 +96,23 @@ class LanguageScreen extends BaseScreen {
     this.state = {
       value: 'eng',
     };
-    this.listTime = [
-      {
-        label: 'English : English',
-        value: 'eng',
-      },
-      {
-        label: 'Vietnamese : Tiếng Việt',
-        value: 'vie',
-      },
-      {
-        label: 'Catalan : Català',
-        value: 'catalan',
-      },
-      {
-        label: 'Welsh : Cymraeg',
-        value: 'welsh',
-      },
-    ];
+    this.listTime = Object.values(DEFINE_LANGUAGE);
   }
   onPressItem = item => {
-    this.setState({
-      value: item.value,
-    });
+    const {setLocaleCustom} = this.props;
+    setLocaleCustom(item.value);
   };
   renderItem = params => {
     const {item, index} = params;
     const {value} = this.state;
+    const {language} = this.props;
+    myLog('---renderItem--->', this.props);
     return (
       <ItemListSetting
         onPressItem={this.onPressItem}
         key={index}
         item={item}
-        value={value}
+        value={language}
       />
     );
   };
@@ -139,5 +135,19 @@ class LanguageScreen extends BaseScreen {
     );
   }
 }
-
-export default LanguageScreen;
+const mapStateToProps = state => {
+  return {
+    language: getStateForKeys(state, ['Language', 'language']),
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    changeLanguage: value => {
+      return dispatch(LanguageAction.changeLanguage(value));
+    },
+  };
+};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withI18n(LanguageScreen));

@@ -40,7 +40,9 @@ export const getStateForKeys = (state = {}, keys = []) => {
   for (let i = 0; i < length; i++) {
     output = output.get(keys[i]);
   }
-  return output;
+  return output && output.toJS && typeof output.toJS === 'function'
+    ? output.toJS()
+    : output;
 };
 
 export const checkKeyExistObject = (obj = {}, keys = []) => {
@@ -320,6 +322,15 @@ export const getMoonPhase = (year, month, day) => {
 
 export const temperatureC = '°C';
 export const temperatureF = '°F';
+export const temperatureNne = '°';
+
+export const deepCopyObject = (obj = {}) => {
+  try {
+    return JSON.parse(JSON.stringify(obj));
+  } catch (error) {
+    return obj;
+  }
+};
 
 const Util = {
   getStateForKeys,

@@ -1,10 +1,14 @@
 import React from 'react';
-import {FlatList, View} from 'react-native';
+import {FlatList, View, ActivityIndicator, RefreshControl} from 'react-native';
 import BaseScreen from '../BaseScreen';
 import IconWeatherSvg from '../../../../assets/SVGIcon/view-menu/icon_weather.svg';
 import {Images} from '../../../themes/Images';
 import CustomImage from '../../common/Image';
-import {normalize, STATUS_BAR_HEIGHT} from '../../../utils/DeviceUtil';
+import {
+  normalize,
+  STATUS_BAR_HEIGHT,
+  widthDevice,
+} from '../../../utils/DeviceUtil';
 import IconBackSvg from '../../../../assets/SVGIcon/view-menu/icon_back.svg';
 import IconAddSvg from '../../../../assets/SVGIcon/view-menu/icon_add.svg';
 import IconSettingSvg from '../../../../assets/SVGIcon/view-menu/icon_setting.svg';
@@ -15,31 +19,110 @@ import {TouchablePlatform} from '../../../modules/TouchablePlatform';
 import NavigationService from '../../../navigation/NavigationService';
 import {ROUTER_NAME} from '../../../navigation/NavigationConst';
 import {Colors} from '../../../themes/Colors';
+import {
+  deepCopyObject,
+  getStateForKeys,
+  temperatureC,
+  temperatureF,
+  temperatureNone,
+} from '../../../utils/Util';
+import withI18n from '../../../modules/i18n/HOC';
+import {connect} from 'react-redux';
+import {myLog} from '../../../Debug';
+import {MyServer} from '../../../data-source/server';
+import {DEFINE_UNITS_TEMP, unitsQuery} from '../../../Define';
+import Axios from 'axios';
+import Modal from 'react-native-modal';
+import {LocationAction} from '../../../actions';
+import {AppSettingManager} from '../../../modules/AppSettingManager';
 
-export default class MenuScreen extends BaseScreen {
+class MenuScreen extends BaseScreen {
   constructor(props) {
     super(props);
     this.state = {
-      data: [
-        {
-          label: 'Tan Binh, Ho Chi Minh',
-          temperature: 36,
-          unit: 'c',
-          icon: IconWeatherSvg,
-          background: Images.assets.bg_menu.source,
-          ratio: 543 / 271.5,
-          key: 'hcm',
-        },
-      ],
+      data: [],
+      isShowModalRemove: false,
+      locationSelected: null,
+      loadingData: false,
     };
+  }
+  getWeatherDetail = async (props = this.props) => {
+    try {
+      if (!AppSettingManager.getInstance().setFirstValueLocal) return;
+      myLog('getWeatherDetail--->', props);
+      this.setState({loadingData: true});
+      const {myLocations, unitTemp} = props;
+      if (myLocations && myLocations.length) {
+        let arrDetail = [];
+        myLocations.map(item => {
+          arrDetail.push(
+            MyServer.getInstance().getWeatherByCityId({
+              query: {
+                id: item.id,
+                units: unitsQuery.openWeather.temp[unitTemp],
+              },
+            }),
+          );
+        });
+        if (arrDetail.length) {
+          const resAllDetail = await Axios.all(arrDetail);
+          myLog('resAllDetail--->', resAllDetail);
+          let tmpDataLocation = [];
+          resAllDetail.map(resDetail => {
+            const resDetailData =
+              resDetail && resDetail.data && Object.keys(resDetail.data).length
+                ? resDetail.data
+                : null;
+            if (resDetailData) {
+              tmpDataLocation.push({
+                label: resDetailData.name,
+                key: resDetailData.id,
+                id: resDetailData.id,
+                temperature: resDetailData.main.temp,
+              });
+            }
+          });
+          this.setState({
+            data: tmpDataLocation,
+            loadingData: false,
+          });
+        }
+      }
+    } catch (error) {
+      myLog('getWeatherDetail--->', error);
+      this.setState({
+        loadingData: false,
+      });
+    }
+  };
+  componentDidMount() {
+    this.getWeatherDetail();
+  }
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    myLog('componentWillReceiveProps--->', nextProps);
+    if (
+      JSON.stringify(nextProps.myLocations) !==
+        JSON.stringify(this.props.myLocations) ||
+      nextProps.unitTemp !== this.props.unitTemp ||
+      nextProps.language !== this.props.language ||
+      nextProps.dataSource !== this.props.dataSource
+    ) {
+      this.getWeatherDetail(nextProps);
+    }
   }
   renderItem = params => {
     const {item, index} = params;
+    const {unitTemp} = this.props;
     return (
-      <View style={{paddingHorizontal: normalize(9)}} key={index}>
+      <View
+        style={{
+          paddingHorizontal: normalize(9),
+          marginBottom: normalize(9),
+        }}
+        key={index}>
         <CustomImage
-          source={item.background}
-          style={{width: normalize(543), height: normalize(271.5)}}
+          source={item.background || Images.assets.bg_menu.source}
+          style={{width: normalize(544), height: normalize(271.5)}}
         />
         <View
           style={{
@@ -48,7 +131,7 @@ export default class MenuScreen extends BaseScreen {
             height: normalize(271.5),
             top: 0,
             left: normalize(9),
-            backgroundColor: Colors.blackAlpha20,
+            backgroundColor: Colors.TRANSPARENT,
           }}
         />
         <View
@@ -56,7 +139,7 @@ export default class MenuScreen extends BaseScreen {
             position: 'absolute',
             top: 0,
             left: normalize(9),
-            width: normalize(543),
+            width: normalize(544),
             height: normalize(271.5),
             paddingHorizontal: normalize(30),
             justifyContent: 'space-between',
@@ -71,7 +154,13 @@ export default class MenuScreen extends BaseScreen {
             <CustomText numberOfLines={1} color={Colors.white} size={36}>
               {item.label}
             </CustomText>
-            <TouchablePlatform>
+            <TouchablePlatform
+              onPress={() => {
+                this.setState({
+                  locationSelected: item,
+                  isShowModalRemove: true,
+                });
+              }}>
               <CustomImage
                 source={Images.assets.icon_more_menu.source}
                 style={{
@@ -85,15 +174,38 @@ export default class MenuScreen extends BaseScreen {
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
-              alignItems: 'center',
+              alignItems: 'flex-end',
             }}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <CustomText color={Colors.white} size={80}>
-                {item.temperature}
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'flex-start',
+              }}>
+              <CustomText
+                style={{includeFontPadding: false, marginTop: 5}}
+                thin
+                color={Colors.white}
+                size={80}>
+                {parseFloat(item.temperature).toFixed(1) || 36}
               </CustomText>
-              <IconTempCSvg width={normalize(42)} height={normalize(33)} />
+              <CustomText
+                style={{
+                  includeFontPadding: false,
+                  marginTop: 10,
+                }}
+                thin
+                color={Colors.white}
+                size={50}>
+                {DEFINE_UNITS_TEMP[unitTemp].label || temperatureNone}
+              </CustomText>
+              {/* <IconTempCSvg width={normalize(42)} height={normalize(33)} /> */}
             </View>
-            <IconWeatherSvg width={normalize(58)} height={normalize(58)} />
+            <View
+              style={{
+                height: normalize(58) + 6,
+              }}>
+              <IconWeatherSvg width={normalize(58)} height={normalize(58)} />
+            </View>
           </View>
         </View>
       </View>
@@ -104,11 +216,12 @@ export default class MenuScreen extends BaseScreen {
       <View
         style={{
           flexDirection: 'row',
-          marginTop: normalize(104) + STATUS_BAR_HEIGHT,
+          paddingTop: normalize(104) + STATUS_BAR_HEIGHT,
           alignItems: 'center',
           justifyContent: 'space-between',
           paddingHorizontal: normalize(30),
-          marginBottom: normalize(40),
+          paddingBottom: normalize(40),
+          backgroundColor: Colors.white,
         }}>
         <TouchablePlatform
           onPress={() => {
@@ -143,15 +256,120 @@ export default class MenuScreen extends BaseScreen {
       </View>
     );
   };
+  hideModalRemove = () => {
+    this.setState({
+      isShowModalRemove: false,
+    });
+  };
+  removeLocation = () => {
+    const {locationSelected, data} = this.state;
+    const {myLocations, changeLocation} = this.props;
+    const tmpMyLocations = deepCopyObject(myLocations);
+    const indexRemove = tmpMyLocations.findIndex(
+      x => x.id === locationSelected.id,
+    );
+    if (indexRemove !== -1) {
+      tmpMyLocations.splice(indexRemove, 1);
+      changeLocation(tmpMyLocations);
+      this.setState({
+        locationSelected: null,
+        isShowModalRemove: false,
+      });
+    }
+  };
   renderContent() {
-    const {data} = this.state;
+    const {data, isShowModalRemove, loadingData} = this.state;
+    const {myLocations} = this.props;
+    myLog('--render menu---', data);
     return (
-      <FlatList
-        keyExtractor={(item, index) => item.key + index}
-        data={data}
-        renderItem={this.renderItem}
-        ListHeaderComponent={this.renderHeader}
-      />
+      <View style={{backgroundColor: Colors.white}}>
+        <FlatList
+          keyExtractor={(item, index) => item.key + index}
+          data={data}
+          renderItem={this.renderItem}
+          stickyHeaderIndices={[0]}
+          ListHeaderComponent={this.renderHeader}
+          refreshControl={
+            <RefreshControl
+              refreshing={false}
+              onRefresh={this.getWeatherDetail}
+            />
+          }
+          ListEmptyComponent={() => {
+            return loadingData ? (
+              <ActivityIndicator
+                style={{marginTop: normalize(30)}}
+                size="large"
+                color={Colors.viewDetail}
+              />
+            ) : null;
+          }}
+        />
+        <Modal
+          onBackButtonPress={this.hideModalRemove}
+          onBackdropPress={this.hideModalRemove}
+          isVisible={isShowModalRemove}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+            }}>
+            <View
+              style={{
+                width: widthDevice - 2 * normalize(30),
+              }}>
+              <TouchablePlatform
+                onPress={this.removeLocation}
+                style={{
+                  paddingVertical: normalize(35),
+                  backgroundColor: Colors.white,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: normalize(20),
+                }}>
+                <CustomText semiBold size={36} color={Colors.viewDetail}>
+                  Remove this location
+                </CustomText>
+              </TouchablePlatform>
+              <TouchablePlatform
+                onPress={this.hideModalRemove}
+                style={{
+                  paddingVertical: normalize(35),
+                  backgroundColor: Colors.white,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginTop: normalize(20),
+                  borderRadius: normalize(20),
+                }}>
+                <CustomText semiBold size={36} color={Colors.textTitle}>
+                  Cancel
+                </CustomText>
+              </TouchablePlatform>
+            </View>
+          </View>
+        </Modal>
+      </View>
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    myLocations: getStateForKeys(state, ['Location', 'myLocations']),
+    unitTemp: getStateForKeys(state, ['Setting', 'unitTemp']),
+    dataSource: getStateForKeys(state, ['Setting', 'dataSource']),
+    language: getStateForKeys(state, ['Language', 'language']),
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    changeLocation: data => {
+      return dispatch(LocationAction.changeLocation(data));
+    },
+  };
+};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withI18n(MenuScreen));

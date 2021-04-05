@@ -1,0 +1,12 @@
+{
+  "hello": "hello",
+  "menu": "menu",
+  "channel": "channel",
+  "home": "home",
+  "event": "event",
+  "movie": "movie",
+  "genre": "Genre",
+  "episode": "Episode",
+  "director": "Director",
+  "cast": "Cast"
+}

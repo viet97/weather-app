@@ -1,5 +1,7 @@
+import {temperatureC, temperatureF} from './utils/Util';
 import {getBootloader} from 'react-native-device-info';
 import {Colors} from './themes/Colors';
+import {languagesKeys} from './modules/i18n/defined';
 
 export const checkExistsSpecailChar = string => {
   const format = /^[a-zA-Z0-9]*$/;
@@ -116,7 +118,251 @@ export const AIR_LIST = {
 export const MOMENT_DATE_FORMAT = 'MM/DD/YY';
 export const appCreatedBy = 'By GOD Team';
 export const DEFINE_DATA_SOURCE = {
-  openWeather: {key: 'openWeather', label: 'Open Weather'},
-  weatherBit: {key: 'weatherBit', label: 'Weather Bit'},
-  foreca: {key: 'foreca', label: 'Foreca'},
+  openWeather: {
+    key: 'openWeather',
+    value: 'openWeather',
+    label: 'Open Weather',
+  },
+  weatherBit: {key: 'weatherBit', value: 'weatherBit', label: 'Weather Bit'},
+  foreca: {key: 'foreca', value: 'foreca', label: 'Foreca'},
+};
+export const DEFINE_UNIT_FREQUENCY = {
+  '30m': {
+    value: '30m',
+    label: '30 minutes',
+    languageKey: languagesKeys.time30m,
+  },
+  '1h': {
+    value: '1h',
+    label: '1 hour',
+    languageKey: languagesKeys.time1h,
+  },
+  '2h': {
+    value: '2h',
+    label: '2 hour',
+    languageKey: languagesKeys.time2h,
+  },
+  '12h': {
+    value: '12h',
+    label: '12 hour',
+    languageKey: languagesKeys.time12h,
+  },
+};
+export const DEFINE_UNITS_TEMP = {
+  c: {
+    value: 'c',
+    label: '°C',
+  },
+  f: {
+    value: 'f',
+    label: '°F',
+  },
+};
+export const DEFINE_UNITS_RAIN_SNOW = {
+  mm: {
+    value: 'mm',
+    label: 'mm',
+  },
+  in: {
+    value: 'in',
+    label: 'in',
+  },
+};
+export const DEFINE_UNITS_DISTANCE = {
+  mi: {
+    value: 'mi',
+    label: 'mi',
+  },
+  km: {
+    value: 'km',
+    label: 'km',
+  },
+};
+export const DEFINE_UNITS_WIND_SPEED = {
+  mph: {
+    value: 'mph',
+    label: 'mph',
+  },
+  kph: {
+    value: 'kph',
+    label: 'kph',
+  },
+  'km/h': {
+    value: 'km/h',
+    label: 'km/h',
+  },
+  'm/s': {
+    value: 'm/s',
+    label: 'm/s',
+  },
+};
+export const DEFINE_UNITS_PRESSURE = {
+  mBar: {
+    value: 'mBar',
+    label: 'mBar',
+  },
+  inHg: {
+    value: 'inHg',
+    label: 'inHg',
+  },
+  psi: {
+    value: 'psi',
+    label: 'psi',
+  },
+  bar: {
+    value: 'bar',
+    label: 'bar',
+  },
+  mmHg: {
+    value: 'mmHg',
+    label: 'mmHg',
+  },
+};
+export const DEFINE_NOTIFICATION = {
+  daily: {
+    value: 'daily',
+    label: 'Daily Notification',
+  },
+  severe: {
+    value: 'severe',
+    label: 'Severe Alerts',
+  },
+  rain: {
+    label: 'Rain & Snow Alarm',
+    value: 'rain',
+  },
+};
+export const DEFINE_THEME_COLOR = {
+  light: {
+    value: 'light',
+    label: 'Light Mode',
+    languageKey: languagesKeys.lightMode,
+  },
+  dark: {
+    value: 'dark',
+    label: 'Dark Mode',
+    languageKey: languagesKeys.darkMode,
+  },
+};
+export const DEFINE_TIME_FORMAT = {
+  '24h': {value: '24h', label: '24 hours', languageKey: languagesKeys.time24h},
+  '12h': {value: '12h', label: '12 hours', languageKey: languagesKeys.time12h},
+};
+export const DEFINE_LAYOUT = {
+  status: {
+    value: 'status',
+    label: 'Status',
+    index: 1,
+    active: 1,
+  },
+  detail: {
+    value: 'detail',
+    label: 'Detail',
+    index: 2,
+    active: 1,
+  },
+  hourly: {
+    value: 'hourly',
+    label: 'Hourly',
+    index: 3,
+    active: 1,
+  },
+  sunAndMoon: {
+    value: 'sunAndMoon',
+    label: 'Sun and Moon',
+    index: 4,
+    active: 1,
+  },
+  windAndPressure: {
+    value: 'Wind and Pressure',
+    label: 'windAndPressure',
+    index: 5,
+    active: 1,
+  },
+  airQuality: {
+    value: 'airQuality',
+    label: 'Air Quality',
+    index: 6,
+    active: 1,
+  },
+  radar: {
+    value: 'radar',
+    label: 'Radar',
+    index: 7,
+    active: 0,
+  },
+  covid: {
+    value: 'covid',
+    label: 'Covid',
+    index: 8,
+    active: 0,
+  },
+};
+
+export const DEFINE_LANGUAGE = {
+  eng: {
+    label: 'English : English',
+    txtSub: 'English',
+    value: 'eng',
+  },
+  vi: {
+    label: 'Vietnamese: Tiếng Việt',
+    txtSub: 'Tiếng Việt',
+    value: 'vi',
+  },
+  ca: {
+    label: 'Catalan : Català',
+    txtSub: 'Català',
+    value: 'ca',
+  },
+  we: {
+    label: 'Welsh : Cymraeg',
+    txtSub: 'Cymraeg',
+    value: 'we',
+  },
+  sv: {
+    label: 'Swedish : Svenska',
+    txtSub: 'Svenska',
+    value: 'sv',
+  },
+  sl: {
+    label: 'Sloval : Slovenský',
+    txtSub: 'Slovenský',
+    value: 'sl',
+  },
+  pt: {
+    label: 'Portuguese : Português',
+    txtSub: 'Português',
+    value: 'pt',
+  },
+  pl: {
+    label: 'Polish : Polskie',
+    txtSub: 'Polskie',
+    value: 'pl',
+  },
+  it: {
+    label: 'Italian : Italiano',
+    txtSub: 'Italiano',
+    value: 'it',
+  },
+  de: {
+    label: 'German : Deutsch',
+    txtSub: 'Deutsch',
+    value: 'de',
+  },
+};
+
+export const unitsQuery = {
+  openWeather: {
+    temp: {
+      [DEFINE_UNITS_TEMP.c.value]: 'metric',
+      [DEFINE_UNITS_TEMP.f.value]: 'imperial',
+    },
+  },
+  weatherBit: {
+    temp: {
+      [DEFINE_UNITS_TEMP.c.value]: 'M',
+      [DEFINE_UNITS_TEMP.f.value]: 'I',
+    },
+  },
 };

@@ -30,10 +30,33 @@ import CustomText from '../../common/Text';
 import NavigationService from '../../../navigation/NavigationService';
 import {ROUTER_NAME} from '../../../navigation/NavigationConst';
 import {Header} from '../Header';
-import {temperatureC} from '../../../utils/Util';
+import {getStateForKeys, temperatureC} from '../../../utils/Util';
 import {Colors} from '../../../themes/Colors';
 import {TouchablePlatform} from '../../../modules/TouchablePlatform';
+import {
+  DEFINE_DATA_SOURCE,
+  DEFINE_LANGUAGE,
+  DEFINE_THEME_COLOR,
+  DEFINE_TIME_FORMAT,
+  DEFINE_UNITS_DISTANCE,
+  DEFINE_UNITS_PRESSURE,
+  DEFINE_UNITS_RAIN_SNOW,
+  DEFINE_UNITS_TEMP,
+  DEFINE_UNITS_WIND_SPEED,
+  DEFINE_UNIT_FREQUENCY,
+} from '../../../Define';
+import {connect} from 'react-redux';
+import SettingAction from '../../../actions/SettingAction';
+import {NORMAL_TYPE} from '../../../actions/ActionTypes';
+import {myLog} from '../../../Debug';
+import AppInfoManager from '../../../AppInfoManager';
+import {languagesKeys} from '../../../modules/i18n/defined';
+import withI18n, {typeStringAfterTranslation} from '../../../modules/i18n/HOC';
 
+const modalKey = {
+  time: 'time',
+  theme: 'theme',
+};
 const borderRadiusBig = normalize(40);
 const borderRadiusSmall = normalize(10);
 const paddingHorizontalItem = normalize(30);
@@ -112,23 +135,38 @@ const styles = StyleSheet.create({
     paddingHorizontal: normalize(40),
   },
 });
-
+const itemKey = {
+  unit: 'unit',
+  noti: 'noti',
+  provider: 'provider',
+  iconSet: 'iconSet',
+  theme: 'theme',
+  time: 'time',
+  language: 'language',
+  frequency: 'frequency',
+  layout: 'layout',
+  privacy: 'privacy',
+  about: 'about',
+  rate: 'rate',
+};
 class SettingScreen extends BaseScreen {
   constructor(props) {
     super(props);
     this.state = {
       isVisibleModalTime: false,
       isVisibleModalTheme: false,
+      valueThemeColor: this.props.themeColor,
+      valueTimeFormat: this.props.timeFormat,
     };
     this.listAction = [
       {
         label: 'Units',
         iconLeft: IconUnitSvg,
-        txtRight: temperatureC + ', mm, cm, km, m/s, hPa',
         iconRight: IconRightSvg,
         onClick: () => {},
-        key: 'units',
+        key: itemKey.unit,
         isSvg: true,
+        languageKey: languagesKeys.unit,
       },
       {
         label: 'Notification',
@@ -136,17 +174,18 @@ class SettingScreen extends BaseScreen {
         txtRight: '',
         iconRight: IconRightSvg,
         onClick: () => {},
-        key: 'noti',
+        key: itemKey.noti,
         isSvg: true,
+        languageKey: languagesKeys.notice,
       },
       {
         label: 'Weather Provider',
         iconLeft: IconProviderSvg,
-        txtRight: 'TheWeatherChannel',
         iconRight: IconRightSvg,
         onClick: () => {},
-        key: 'provider',
+        key: itemKey.provider,
         isSvg: true,
+        languageKey: languagesKeys.weatherProvider,
       },
       {
         label: 'Weather Iconset',
@@ -154,44 +193,44 @@ class SettingScreen extends BaseScreen {
         txtRight: 'Colorful',
         iconRight: IconRightSvg,
         onClick: () => {},
-        key: 'weather',
+        key: itemKey.iconSet,
         isSvg: true,
       },
       {
         label: 'Theme Color',
         iconLeft: IconThemeSvg,
-        txtRight: 'Light mode',
         iconRight: IconRightSvg,
         onClick: () => {},
-        key: 'theme',
+        key: itemKey.theme,
         isSvg: true,
+        languageKey: languagesKeys.themeColor,
       },
       {
         label: 'Language',
         iconLeft: IconLanguageSvg,
-        txtRight: 'English',
         iconRight: IconRightSvg,
         onClick: () => {},
-        key: 'language',
+        key: itemKey.language,
         isSvg: true,
+        languageKey: languagesKeys.language,
       },
       {
         label: 'Update Frequency',
         iconLeft: IconUpdateSvg,
-        txtRight: '30 minutes',
         iconRight: IconRightSvg,
         onClick: () => {},
-        key: 'update',
+        key: itemKey.frequency,
         isSvg: true,
+        languageKey: languagesKeys.updateFrequency,
       },
       {
         label: 'Time Format',
         iconLeft: IconTimeSvg,
-        txtRight: '24 hours',
         iconRight: IconRightSvg,
         onClick: () => {},
-        key: 'time',
+        key: itemKey.time,
         isSvg: true,
+        languageKey: languagesKeys.timeFormat,
       },
       {
         label: 'Customize Layout',
@@ -199,83 +238,88 @@ class SettingScreen extends BaseScreen {
         txtRight: '',
         iconRight: IconRightSvg,
         onClick: () => {},
-        key: 'custom',
+        key: itemKey.layout,
         isSvg: true,
+        languageKey: languagesKeys.customizeLayout,
       },
       {
         label: 'Privacy',
         iconLeft: IconPrivacySvg,
         txtRight: '',
         onClick: () => {},
-        key: 'privacy',
+        key: itemKey.privacy,
         isSvg: true,
         isUp: true,
+        languageKey: languagesKeys.privacy,
       },
       {
         label: 'About App',
         iconLeft: IconInfoSvg,
-        txtRight: 'Version 1.2.3',
+        txtRight:
+          'Version ' + AppInfoManager.getInstance().getAppInfo().buildVersion,
         iconRight: IconRightSvg,
         onClick: () => {},
-        key: 'about',
+        key: itemKey.about,
         isSvg: true,
+        languageKey: languagesKeys.aboutApp,
       },
       {
         label: 'Rate Us',
         iconLeft: IconStarSvg,
         txtRight: '',
         onClick: () => {},
-        key: 'rate',
+        key: itemKey.rate,
         isSvg: true,
         isUp: true,
+        languageKey: languagesKeys.rateUs,
       },
     ];
   }
   onPressItem = item => {
     switch (item.key) {
-      case 'update':
+      case itemKey.frequency:
         NavigationService.getInstance().navigate({
           routerName: ROUTER_NAME.FREQUENCY.name,
         });
         break;
-      case 'language':
+      case itemKey.language:
         NavigationService.getInstance().navigate({
           routerName: ROUTER_NAME.LANGUAGE.name,
         });
         break;
-      case 'provider':
+      case itemKey.provider:
         NavigationService.getInstance().navigate({
           routerName: ROUTER_NAME.WEATHER_PROVIDER.name,
         });
         break;
-      case 'units':
+      case itemKey.unit:
         NavigationService.getInstance().navigate({
           routerName: ROUTER_NAME.UNIT.name,
         });
         break;
-      case 'custom':
+      case itemKey.layout:
         NavigationService.getInstance().navigate({
           routerName: ROUTER_NAME.CUSTOM_LAYOUT.name,
         });
         break;
-      case 'theme':
+      case itemKey.theme:
         this.setState({
           isVisibleModalTime: false,
           isVisibleModalTheme: true,
         });
         break;
-      case 'time':
+      case itemKey.time:
         this.setState({
           isVisibleModalTime: true,
           isVisibleModalTheme: false,
         });
         break;
-      case 'about':
+      case itemKey.about:
         NavigationService.getInstance().navigate({
           routerName: ROUTER_NAME.ABOUT.name,
         });
         break;
-      case 'noti':
+      case itemKey.noti:
         NavigationService.getInstance().navigate({
           routerName: ROUTER_NAME.Notification.name,
         });
@@ -285,7 +329,85 @@ class SettingScreen extends BaseScreen {
     }
   };
   renderItem = params => {
+    myLog('---renderItem--->', this.props);
     const {item, index} = params;
+    const {
+      timeFormat,
+      themeColor,
+      frequencyValue,
+      dataSource,
+      unitTemp,
+      unitDistance,
+      unitPressure,
+      unitRainSnow,
+      unitWindSpeed,
+      t,
+      language,
+    } = this.props;
+    let txtRight = item.txtRight || '';
+    if (!item.txtRight) {
+      switch (item.key) {
+        case itemKey.frequency:
+          txtRight = DEFINE_UNIT_FREQUENCY[frequencyValue]
+            ? DEFINE_UNIT_FREQUENCY[frequencyValue].languageKey
+              ? t(DEFINE_UNIT_FREQUENCY[frequencyValue].languageKey, {
+                  type: typeStringAfterTranslation.capitalize,
+                })
+              : DEFINE_UNIT_FREQUENCY[frequencyValue].label
+            : '';
+          break;
+        case itemKey.provider:
+          txtRight = DEFINE_DATA_SOURCE[dataSource]
+            ? DEFINE_DATA_SOURCE[dataSource].label
+            : '';
+          break;
+        case itemKey.time:
+          txtRight = DEFINE_TIME_FORMAT[timeFormat]
+            ? DEFINE_TIME_FORMAT[timeFormat].languageKey
+              ? t(DEFINE_TIME_FORMAT[timeFormat].languageKey, {
+                  type: typeStringAfterTranslation.capitalize,
+                })
+              : DEFINE_TIME_FORMAT[timeFormat].label
+            : '';
+          break;
+        case itemKey.theme:
+          txtRight = DEFINE_THEME_COLOR[themeColor]
+            ? DEFINE_THEME_COLOR[themeColor].label
+            : '';
+          break;
+        case itemKey.language:
+          txtRight = DEFINE_LANGUAGE[language]
+            ? DEFINE_LANGUAGE[language].txtSub
+            : '';
+          break;
+        case itemKey.unit:
+          const labelTemp = DEFINE_UNITS_TEMP[unitTemp]
+            ? DEFINE_UNITS_TEMP[unitTemp].label
+            : '';
+          const labelRain = DEFINE_UNITS_RAIN_SNOW[unitRainSnow]
+            ? DEFINE_UNITS_RAIN_SNOW[unitRainSnow].label
+            : '';
+          const labelDistance = DEFINE_UNITS_DISTANCE[unitDistance]
+            ? DEFINE_UNITS_DISTANCE[unitDistance].label
+            : '';
+          const labelWindSpeed = DEFINE_UNITS_WIND_SPEED[unitWindSpeed]
+            ? DEFINE_UNITS_WIND_SPEED[unitWindSpeed].label
+            : '';
+          const labelPressure = DEFINE_UNITS_PRESSURE[unitPressure]
+            ? DEFINE_UNITS_PRESSURE[unitPressure].label
+            : '';
+          txtRight = [
+            labelTemp,
+            labelRain,
+            labelDistance,
+            labelWindSpeed,
+            labelPressure,
+          ].join(', ');
+          break;
+        default:
+          break;
+      }
+    }
     const IconLeft = item.iconLeft;
     const IconRight = item.iconRight;
     const labelStyle = {
@@ -308,7 +430,17 @@ class SettingScreen extends BaseScreen {
                   <CustomImage source={IconLeft} style={styles.imageLeftItem} />
                 )
               ) : null}
-              {item.label ? (
+              {item.languageKey ? (
+                <CustomText
+                  size={32}
+                  numberOfLines={1}
+                  style={labelStyle}
+                  color={Colors.air_quality_text}>
+                  {t(item.languageKey, {
+                    type: typeStringAfterTranslation.capitalize,
+                  })}
+                </CustomText>
+              ) : item.label ? (
                 <CustomText
                   size={32}
                   numberOfLines={1}
@@ -322,13 +454,13 @@ class SettingScreen extends BaseScreen {
               ) : null}
             </View>
             <View style={styles.wrapRightItem}>
-              {item.txtRight ? (
+              {txtRight ? (
                 <CustomText
                   size={28}
                   style={{marginRight: normalize(33)}}
                   numberOfLines={1}
                   color="#AAAAAA">
-                  {item.txtRight}
+                  {txtRight}
                 </CustomText>
               ) : null}
               {IconRight ? (
@@ -398,11 +530,28 @@ class SettingScreen extends BaseScreen {
       </View>
     );
   };
+  changeValueOption = ({key, option}) => {
+    switch (key) {
+      case modalKey.theme:
+        this.setState({
+          valueThemeColor: option.value,
+        });
+        break;
+      case modalKey.time:
+        this.setState({
+          valueTimeFormat: option.value,
+        });
+        break;
+      default:
+        break;
+    }
+  };
   renderModalBottom = ({
     title = '',
     options = [],
     onCancel = () => {},
     onOk = () => {},
+    key = null,
   }) => {
     return (
       <View style={styles.wrapContentModal}>
@@ -413,20 +562,40 @@ class SettingScreen extends BaseScreen {
             </CustomText>
           </View>
           {options.map((option, idx) => {
-            const IconFinal = option.isActive ? IconChoiceSvg : IconUnChoiceSvg;
+            const {valueThemeColor, valueTimeFormat} = this.state;
+            let IconFinal = IconUnChoiceSvg;
+            switch (key) {
+              case modalKey.theme:
+                IconFinal =
+                  valueThemeColor === option.value
+                    ? IconChoiceSvg
+                    : IconUnChoiceSvg;
+                break;
+              case modalKey.time:
+                IconFinal =
+                  valueTimeFormat === option.value
+                    ? IconChoiceSvg
+                    : IconUnChoiceSvg;
+                break;
+              default:
+                break;
+            }
             const styleWrapTouch = {
               borderBottomColor: Colors.borderRgb,
               borderBottomWidth: idx === options.length - 1 ? 0 : 1,
-              paddingVertical: normalize(40),
             };
             return (
               <View key={idx} style={styles.wrapOption}>
                 <View style={styleWrapTouch}>
-                  <TouchableOpacity
+                  <TouchablePlatform
+                    onPress={() => {
+                      this.changeValueOption({key, option});
+                    }}
                     style={{
                       flexDirection: 'row',
                       alignItems: 'center',
                       justifyContent: 'space-between',
+                      paddingVertical: normalize(40),
                     }}>
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
                       <IconFinal width={normalize(40)} height={normalize(40)} />
@@ -441,14 +610,14 @@ class SettingScreen extends BaseScreen {
                     <CustomText size={32} color={Colors.air_quality_text}>
                       {option.txtRight || ''}
                     </CustomText>
-                  </TouchableOpacity>
+                  </TouchablePlatform>
                 </View>
               </View>
             );
           })}
         </View>
         <View style={styles.wrapTouch}>
-          <TouchableOpacity
+          <TouchablePlatform
             onPress={() => {
               onCancel && onCancel();
             }}
@@ -459,7 +628,7 @@ class SettingScreen extends BaseScreen {
               color={Colors.viewDetail}>
               Cancel
             </CustomText>
-          </TouchableOpacity>
+          </TouchablePlatform>
           <View
             style={{
               width: 1,
@@ -467,8 +636,8 @@ class SettingScreen extends BaseScreen {
               backgroundColor: '#E9EAEE',
             }}
           />
-          <TouchableOpacity
-            onOk={() => {
+          <TouchablePlatform
+            onPress={() => {
               onOk && onOk();
             }}
             style={styles.touchBottom}>
@@ -478,17 +647,48 @@ class SettingScreen extends BaseScreen {
               color={Colors.viewDetail}>
               Done
             </CustomText>
-          </TouchableOpacity>
+          </TouchablePlatform>
         </View>
       </View>
     );
   };
+  onPressOk = ({key}) => {
+    const {valueThemeColor, valueTimeFormat} = this.state;
+    const {
+      themeColor,
+      timeFormat,
+      changeValueThemeColor,
+      changeValueTimeFormat,
+    } = this.props;
+    switch (key) {
+      case modalKey.theme:
+        if (themeColor !== valueThemeColor) {
+          changeValueThemeColor(valueThemeColor);
+          this.setState({
+            isVisibleModalTheme: false,
+          });
+        }
+        break;
+      case modalKey.time:
+        if (timeFormat !== valueTimeFormat) {
+          changeValueTimeFormat(valueTimeFormat);
+          this.setState({
+            isVisibleModalTime: false,
+          });
+        }
+        break;
+      default:
+        break;
+    }
+  };
   renderContent() {
     const {isVisibleModalTime, isVisibleModalTheme} = this.state;
+    myLog('---renderContent--->', this.props);
+    const {timeFormat, themeColor} = this.props;
     return (
       <View
         style={{
-          backgroundColor: '#FFFFFF',
+          backgroundColor: Colors.white,
           flex: 1,
         }}>
         <FlatList
@@ -504,22 +704,17 @@ class SettingScreen extends BaseScreen {
           style={{justifyContent: 'flex-end'}}
           onBackdropPress={() => this.setState({isVisibleModalTime: false})}>
           {this.renderModalBottom({
-            onCancel: () => this.setState({isVisibleModalTime: false}),
-            onOk: () => {},
+            onCancel: () =>
+              this.setState({
+                isVisibleModalTime: false,
+                valueTimeFormat: timeFormat,
+              }),
+            onOk: () => {
+              this.onPressOk({key: modalKey.time});
+            },
             title: 'Time Format',
-            options: [
-              {
-                label: '24 hours',
-                value: '24h',
-                txtRight: '13:52',
-                isActive: true,
-              },
-              {
-                label: '12 hours',
-                value: '12h',
-                txtRight: '1:52 PM',
-              },
-            ],
+            options: Object.values(DEFINE_TIME_FORMAT),
+            key: modalKey.time,
           })}
         </Modal>
         <Modal
@@ -527,20 +722,17 @@ class SettingScreen extends BaseScreen {
           style={{justifyContent: 'flex-end'}}
           onBackdropPress={() => this.setState({isVisibleModalTheme: false})}>
           {this.renderModalBottom({
-            onCancel: () => this.setState({isVisibleModalTheme: false}),
-            onOk: () => {},
+            onCancel: () =>
+              this.setState({
+                isVisibleModalTheme: false,
+                valueThemeColor: themeColor,
+              }),
+            onOk: () => {
+              this.onPressOk({key: modalKey.theme});
+            },
             title: 'Theme Color',
-            options: [
-              {
-                label: 'Light Mode',
-                value: 'light',
-                isActive: true,
-              },
-              {
-                label: 'Dark Mode',
-                value: 'dark',
-              },
-            ],
+            options: Object.values(DEFINE_THEME_COLOR),
+            key: modalKey.theme,
           })}
         </Modal>
       </View>
@@ -548,4 +740,41 @@ class SettingScreen extends BaseScreen {
   }
 }
 
-export default SettingScreen;
+const mapStateToProps = state => {
+  return {
+    frequencyValue: getStateForKeys(state, ['Setting', 'frequencyValue']),
+    unitTemp: getStateForKeys(state, ['Setting', 'unitTemp']),
+    unitRainSnow: getStateForKeys(state, ['Setting', 'unitRainSnow']),
+    unitDistance: getStateForKeys(state, ['Setting', 'unitDistance']),
+    unitWindSpeed: getStateForKeys(state, ['Setting', 'unitWindSpeed']),
+    unitPressure: getStateForKeys(state, ['Setting', 'unitPressure']),
+    timeFormat: getStateForKeys(state, ['Setting', 'timeFormat']),
+    themeColor: getStateForKeys(state, ['Setting', 'themeColor']),
+    dataSource: getStateForKeys(state, ['Setting', 'dataSource']),
+    layout: getStateForKeys(state, ['Setting', 'layout']),
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    changeValueTimeFormat: value => {
+      return dispatch(
+        SettingAction.changeOneValueSetting({
+          timeFormat: value,
+          subKey: NORMAL_TYPE.CHANGE_VALUE_TIME_FORMAT,
+        }),
+      );
+    },
+    changeValueThemeColor: value => {
+      return dispatch(
+        SettingAction.changeOneValueSetting({
+          themeColor: value,
+          subKey: NORMAL_TYPE.CHANGE_VALUE_THEME_COLOR,
+        }),
+      );
+    },
+  };
+};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withI18n(SettingScreen));

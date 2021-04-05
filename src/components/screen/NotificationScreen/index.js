@@ -23,8 +23,17 @@ import {Header} from '../Header';
 import {Colors} from '../../../themes/Colors';
 import {TouchablePlatform} from '../../../modules/TouchablePlatform';
 import {Images} from '../../../themes/Images';
-import {temperatureC} from '../../../utils/Util';
+import {getStateForKeys, temperatureC} from '../../../utils/Util';
+import {DEFINE_NOTIFICATION} from '../../../Define';
+import {connect} from 'react-redux';
+import SettingAction from '../../../actions/SettingAction';
+import {NORMAL_TYPE} from '../../../actions/ActionTypes';
 
+const itemKey = {
+  daily: 'daily',
+  severe: 'severe',
+  rain: 'rain',
+};
 const sizeOfIconRightItem = {
   width: normalize(68.57),
   height: normalize(40),
@@ -48,7 +57,7 @@ const styles = StyleSheet.create({
     marginLeft: paddingHorizontalItem,
   },
 });
-export const ItemListSetting = props => {
+const ItemListSetting = props => {
   const {
     onPressItem = () => {},
     item,
@@ -109,49 +118,68 @@ export const ItemListSetting = props => {
 class NotificationScreen extends BaseScreen {
   constructor(props) {
     super(props);
-    this.state = {
-      value: 'eng',
-    };
-    this.listTime = [
+    this.state = {};
+    this.listNotification = [
       {
-        label: 'Daily Notification',
-        value: 1,
-        sub: 'On',
-        key: 'daily',
+        label: DEFINE_NOTIFICATION.daily.label,
+        key: DEFINE_NOTIFICATION.daily.value,
+        keyStore: 'dailyNotification',
       },
       {
-        label: 'Severe Alerts',
-        value: 0,
-        sub: 'Off',
-        key: 'severe',
+        label: DEFINE_NOTIFICATION.severe.label,
+        key: DEFINE_NOTIFICATION.severe.value,
+        keyStore: 'severeAlert',
       },
       {
-        label: 'Rain & Snow Alarm',
-        value: 1,
+        label: DEFINE_NOTIFICATION.rain.label,
+        key: DEFINE_NOTIFICATION.rain.value,
+        keyStore: 'alarmRainAndSnow',
         sub: 'Alerts you when rain, snow is approaching',
-        key: 'rain',
       },
     ];
   }
   onPressItem = item => {
-    this.setState({
-      value: item.value,
-    });
+    const {
+      changeValueDailyNotification,
+      changeValueSevereAlert,
+      changeValueNotiRainSnow,
+      dailyNotification,
+      severeAlert,
+      alarmRainAndSnow,
+    } = this.props;
+    switch (item.key) {
+      case DEFINE_NOTIFICATION.daily.value:
+        changeValueDailyNotification(Number(dailyNotification) === 1 ? 0 : 1);
+        break;
+      case DEFINE_NOTIFICATION.severe.value:
+        changeValueSevereAlert(Number(severeAlert) === 1 ? 0 : 1);
+        break;
+      case DEFINE_NOTIFICATION.rain.value:
+        changeValueNotiRainSnow(Number(alarmRainAndSnow) === 1 ? 0 : 1);
+        break;
+      default:
+        break;
+    }
   };
   renderItem = params => {
     const {item, index} = params;
     const {value} = this.state;
+    const {dailyNotification, severeAlert, alarmRainAndSnow} = this.props;
     switch (item.key) {
-      case 'daily':
+      case DEFINE_NOTIFICATION.daily.value:
         return (
           <View key={index}>
             <ItemListSetting
-              onPressItem={this.onPressItem}
+              onPressItem={() => this.onPressItem(item)}
               item={item}
-              value={value}
+              value={this.props[item.keyStore]}
               iconRight={
-                <TouchablePlatform>
-                  {item.value === 0 ? (
+                <TouchablePlatform
+                  onPress={() => {
+                    this.onPressItem(item);
+                  }}>
+                  {Number(this.props[item.keyStore]) === 0 ||
+                  !this.props[item.keyStore] ? (
                     <IconSwitchDisableSvg {...sizeOfIconRightItem} />
                   ) : (
                     <IconSwitchEnableSvg {...sizeOfIconRightItem} />
@@ -180,12 +208,15 @@ class NotificationScreen extends BaseScreen {
                           height={normalize(34.61)}
                         />
                         <CustomText
+                          color={Colors.air_quality_text}
                           style={{marginLeft: normalize(20)}}
                           size={32}>
                           Receive Time
                         </CustomText>
                       </View>
-                      <CustomText size={32}>7:00</CustomText>
+                      <CustomText color={Colors.air_quality_text} size={32}>
+                        7:00
+                      </CustomText>
                     </TouchablePlatform>
                     <ImageBackground
                       source={Images.assets.bg_review_noti.source}
@@ -201,7 +232,7 @@ class NotificationScreen extends BaseScreen {
                       <View
                         style={{
                           borderRadius: normalize(26),
-                          backgroundColor: Colors.backgroundGray80,
+                          backgroundColor: Colors.backgroundGray85,
                           width: widthDevice - 2 * paddingHorizontalItem,
                           height:
                             widthDevice *
@@ -218,16 +249,18 @@ class NotificationScreen extends BaseScreen {
                         />
                         <View style={{marginLeft: normalize(20)}}>
                           <CustomText
+                            color={Colors.text_color1}
                             style={{marginBottom: normalize(10)}}
                             size={30}>
                             Partly Cloudy
                           </CustomText>
                           <CustomText
+                            color={Colors.text_color1}
                             style={{marginBottom: normalize(10)}}
                             size={30}>
                             26o / 24o Overcast
                           </CustomText>
-                          <CustomText size={28}>
+                          <CustomText color={Colors.air_quality_text} size={28}>
                             Rain 0.1mm/d, sat 20, Tan Binh, HCMC
                           </CustomText>
                         </View>
@@ -239,10 +272,11 @@ class NotificationScreen extends BaseScreen {
                             flexDirection: 'row',
                             alignItems: 'center',
                           }}>
-                          <CustomText size={68} thin>
+                          <CustomText color={Colors.text_color1} size={68} thin>
                             {36}
                           </CustomText>
                           <CustomText
+                            color={Colors.text_color1}
                             style={{
                               marginTop: -5,
                             }}
@@ -260,15 +294,23 @@ class NotificationScreen extends BaseScreen {
           </View>
         );
       default:
+        let itemFormat = {...item};
+        if (!item.sub) {
+          itemFormat.sub =
+            Number(this.props[item.keyStore]) === 0 ? 'Off' : 'On';
+        }
         return (
           <ItemListSetting
             onPressItem={this.onPressItem}
             key={index}
-            item={item}
-            value={value}
+            item={itemFormat}
+            value={this.props[item.keyStore]}
             iconRight={
-              <TouchablePlatform>
-                {item.value === 0 ? (
+              <TouchablePlatform
+                onPress={() => {
+                  this.onPressItem(item);
+                }}>
+                {Number(this.props[item.keyStore]) === 0 ? (
                   <IconSwitchDisableSvg {...sizeOfIconRightItem} />
                 ) : (
                   <IconSwitchEnableSvg {...sizeOfIconRightItem} />
@@ -291,7 +333,7 @@ class NotificationScreen extends BaseScreen {
         <Header title="Notification" />
         <FlatList
           keyExtractor={(item, index) => item.key + index}
-          data={this.listTime}
+          data={this.listNotification}
           renderItem={this.renderItem}
           showsVerticalScrollIndicator={false}
         />
@@ -300,4 +342,39 @@ class NotificationScreen extends BaseScreen {
   }
 }
 
-export default NotificationScreen;
+const mapStateToProps = state => {
+  return {
+    dailyNotification: getStateForKeys(state, ['Setting', 'dailyNotification']),
+    severeAlert: getStateForKeys(state, ['Setting', 'severeAlert']),
+    alarmRainAndSnow: getStateForKeys(state, ['Setting', 'alarmRainAndSnow']),
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    changeValueDailyNotification: value => {
+      return dispatch(
+        SettingAction.changeOneValueSetting({
+          dailyNotification: value,
+          subKey: NORMAL_TYPE.CHANGE_VALUE_DAILY_NOTIFICATION,
+        }),
+      );
+    },
+    changeValueNotiRainSnow: value => {
+      return dispatch(
+        SettingAction.changeOneValueSetting({
+          alarmRainAndSnow: value,
+          subKey: NORMAL_TYPE.CHANGE_VALUE_NOTI_RAIN_SNOW,
+        }),
+      );
+    },
+    changeValueSevereAlert: value => {
+      return dispatch(
+        SettingAction.changeOneValueSetting({
+          severeAlert: value,
+          subKey: NORMAL_TYPE.CHANGE_VALUE_SEVERE_ALERT,
+        }),
+      );
+    },
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(NotificationScreen);
