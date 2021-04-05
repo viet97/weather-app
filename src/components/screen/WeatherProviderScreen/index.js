@@ -14,9 +14,14 @@ import {
 } from '../../../utils/DeviceUtil';
 import CustomText from '../../common/Text';
 import {Header} from '../Header';
-import {temperatureC} from '../../../utils/Util';
+import {getStateForKeys, temperatureC} from '../../../utils/Util';
 import {KEY_FONT} from '../../../themes/Fonts';
 import {Colors} from '../../../themes/Colors';
+import {SettingAction} from '../../../actions';
+import {NORMAL_TYPE} from '../../../actions/ActionTypes';
+import {connect} from 'react-redux';
+import withI18n from '../../../modules/i18n/HOC';
+import {DEFINE_DATA_SOURCE} from '../../../Define';
 
 const sizeIconLeft = {
   width: normalize(44),
@@ -60,39 +65,16 @@ class WeatherProviderScreen extends BaseScreen {
     this.state = {
       value: 'eng',
     };
-    this.listProvider = [
-      {
-        label: 'TheWeatherChannel',
-        sub: 'Scattered clouds',
-        value: 'eng',
-        temperatureValue: 37,
-        temperatureSuffix: 'c',
-      },
-      {
-        label: 'World Weather Online',
-        value: 'vie',
-        sub: 'Few clouds',
-        isSecure: true,
-        temperatureValue: 37,
-        temperatureSuffix: 'f',
-      },
-      {
-        label: 'Accuweather.com',
-        value: 'acc',
-        sub: 'Parly sunny',
-        temperatureValue: 33,
-        temperatureSuffix: 'f',
-      },
-    ];
+    this.listProvider = Object.values(DEFINE_DATA_SOURCE);
   }
   onPressItem = item => {
-    this.setState({
-      value: item.value,
-    });
+    const {changeDataSource} = this.props;
+    changeDataSource(item.value);
   };
   renderItem = params => {
     const {item, index} = params;
     const {value} = this.state;
+    const {dataSource} = this.props;
     return (
       <View key={index} style={styles.containerItem}>
         <View style={styles.wrapTouchItem}>
@@ -102,7 +84,7 @@ class WeatherProviderScreen extends BaseScreen {
             }}
             style={styles.touchItem}>
             <View style={{flexDirection: 'row'}}>
-              {value === item.value ? (
+              {dataSource === item.value ? (
                 <IconChoiceSvg {...sizeIconLeft} />
               ) : item.isSecure ? (
                 <IconSecureSvg {...sizeIconLeft} />
@@ -213,4 +195,24 @@ class WeatherProviderScreen extends BaseScreen {
   }
 }
 
-export default WeatherProviderScreen;
+const mapStateToProps = state => {
+  return {
+    dataSource: getStateForKeys(state, ['Setting', 'dataSource']),
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    changeDataSource: value => {
+      return dispatch(
+        SettingAction.changeOneValueSetting({
+          dataSource: value,
+          subKey: NORMAL_TYPE.CHANGE_DATA_SOURCE,
+        }),
+      );
+    },
+  };
+};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withI18n(WeatherProviderScreen));

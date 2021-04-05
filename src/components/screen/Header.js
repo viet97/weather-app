@@ -17,19 +17,22 @@ export const HEADER_HEIGHT = normalize(109) - getTopSpace() + 60;
 
 export const Header = props => {
   const {title, iconBack, extraElement} = props;
+  const styleWrap = {
+    paddingTop: normalize(109) - getTopSpace(),
+    width: widthDevice,
+    shadowColor: Colors.shadowHeader,
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.4,
+    shadowRadius: 3,
+    elevation: 5,
+    backgroundColor: Colors.white,
+    // height: extraElement ? '30%' : HEADER_HEIGHT,
+  };
+  if (!extraElement) {
+    styleWrap.height = HEADER_HEIGHT;
+  }
   return (
-    <View
-      style={{
-        paddingTop: normalize(109) - getTopSpace(),
-        width: widthDevice,
-        shadowColor: Colors.shadowHeader,
-        shadowOffset: {width: 0, height: 1},
-        shadowOpacity: 0.4,
-        shadowRadius: 3,
-        elevation: 5,
-        backgroundColor: Colors.white,
-        height: HEADER_HEIGHT,
-      }}>
+    <View style={styleWrap}>
       <View
         style={{
           flexDirection: 'row',
@@ -46,7 +49,7 @@ export const Header = props => {
             paddingBottom: extraElement ? 0 : paddingBottomTitle,
           }}>
           <CustomText
-            style={{includePadding: false}}
+            style={{includeFontPadding: false}}
             size={36}
             semiBold
             color="#202020">
