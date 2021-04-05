@@ -53,6 +53,7 @@ import Svg from 'react-native-svg';
 
 const LEFT_PADDING_SCREEN = normalize(14) + 8;
 const RIGHT_PADDING_SCREEN = 16;
+const SUN_CIRCLE_R = normalize(175);
 class HomeScreen extends BaseScreen {
   constructor(props) {
     super(props);
@@ -64,7 +65,7 @@ class HomeScreen extends BaseScreen {
       address: '',
     };
     this.displayName = 'HomeScreen';
-    this.sunCircleR = normalize(175);
+
     this.sunCircleCenterX =
       (widthDevice - LEFT_PADDING_SCREEN - RIGHT_PADDING_SCREEN) / 2;
     this.sunCircleCenterY = normalize(175);
@@ -835,7 +836,7 @@ class HomeScreen extends BaseScreen {
   getCirclePointY = x => {
     return (
       -Math.sqrt(
-        Math.pow(this.sunCircleR, 2) - Math.pow(x - this.sunCircleCenterX, 2),
+        Math.pow(SUN_CIRCLE_R, 2) - Math.pow(x - this.sunCircleCenterX, 2),
       ) + this.sunCircleCenterY
     );
   };
@@ -844,6 +845,18 @@ class HomeScreen extends BaseScreen {
     const {current} = this.props;
     const sunrise = getValueFromObjectByKeys(current, ['sunrise']);
     const sunset = getValueFromObjectByKeys(current, ['sunset']);
+    const dt = getValueFromObjectByKeys(current, ['dt']);
+    if (!dt) return null;
+    let percentage = (dt - sunrise) / (sunset - sunrise);
+    if (percentage > 1) percentage = 1;
+    this.sunX =
+      (widthDevice -
+        LEFT_PADDING_SCREEN -
+        RIGHT_PADDING_SCREEN -
+        SUN_CIRCLE_R * 2) /
+        2 +
+      percentage * SUN_CIRCLE_R * 2;
+
     return (
       <View style={styles.sectionContainer}>
         {this.renderHeaderSection({title: 'Sun', hasDetail: false})}
@@ -860,16 +873,15 @@ class HomeScreen extends BaseScreen {
                 start={{x: 0, y: 0}}
                 end={{x: 0, y: 1.0}}
                 colors={[Colors.sun_rise, Colors.sun_set]}
-                style={styles.sunInnerBackground}
+                style={[styles.sunInnerBackground, {flex: percentage}]}
               />
-              <View style={styles.sunInnerEmptyBackground} />
             </View>
           </View>
           <SVGIcon.sun
             style={{
               position: 'absolute',
-              top: this.getCirclePointY(240),
-              left: 240,
+              top: this.getCirclePointY(this.sunX) - normalize(40) / 2,
+              left: this.sunX - normalize(40) / 2,
             }}
             width={normalize(40)}
             height={normalize(40)}
@@ -1141,15 +1153,14 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
   },
   sunInnerBackground: {
-    flex: 0.2,
     borderWidth: 1,
     borderColor: 'black',
     borderRadius: normalize(175) * 0.75,
     borderTopRightRadius: 0,
   },
   sunInnerCircleContainer: {
-    width: normalize(350),
-    height: normalize(350),
+    width: SUN_CIRCLE_R * 2,
+    height: SUN_CIRCLE_R * 2,
     borderTopLeftRadius: normalize(175),
     borderTopRightRadius: normalize(175),
     overflow: 'hidden',
@@ -1163,6 +1174,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.border_color_4,
     borderStyle: 'dashed',
     marginHorizontal: 8,
+    overflow: 'hidden',
   },
   sunContentContainer: {
     flexDirection: 'row',
