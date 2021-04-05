@@ -63,7 +63,10 @@ class HomeScreen extends BaseScreen {
       address: '',
     };
     this.displayName = 'HomeScreen';
-
+    this.sunCircleR = normalize(175);
+    this.sunCircleCenterX =
+      (widthDevice - LEFT_PADDING_SCREEN - RIGHT_PADDING_SCREEN) / 2;
+    this.sunCircleCenterY = normalize(175);
     this.listQualityIndex = [
       {
         color: 'green',
@@ -825,6 +828,14 @@ class HomeScreen extends BaseScreen {
     );
   };
 
+  getCirclePointY = x => {
+    return (
+      -Math.sqrt(
+        Math.pow(this.sunCircleR, 2) - Math.pow(x - this.sunCircleCenterX, 2),
+      ) + this.sunCircleCenterY
+    );
+  };
+
   renderSun = () => {
     const {current} = this.props;
     const sunrise = getValueFromObjectByKeys(current, ['sunrise']);
@@ -839,13 +850,26 @@ class HomeScreen extends BaseScreen {
               {moment(new Date(sunrise * 1000)).format('HH:ss')}
             </Text>
           </View>
-          <Svg height={normalize(175)} width={normalize(350)}>
-            <SVGIcon.sun_circle
-              width={normalize(350)}
-              height={normalize(175)}
-            />
-          </Svg>
-
+          <View style={styles.sunCircleContainer}>
+            <View style={styles.sunInnerCircleContainer}>
+              <LinearGradient
+                start={{x: 0, y: 0}}
+                end={{x: 0, y: 1.0}}
+                colors={[Colors.sun_rise, Colors.sun_set]}
+                style={styles.sunInnerBackground}
+              />
+              <View style={styles.sunInnerEmptyBackground} />
+            </View>
+          </View>
+          <SVGIcon.sun
+            style={{
+              position: 'absolute',
+              top: this.getCirclePointY(240),
+              left: 240,
+            }}
+            width={normalize(40)}
+            height={normalize(40)}
+          />
           <View>
             <Text style={{color: Colors.textTitle}}>Sunset</Text>
             <Text size={36} style={{color: Colors.air_quality_text}}>

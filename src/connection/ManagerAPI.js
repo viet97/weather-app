@@ -1,8 +1,8 @@
 import Config from '../Config';
-import Connector, {TYPE_METHOD} from './Connector';
+import Connector, { TYPE_METHOD } from './Connector';
 import AppInfoManager from '../AppInfoManager';
 import LocationModule from '../modules/LocationModule';
-import {getValueFromObjectByKeys} from '../utils/Util';
+import { getValueFromObjectByKeys } from '../utils/Util';
 
 export const URL = {
   _tmpUrl: '',
@@ -97,10 +97,7 @@ export default class ManagerAPI {
 
     let lat = getValueFromObjectByKeys(location, ['latitude']);
     let lon = getValueFromObjectByKeys(location, ['longitude']);
-    if (Config.debug) {
-      lat = 30;
-      lon = -100;
-    }
+
     return this.getConnector(URL.allData)
       .setQuery({
         appid: Config.apiKey,
@@ -117,10 +114,7 @@ export default class ManagerAPI {
 
     let lat = getValueFromObjectByKeys(location, ['latitude']);
     let lon = getValueFromObjectByKeys(location, ['longitude']);
-    if (Config.debug) {
-      lat = 30;
-      lon = -100;
-    }
+
     return this.getConnector(URL.airPollution)
       .setQuery({
         lat,
@@ -131,4 +125,4 @@ export default class ManagerAPI {
   };
 }
 
-export {ManagerAPI};
+export { ManagerAPI };
