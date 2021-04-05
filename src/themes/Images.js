@@ -80,6 +80,11 @@ const DEFINE_REQUIRE = {
     type: TYPE_IMAGE.PNG,
     ratio: 210 / 354,
   },
+  background_title_hourly_detail: {
+    source: require('../../assets/images/background_title_hourly_detail.png'),
+    type: TYPE_IMAGE.PNG,
+    ratio: 341 / 70,
+  },
 };
 
 export const Images = {
