@@ -50,6 +50,8 @@ import {AIR_LIST} from '../../../Define';
 import {EmitterManager} from '../../../modules/EmitterManager';
 import LocationModule from '../../../modules/LocationModule';
 import Svg from 'react-native-svg';
+import {CovidAction} from '../../../actions';
+import numeral from 'numeral';
 
 const LEFT_PADDING_SCREEN = normalize(14) + 8;
 const RIGHT_PADDING_SCREEN = 16;
@@ -234,53 +236,43 @@ class HomeScreen extends BaseScreen {
     ];
 
     this.listMoonInfo = [{}, {}, {}];
-    this.covidInfo = [
-      {
-        title: 'Viet Name',
-      },
-      {
-        title: 'Worldwide',
-      },
-    ];
-    this.listCovidGridInfo = [
-      {
-        Icon: SVGIcon.covid_active,
-        value: 549,
-        title: 'Active',
-      },
-      {
-        Icon: SVGIcon.covid_confirm,
-        value: 2482,
-        title: 'Confirmed',
-      },
-      {
-        Icon: SVGIcon.covid_recover,
-        value: 1898,
-        title: 'Recovered',
-      },
-      {
-        Icon: SVGIcon.covid_death,
-        value: 35,
-        title: 'Deaths',
-      },
-    ];
   }
   componentWillMount = async () => {
     await AppSettingManager.getInstance().setDataSettingFromLocal();
   };
 
   async _componentDidMount() {
-    const {getAllData, getAirPollution} = this.props;
+    const {
+      getAllData,
+      getAirPollution,
+      getCountryCovid,
+      getWorldCovid,
+    } = this.props;
+    await LocationModule.getCurrentPosition();
+    const currentAddressInfo = await LocationModule.getCurrentAddressInfo();
+    this.setStateSafe({
+      covidTabList: [
+        {
+          title: getValueFromObjectByKeys(currentAddressInfo, ['country']),
+        },
+        {
+          title: 'Worldwide',
+        },
+      ],
+    });
     getAllData();
     getAirPollution();
-    LocationModule.getCurrentAddress().then(address =>
+    getCountryCovid();
+    getWorldCovid();
+
+    LocationModule.getCurrentAddressStr().then(address =>
       this.setStateSafe({address}),
     );
     EmitterManager.getInstance().on(
       EmitterManager.listEvent.APP_STATE_CHANGE,
       () => {
         this.setStateSafe({greeting: getGreetingTime(moment())});
-        LocationModule.getCurrentAddress().then(address =>
+        LocationModule.getCurrentAddressStr().then(address =>
           this.setStateSafe({address}),
         );
       },
@@ -973,29 +965,33 @@ class HomeScreen extends BaseScreen {
   };
 
   renderCovidTab = () => {
-    const {currentIndexCovidTab} = this.state;
+    const {currentIndexCovidTab, covidTabList} = this.state;
     return (
       <View style={styles.covidTabContainer}>
-        {this.covidInfo.map((it, index) => {
-          const isFocus = currentIndexCovidTab === index;
-          return (
-            <TouchablePlatform
-              onPress={() => this.setStateSafe({currentIndexCovidTab: index})}
-              style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                paddingVertical: 12,
-                backgroundColor: isFocus ? Colors.viewDetail : Colors.white,
-              }}>
-              <Text
-                medium
-                style={{color: isFocus ? Colors.white : Colors.textTitle}}>
-                {it.title}
-              </Text>
-            </TouchablePlatform>
-          );
-        })}
+        {covidTabList
+          ? covidTabList.map((it, index) => {
+              const isFocus = currentIndexCovidTab === index;
+              return (
+                <TouchablePlatform
+                  onPress={() =>
+                    this.setStateSafe({currentIndexCovidTab: index})
+                  }
+                  style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    paddingVertical: 12,
+                    backgroundColor: isFocus ? Colors.viewDetail : Colors.white,
+                  }}>
+                  <Text
+                    medium
+                    style={{color: isFocus ? Colors.white : Colors.textTitle}}>
+                    {it.title}
+                  </Text>
+                </TouchablePlatform>
+              );
+            })
+          : null}
       </View>
     );
   };
@@ -1016,23 +1012,29 @@ class HomeScreen extends BaseScreen {
           <Text size={30} style={{color: Colors.air_quality_text}}>
             {title}
           </Text>
-          <Text
-            size={44}
-            light
-            style={{color: Colors.air_quality_text, marginTop: 4}}>
-            {value}
-          </Text>
+          {value ? (
+            <Text
+              size={38}
+              light
+              style={{color: Colors.air_quality_text, marginTop: 4}}>
+              {numeral(value).format('0,0')}
+            </Text>
+          ) : null}
         </View>
       </View>
     );
   };
 
   renderCovidGridInfo = () => {
+    const {currentIndexCovidTab} = this.state;
+    const {listWorldCovidInfo, listCountryCovidInfo} = this.props;
     return (
       <FlatList
         style={styles.covidGridInfo}
-        data={this.listCovidGridInfo}
-        numColumns={this.listCovidGridInfo.length / 2}
+        data={
+          currentIndexCovidTab === 0 ? listCountryCovidInfo : listWorldCovidInfo
+        }
+        numColumns={2}
         showsVerticalScrollIndicator={false}
         bounces={false}
         renderItem={this.renderCovidGridInfoItem}
@@ -1338,6 +1340,11 @@ const mapStateToProps = state => {
     hourly: getStateForKeys(state, ['Weather', 'hourly']),
     daily: getStateForKeys(state, ['Weather', 'daily']),
     listAirObj: getStateForKeys(state, ['Weather', 'listAirObj']),
+    listCountryCovidInfo: getStateForKeys(state, [
+      'Covid',
+      'listCountryCovidInfo',
+    ]),
+    listWorldCovidInfo: getStateForKeys(state, ['Covid', 'listWorldCovidInfo']),
   };
 };
 
@@ -1345,6 +1352,8 @@ const mapDispatchToProps = (dispatch, getState) => {
   return {
     getAllData: () => dispatch(WeatherAction.getAllData()),
     getAirPollution: () => dispatch(WeatherAction.getAirPollution()),
+    getCountryCovid: () => dispatch(CovidAction.getCountryCovid()),
+    getWorldCovid: () => dispatch(CovidAction.getWorldCovid()),
   };
 };
 

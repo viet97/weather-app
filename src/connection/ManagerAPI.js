@@ -1,12 +1,14 @@
 import Config from '../Config';
-import Connector, { TYPE_METHOD } from './Connector';
+import Connector, {TYPE_METHOD} from './Connector';
 import AppInfoManager from '../AppInfoManager';
 import LocationModule from '../modules/LocationModule';
-import { getValueFromObjectByKeys } from '../utils/Util';
+import {getValueFromObjectByKeys} from '../utils/Util';
+import {myLog} from '../Debug';
 
 export const URL = {
   _tmpUrl: '',
   getBaseUrl: () => 'https://api.openweathermap.org/data/2.5/',
+  getBaseCovidUrl: () => 'https://corona-api.com/',
   customerUrl: Config.serverHostCustomer,
   switchCustomerUrl: function (url) {
     if (url) {
@@ -40,6 +42,8 @@ export const URL = {
   },
   allData: 'onecall',
   airPollution: 'air_pollution',
+  getCountryCovidUrl: code => `countries/${code}`,
+  worldCovid: 'timeline',
 };
 
 export default class ManagerAPI {
@@ -58,10 +62,8 @@ export default class ManagerAPI {
     this.name = 'ManagerAPI';
   }
   // 0. GetConnector
-  getConnector = (url, customUrl) => {
-    return new Connector().setUrl(
-      customUrl ? customUrl : URL.getBaseUrl() + url,
-    );
+  getConnector = (url, baseUrl = URL.getBaseUrl()) => {
+    return new Connector().setUrl(baseUrl + url);
   };
   // Create custom request
   requestCustom = ({
@@ -123,6 +125,23 @@ export default class ManagerAPI {
       })
       .getPromise();
   };
+  getCountryCovid = async () => {
+    const currentAddressInfo = await LocationModule.getCurrentAddressInfo();
+    const countryCode = getValueFromObjectByKeys(currentAddressInfo, [
+      'countryCode',
+    ]);
+    myLog('getCountryCovid', currentAddressInfo, countryCode);
+    return this.getConnector(
+      URL.getCountryCovidUrl(countryCode),
+      URL.getBaseCovidUrl(),
+    ).getPromise();
+  };
+  getWorldCovid = () => {
+    return this.getConnector(
+      URL.worldCovid,
+      URL.getBaseCovidUrl(),
+    ).getPromise();
+  };
 }
 
-export { ManagerAPI };
+export {ManagerAPI};

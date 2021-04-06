@@ -12,6 +12,7 @@ import Frequency from './Frequency';
 import Location from './Location';
 import Setting from './Setting';
 import Weather from './Weather';
+import Covid from './Covid';
 
 const MainListReducers = {
   Navigation,
@@ -20,6 +21,7 @@ const MainListReducers = {
   DataSource,
   Weather,
   Location,
+  Covid,
 };
 
 const rootReducerImmutable = (reducers, getDefaultState) => {

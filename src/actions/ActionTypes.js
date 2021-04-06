@@ -10,6 +10,8 @@ export const REQUEST_TYPE = {
   GET_PRIVACY: encodeString('GET_PRIVACY'),
   GET_ALL_DATA: encodeString('GET_ALL_DATA'),
   GET_AIR_POLLUTION: encodeString('GET_AIR_POLLUTION'),
+  GET_COUNTRY_COVID: encodeString('GET_COUNTRY_COVID'),
+  GET_WORLD_COVID: encodeString('GET_WORLD_COVID'),
 };
 
 export const REQUEST_SUBTYPE = {
