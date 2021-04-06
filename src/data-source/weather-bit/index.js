@@ -68,4 +68,24 @@ export class weatherBitManager {
       })
       .getPromise();
   };
+  getWeatherByGeometry = async ({query = {}}) => {
+    myLog('getWeatherByGeometry-->', query);
+    const localeUserSet = await LocalStorage.getItem(
+      LocalStorage.DEFINE_KEY.LAST_LOCALE_SET,
+    );
+    return this.getConnector()
+      .setUrl(apiUrl + apiEndPoint.current)
+      .setQuery({
+        ...this.defaultQuery,
+        ...query,
+        lang:
+          localeUserSet ||
+          getStateForKeys(this.getStateStore(), ['Language', 'language']),
+        units:
+          unitsQuery.weatherBit.temp[
+            getStateForKeys(this.getStateStore(), ['Setting', 'unitTemp'])
+          ],
+      })
+      .getPromise();
+  };
 }

@@ -44,7 +44,6 @@ export class AppSettingManager {
     }
   };
   setDataSettingFromLocal = async () => {
-    this.setDataLocationFromLocal();
     const dataSetting = await LocalStorage.getMultiItem(
       Object.values(LocalStorage.DEFINE_KEY.SETTING_APP),
     );
@@ -115,6 +114,9 @@ export class AppSettingManager {
             break;
         }
       });
+    myLog('---setFirstValueLocal 123---');
+    this.setFirstValueLocal = true;
+    this.setDataLocationFromLocal();
     if (Object.keys(settingAppFromLocalStorage).length) {
       myLog('---settingAppFromLocalStorage---', settingAppFromLocalStorage);
       ConfigStore().store.dispatch(
@@ -123,6 +125,6 @@ export class AppSettingManager {
         }),
       );
     }
-    this.setFirstValueLocal = true;
   };
+  isSetFirstValueLocal = () => this.setFirstValueLocal;
 }

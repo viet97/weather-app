@@ -72,4 +72,30 @@ export class openWeatherManager {
       })
       .getPromise();
   };
+  getWeatherByGeometry = async ({query = {}}) => {
+    myLog('getWeatherByGeometry-->', query);
+    const localeUserSet = await LocalStorage.getItem(
+      LocalStorage.DEFINE_KEY.LAST_LOCALE_SET,
+    );
+    return this.getConnector()
+      .setUrl(apiUrl + apiEndPoint.weather)
+      .setQuery({
+        ...this.defaultQuery,
+        ...query,
+        lang:
+          localeUserSet ||
+          getStateForKeys(ConfigStore().store.getState(), [
+            'Language',
+            'language',
+          ]),
+        units:
+          unitsQuery.openWeather.temp[
+            getStateForKeys(ConfigStore().store.getState(), [
+              'Setting',
+              'unitTemp',
+            ])
+          ],
+      })
+      .getPromise();
+  };
 }
