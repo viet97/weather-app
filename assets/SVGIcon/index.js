@@ -36,6 +36,7 @@ import dew_point_trans from './dew_point_trans.svg';
 import pressure_trans from './pressure_trans.svg';
 import visibility_trans from './visibility_trans.svg';
 import humidity_trans from './humidity_trans.svg';
+import sun_circle from './sun_circle.svg';
 
 export default {
   header_left,
@@ -76,4 +77,5 @@ export default {
   pressure_trans,
   visibility_trans,
   humidity_trans,
+  sun_circle,
 };

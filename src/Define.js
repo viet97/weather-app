@@ -101,19 +101,84 @@ export const AIR_LIST = {
   PM2_5: {
     name: 'PM2.5',
     fullName: 'Fine particles matter',
-    key: 'pm2_5',
+    key: 'pm25',
   },
   PM10: {
     name: 'PM10',
     fullName: 'Coarse particulate matter',
     key: 'pm10',
   },
-  PM2_5: {
+  NH3: {
     name: 'NH3',
     fullName: 'Ammonia',
     key: 'nh3',
   },
 };
+
+export const AIR_POLLUTION_LEVEL = {
+  GOOD: {
+    min: 0,
+    max: 50,
+    rangeText: '0 - 50',
+    color: Colors.windLineColor,
+    name: 'Good',
+    description:
+      'Air quality is considered satisfactory, and air pollution poses little or no risk.',
+    flex: 1,
+  },
+  MODERATE: {
+    min: 51,
+    max: 100,
+    rangeText: '51 - 100',
+    color: Colors.moderate,
+    name: 'Moderate',
+    description:
+      'Air quality is acceptable; however, for some pollutants there may be a moderate health concern for a very small number of people who are unusually sensitive to air pollution.',
+    flex: 1,
+  },
+  UNHEALTHY_SENSITIVE: {
+    min: 101,
+    max: 150,
+    rangeText: '101 - 150',
+    color: Colors.unhealthy_sensitive,
+    name: 'Unhealthy (Sensitive)',
+    description:
+      'Members of sensitive groups may experience health effects. The general public is not likely to be affected.',
+    flex: 1,
+  },
+  UNHEALTHY: {
+    min: 151,
+    max: 200,
+    rangeText: '151 - 200',
+    color: Colors.unhealthy,
+    name: 'Unhealthy',
+    description:
+      'Everyone may begin to experience health effects; members of sensitive groups may experience more serious health effects',
+    flex: 1,
+  },
+  VERY_UNHEALTHY: {
+    min: 201,
+    max: 300,
+    rangeText: '201 - 300',
+    color: Colors.very_unhealthy,
+    name: 'Very Unhealthy',
+    description:
+      'Health warnings of emergency conditions. The entire population is more likely to be affected.',
+    flex: 2,
+  },
+  HAZARDOUS: {
+    min: 300,
+    max: INFINITY_NUMBER,
+    rangeText: '300+',
+    color: Colors.hazardous,
+    name: 'Hazardous',
+    description:
+      'Health alert: everyone may experience more serious health effects.',
+    flex: 4,
+  },
+};
+
+export const MAX_AIR_QUALITY_INDEX = 500;
 
 export const MOMENT_DATE_FORMAT = 'MM/DD/YY';
 export const appCreatedBy = 'By GOD Team';

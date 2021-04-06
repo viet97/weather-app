@@ -6,9 +6,11 @@ import {Colors} from '../../../themes/Colors';
 import {widthDevice} from '../../../utils/DeviceUtil';
 import BaseElement from '../BaseElement';
 
+export const CHART_POINT_DISTANCE = 70;
+export const DEFAULT_CHART_HEIGHT = 150;
 export default class LineChartCustom extends BaseElement {
   static defaultProps = {
-    chartHeight: 150,
+    chartHeight: DEFAULT_CHART_HEIGHT,
     chartWidth: widthDevice,
   };
 
@@ -16,7 +18,6 @@ export default class LineChartCustom extends BaseElement {
     super(props);
     this.state = {};
     this.displayName = 'LineChartCustom';
-    this.pointDistance = 70;
   }
 
   getDataAssets = () => {
@@ -36,11 +37,16 @@ export default class LineChartCustom extends BaseElement {
       dotColor,
       lineColor,
       style,
+      onScroll,
+      onChangeCurrentIndex,
+      currentIndex,
     } = this.props;
 
     return (
       <View style={{}}>
         <ScrollView
+          scrollEventThrottle={16}
+          onScroll={onScroll}
           bounces={false}
           showsHorizontalScrollIndicator={false}
           horizontal>
@@ -53,8 +59,8 @@ export default class LineChartCustom extends BaseElement {
               ],
               dataValue: data,
             }}
-            pointDistance={this.pointDistance}
-            width={size(data) * this.pointDistance} // from react-native
+            pointDistance={CHART_POINT_DISTANCE}
+            width={size(data) * CHART_POINT_DISTANCE} // from react-native
             height={chartHeight}
             chartConfig={{
               decimalPlaces: 2, // optional, defaults to 2dp
@@ -71,6 +77,8 @@ export default class LineChartCustom extends BaseElement {
             style={style}
             withHorizontalLabels={false}
             withVerticalLabels={false}
+            onChangeCurrentIndex={onChangeCurrentIndex}
+            currentIndex={currentIndex}
             renderBottomLabel={({index, isFocus}) => {
               return renderBottomLabel && renderBottomLabel({index, isFocus});
             }}

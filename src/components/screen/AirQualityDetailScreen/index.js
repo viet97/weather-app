@@ -16,10 +16,18 @@ import {Images} from '../../../themes/Images';
 import Text from '../../common/Text';
 import NavigationService from '../../../navigation/NavigationService';
 import {AirQualityProgressCircle} from '../../element';
-import {AIR_LIST} from '../../../Define';
+import {
+  AIR_LIST,
+  AIR_POLLUTION_LEVEL,
+  MAX_AIR_QUALITY_INDEX,
+} from '../../../Define';
 import {connect} from 'react-redux';
 import withImmutablePropsToJS from 'with-immutable-props-to-js';
-import {getStateForKeys} from '../../../utils/Util';
+import {
+  getAirPollutionLevel,
+  getStateForKeys,
+  getValueFromObjectByKeys,
+} from '../../../utils/Util';
 class AirQualityDetailScreen extends BaseScreen {
   constructor(props) {
     super(props);
@@ -34,33 +42,21 @@ class AirQualityDetailScreen extends BaseScreen {
     );
     this.listQualityIndex = [
       {
-        color: 'green',
-        value: 50,
         ...AIR_LIST.PM2_5,
       },
       {
-        color: 'yellow',
-        value: 100,
         ...AIR_LIST.PM10,
       },
       {
-        color: 'red',
-        value: 500,
         ...AIR_LIST.NO2,
       },
       {
-        color: 'green',
-        value: 50,
         ...AIR_LIST.SO2,
       },
       {
-        color: 'yellow',
-        value: 100,
         ...AIR_LIST.CO,
       },
       {
-        color: 'red',
-        value: 500,
         ...AIR_LIST.O3,
       },
     ];
@@ -78,11 +74,16 @@ class AirQualityDetailScreen extends BaseScreen {
   };
 
   renderCircle = ({item, index}) => {
-    const {name, fullName, color, key} = item;
-    const {listAirObj} = this.props;
-    if (!listAirObj) return null;
+    const {name, fullName, key} = item;
+    const {aqi_data} = this.props;
+    const iaqi = getValueFromObjectByKeys(aqi_data, ['iaqi']);
 
-    const value = listAirObj[key];
+    if (!iaqi) return null;
+
+    const value = getValueFromObjectByKeys(iaqi, [key, 'v']);
+    const aqiLevel = getAirPollutionLevel(value);
+    const color = getValueFromObjectByKeys(aqiLevel, ['color']);
+    const percentage = value ? (value * 100) / MAX_AIR_QUALITY_INDEX : 0;
     return (
       <ImageBackground
         source={Images.assets.background_circle.source}
@@ -96,9 +97,9 @@ class AirQualityDetailScreen extends BaseScreen {
           ratio: Images.assets.background_circle.ratio,
         }}>
         <AirQualityProgressCircle
-          percentage={30}
+          percentage={percentage}
           radius={normalize(80)}
-          color={color}
+          color={color || Colors.white}
           innerCircleStyle={styles.innerCircleStyle}
           value={value && value.toFixed(2)}
         />
@@ -129,7 +130,7 @@ class AirQualityDetailScreen extends BaseScreen {
         data={this.listQualityIndex}
         showsVerticalScrollIndicator={false}
         style={styles.listCircle}
-        numColumns={this.listQualityIndex.length / 2}
+        numColumns={3}
         renderItem={this.renderCircle}
         bounces={false}
       />
@@ -163,14 +164,23 @@ class AirQualityDetailScreen extends BaseScreen {
   };
 
   renderValueReference = () => {
+    const {aqi_data} = this.props;
+    const cityName = getValueFromObjectByKeys(aqi_data, ['city', 'name']);
+    if (!cityName) return null;
     return (
       <View style={styles.valueReferenceContainer}>
-        {this.renderValueReferenceRow('good', 100, 'green')}
-        {this.renderValueReferenceRow('good', 100, 'green', {marginTop: 8})}
-        {this.renderValueReferenceRow('good', 100, 'green', {marginTop: 8})}
-        {this.renderValueReferenceRow('good', 100, 'green', {marginTop: 8})}
-        {this.renderValueReferenceRow('good', 100, 'green', {marginTop: 8})}
-        {this.renderValueReferenceRow('good', 100, 'green', {marginTop: 8})}
+        {Object.values(AIR_POLLUTION_LEVEL).map((it, index) => {
+          return this.renderValueReferenceRow(
+            it.name,
+            it.rangeText,
+            it.color,
+            index > 0
+              ? {
+                  marginTop: 8,
+                }
+              : {},
+          );
+        })}
         <View
           style={{
             padding: 8,
@@ -186,7 +196,7 @@ class AirQualityDetailScreen extends BaseScreen {
             style={{color: Colors.viewDetail, marginLeft: 16}}
             size={32}
             medium>
-            WAQI: Hà Nội/36A Phạm Văn Đồng, Vietnam
+            WAQI: {cityName}
           </Text>
         </View>
       </View>
@@ -209,7 +219,7 @@ class AirQualityDetailScreen extends BaseScreen {
 
 const mapStateToProps = state => {
   return {
-    listAirObj: getStateForKeys(state, ['Weather', 'listAirObj']),
+    aqi_data: getStateForKeys(state, ['Weather', 'aqi_data']),
   };
 };
 

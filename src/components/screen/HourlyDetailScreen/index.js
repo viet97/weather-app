@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, FlatList, ImageBackground} from 'react-native';
+import {View, FlatList, Animated, ScrollView} from 'react-native';
 
 import BaseScreen from '../BaseScreen';
 import {Header, HEADER_HEIGHT} from '../Header';
@@ -19,11 +19,17 @@ import {connect} from 'react-redux';
 import WeatherAction from '../../../actions/WeatherAction';
 import {
   getDayMonth,
+  getHourString,
   getStateForKeys,
   getValueFromObjectByKeys,
 } from '../../../utils/Util';
 import {size} from 'lodash';
 import {LineChartCustom} from '../../element';
+import {
+  CHART_POINT_DISTANCE,
+  DEFAULT_CHART_HEIGHT,
+} from '../../element/LineChartCustom';
+import {INFINITY_NUMBER} from '../../../Define';
 
 class HourlyScreen extends BaseScreen {
   constructor(props) {
@@ -106,10 +112,15 @@ class HourlyScreen extends BaseScreen {
       ];
     }
     this._debugLog('HourlytDetailConstructor', data, hourly);
-
+    this.topLabelRef = React.createRef();
+    this.itemHeaderHeight = normalize(70);
+    this.itemHeaderTopMargin = 24;
+    this.lineChartTopMargin = 24;
     this.state = {
       data,
+      topLabelHeight: 0,
     };
+    this.scrollX = new Animated.Value(0);
   }
 
   renderLineChart = currentLineChartProps => {
@@ -125,26 +136,40 @@ class HourlyScreen extends BaseScreen {
 
       return (
         <LineChartCustom
-          style={{marginTop: 24}}
+          style={{marginTop: this.lineChartTopMargin}}
           chartHeight={150}
           {...currentLineChartProps}
           data={data}
+          currentIndex={this.state.currentIndex}
+          onChangeCurrentIndex={currentIndex =>
+            this.setStateSafe({currentIndex})
+          }
         />
       );
     }
   };
-  renderItemHeader = item => {
+  renderItemHeader = (item, index) => {
     const {TitleIcon, title, unit} = item;
+    const {topLabelHeight} = this.state;
+    if (!topLabelHeight) return null;
     return (
-      <View
+      <Animated.View
         style={{
+          transform: [
+            {
+              translateX: this.scrollX.interpolate({
+                inputRange: [0, INFINITY_NUMBER],
+                outputRange: [0, INFINITY_NUMBER],
+              }),
+            },
+          ],
           flexDirection: 'row',
           paddingRight: 24,
-          height: normalize(70),
+          height: this.itemHeaderHeight,
           borderTopRightRadius: normalize(40),
           borderBottomRightRadius: normalize(40),
           backgroundColor: Colors.title_background,
-          marginTop: 24,
+          marginTop: this.itemHeaderTopMargin,
           alignItems: 'center',
         }}>
         <View
@@ -171,7 +196,7 @@ class HourlyScreen extends BaseScreen {
           light>
           {unit}
         </Text>
-      </View>
+      </Animated.View>
     );
   };
 
@@ -186,18 +211,87 @@ class HourlyScreen extends BaseScreen {
     );
   };
 
+  renderTopLabelItem = ({item, index}) => {
+    const isFocus = this.state.currentIndex === index;
+    return (
+      <View
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: CHART_POINT_DISTANCE - 8,
+          marginHorizontal: 4,
+          marginVertical: 8,
+        }}>
+        <SVGIcon.cloud_cover width={20} height={20} />
+        <Text
+          size={24}
+          style={{
+            marginTop: 4,
+            color: isFocus ? Colors.text_color1 : Colors.textTitle,
+          }}>
+          {getHourString(item.dt)}
+        </Text>
+      </View>
+    );
+  };
+
+  renderTopLabel = () => {
+    const {hourly} = this.props;
+    if (size(hourly) === 0) return null;
+    return (
+      <View
+        onLayout={event => {
+          const {topLabelHeight} = this.state;
+          const height = event.nativeEvent.layout.height;
+          if (topLabelHeight < height) {
+            this.setStateSafe({topLabelHeight: height});
+          }
+        }}
+        style={{flexDirection: 'row'}}>
+        {hourly.map((item, index) => {
+          return this.renderTopLabelItem({item, index});
+        })}
+      </View>
+    );
+  };
+
+  renderListItemHeader = () => {
+    if (size(this.props.hourly) === 0) return null;
+
+    return (
+      <View style={{position: 'absolute'}}>
+        {this.state.data.map((it, index) => {
+          return this.renderItemHeader(it, index);
+        })}
+      </View>
+    );
+  };
+
   renderContent() {
     const {data} = this.state;
     return (
       <View style={{flex: 1, backgroundColor: Colors.backgroundHome}}>
         <Header title="Hourly • Tan Binh, Ho Chi Minh" />
-        <FlatList
-          data={data}
-          extraData={this.state}
-          renderItem={this.renderItem}
-          contentContainerStyle={{paddingBottom: getBottomSpace()}}
-          showsVerticalScrollIndicator={false}
-        />
+        <View style={{flex: 1}}>
+          <ScrollView
+            scrollEventThrottle={16}
+            onScroll={event =>
+              this.scrollX.setValue(event.nativeEvent.contentOffset.x)
+            }
+            horizontal>
+            <View>
+              {this.renderTopLabel()}
+              <FlatList
+                data={data}
+                extraData={this.state}
+                renderItem={this.renderItem}
+                style={{backgroundColor: Colors.white}}
+                contentContainerStyle={{paddingBottom: getBottomSpace()}}
+                showsVerticalScrollIndicator={false}
+              />
+            </View>
+          </ScrollView>
+        </View>
       </View>
     );
   }

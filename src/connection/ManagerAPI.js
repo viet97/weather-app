@@ -3,10 +3,13 @@ import Connector, {TYPE_METHOD} from './Connector';
 import AppInfoManager from '../AppInfoManager';
 import LocationModule from '../modules/LocationModule';
 import {getValueFromObjectByKeys} from '../utils/Util';
+import {myLog} from '../Debug';
 
 export const URL = {
   _tmpUrl: '',
   getBaseUrl: () => 'https://api.openweathermap.org/data/2.5/',
+  getBaseCovidUrl: () => 'https://corona-api.com/',
+  getBaseAqiUrl: () => 'https://api.waqi.info/feed/',
   customerUrl: Config.serverHostCustomer,
   switchCustomerUrl: function (url) {
     if (url) {
@@ -39,7 +42,10 @@ export const URL = {
     }
   },
   allData: 'onecall',
-  airPollution: 'air_pollution',
+  getAirPollutionUrl: ({lat, lon}) =>
+    `geo:${lat};${lon}/?token=${Config.aqiToken}`,
+  getCountryCovidUrl: code => `countries/${code}`,
+  worldCovid: 'timeline',
 };
 
 export default class ManagerAPI {
@@ -58,10 +64,8 @@ export default class ManagerAPI {
     this.name = 'ManagerAPI';
   }
   // 0. GetConnector
-  getConnector = (url, customUrl) => {
-    return new Connector().setUrl(
-      customUrl ? customUrl : URL.getBaseUrl() + url,
-    );
+  getConnector = (url, baseUrl = URL.getBaseUrl()) => {
+    return new Connector().setUrl(baseUrl + url);
   };
   // Create custom request
   requestCustom = ({
@@ -97,10 +101,7 @@ export default class ManagerAPI {
 
     let lat = getValueFromObjectByKeys(location, ['latitude']);
     let lon = getValueFromObjectByKeys(location, ['longitude']);
-    if (Config.debug) {
-      lat = 30;
-      lon = -100;
-    }
+
     return this.getConnector(URL.allData)
       .setQuery({
         appid: Config.apiKey,
@@ -117,17 +118,28 @@ export default class ManagerAPI {
 
     let lat = getValueFromObjectByKeys(location, ['latitude']);
     let lon = getValueFromObjectByKeys(location, ['longitude']);
-    if (Config.debug) {
-      lat = 30;
-      lon = -100;
-    }
-    return this.getConnector(URL.airPollution)
-      .setQuery({
-        lat,
-        lon,
-        appid: Config.apiKey,
-      })
-      .getPromise();
+
+    return this.getConnector(
+      URL.getAirPollutionUrl({lat, lon}),
+      URL.getBaseAqiUrl(),
+    ).getPromise();
+  };
+  getCountryCovid = async () => {
+    const currentAddressInfo = await LocationModule.getCurrentAddressInfo();
+    const countryCode = getValueFromObjectByKeys(currentAddressInfo, [
+      'countryCode',
+    ]);
+    myLog('getCountryCovid', currentAddressInfo, countryCode);
+    return this.getConnector(
+      URL.getCountryCovidUrl(countryCode),
+      URL.getBaseCovidUrl(),
+    ).getPromise();
+  };
+  getWorldCovid = () => {
+    return this.getConnector(
+      URL.worldCovid,
+      URL.getBaseCovidUrl(),
+    ).getPromise();
   };
 }
 

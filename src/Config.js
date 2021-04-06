@@ -13,6 +13,7 @@ const serverHostCustomer = {
 
 const Config = {
   apiKey: '62b38348b454df9bda79c5a6a144a07d',
+  aqiToken: 'a67e0a2b2a88200b16cf340eb2d1b0a819fb0533',
   versionCode: '20201107',
   versionApi: 'appserver/',
   platformConfig: 1,
