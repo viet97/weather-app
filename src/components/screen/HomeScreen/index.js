@@ -28,7 +28,7 @@ import {
   WeatherIcon,
 } from '../../element';
 import {Images} from '../../../themes/Images';
-import {TYPE_IMAGE_RESIZE_MODE} from '../../common/Image';
+import Image, {TYPE_IMAGE_RESIZE_MODE} from '../../common/Image';
 import NavigationService from '../../../navigation/NavigationService';
 import WeatherInfo from './component/weather-info';
 import {ROUTER_NAME} from '../../../navigation/NavigationConst';
@@ -39,6 +39,7 @@ import WeatherAction from '../../../actions/WeatherAction';
 import {connect} from 'react-redux';
 import withImmutablePropsToJS from 'with-immutable-props-to-js';
 import {
+  getAirPollutionLevel,
   getDateTimeString,
   getDayMonth,
   getGreetingTime,
@@ -46,12 +47,22 @@ import {
   getStateForKeys,
   getValueFromObjectByKeys,
 } from '../../../utils/Util';
-import {AIR_LIST} from '../../../Define';
+import {
+  AIR_LIST,
+  AIR_POLLUTION_LEVEL,
+  MAX_AIR_QUALITY_INDEX,
+} from '../../../Define';
 import {EmitterManager} from '../../../modules/EmitterManager';
 import LocationModule from '../../../modules/LocationModule';
+import Svg from 'react-native-svg';
+import {CovidAction} from '../../../actions';
+import numeral from 'numeral';
+import {isNumber} from 'lodash';
+import withI18n from '../../../modules/i18n/HOC';
 
 const LEFT_PADDING_SCREEN = normalize(14) + 8;
 const RIGHT_PADDING_SCREEN = 16;
+const SUN_CIRCLE_R = normalize(175);
 class HomeScreen extends BaseScreen {
   constructor(props) {
     super(props);
@@ -64,6 +75,9 @@ class HomeScreen extends BaseScreen {
     };
     this.displayName = 'HomeScreen';
 
+    this.sunCircleCenterX =
+      (widthDevice - LEFT_PADDING_SCREEN - RIGHT_PADDING_SCREEN) / 2;
+    this.sunCircleCenterY = normalize(175);
     this.listQualityIndex = [
       {
         color: 'green',
@@ -229,53 +243,43 @@ class HomeScreen extends BaseScreen {
     ];
 
     this.listMoonInfo = [{}, {}, {}];
-    this.covidInfo = [
-      {
-        title: 'Viet Name',
-      },
-      {
-        title: 'Worldwide',
-      },
-    ];
-    this.listCovidGridInfo = [
-      {
-        Icon: SVGIcon.covid_active,
-        value: 549,
-        title: 'Active',
-      },
-      {
-        Icon: SVGIcon.covid_confirm,
-        value: 2482,
-        title: 'Confirmed',
-      },
-      {
-        Icon: SVGIcon.covid_recover,
-        value: 1898,
-        title: 'Recovered',
-      },
-      {
-        Icon: SVGIcon.covid_death,
-        value: 35,
-        title: 'Deaths',
-      },
-    ];
   }
   componentWillMount = async () => {
     await AppSettingManager.getInstance().setDataSettingFromLocal();
   };
 
   async _componentDidMount() {
-    const {getAllData, getAirPollution} = this.props;
+    const {
+      getAllData,
+      getAirPollution,
+      getCountryCovid,
+      getWorldCovid,
+    } = this.props;
+    await LocationModule.getCurrentPosition();
+    const currentAddressInfo = await LocationModule.getCurrentAddressInfo();
+    this.setStateSafe({
+      covidTabList: [
+        {
+          title: getValueFromObjectByKeys(currentAddressInfo, ['country']),
+        },
+        {
+          title: 'Worldwide',
+        },
+      ],
+    });
     getAllData();
     getAirPollution();
-    LocationModule.getCurrentAddress().then(address =>
+    getCountryCovid();
+    getWorldCovid();
+
+    LocationModule.getCurrentAddressStr().then(address =>
       this.setStateSafe({address}),
     );
     EmitterManager.getInstance().on(
       EmitterManager.listEvent.APP_STATE_CHANGE,
       () => {
         this.setStateSafe({greeting: getGreetingTime(moment())});
-        LocationModule.getCurrentAddress().then(address =>
+        LocationModule.getCurrentAddressStr().then(address =>
           this.setStateSafe({address}),
         );
       },
@@ -529,11 +533,15 @@ class HomeScreen extends BaseScreen {
   };
 
   renderAirQualityStatus = () => {
+    const {aqi_data} = this.props;
+    const aqi = getValueFromObjectByKeys(aqi_data, ['aqi']);
+    const currentAirLevel = getAirPollutionLevel(aqi);
+    this._debugLog('renderAirQualityStatus', this.props);
     return (
       <View style={styles.airStatusContainer}>
         <View style={styles.airIndexContainer}>
           <Text thin style={{color: Colors.text_color1}} size={78}>
-            160
+            {aqi}
           </Text>
           <SVGIcon.air_quality_status
             style={styles.air_status_icon}
@@ -546,9 +554,9 @@ class HomeScreen extends BaseScreen {
             size={38}
             medium
             style={{
-              color: Colors.weather_red,
+              color: currentAirLevel.color,
             }}>
-            Unhealthy
+            {currentAirLevel.name}
           </Text>
           <View style={styles.airWarnContent}>
             <Text
@@ -557,7 +565,7 @@ class HomeScreen extends BaseScreen {
               style={{
                 color: Colors.air_quality_text,
               }}>
-              Everyone may begin to experience sadipscing elitrsed diam nonu.
+              {currentAirLevel.description}
             </Text>
           </View>
         </View>
@@ -566,20 +574,35 @@ class HomeScreen extends BaseScreen {
   };
 
   renderAirSeekBar = () => {
+    const {aqi_data} = this.props;
+    const aqi = getValueFromObjectByKeys(aqi_data, ['aqi']);
+    const percentage = aqi / MAX_AIR_QUALITY_INDEX;
     return (
       <View>
         <View style={styles.airSeekBar}>
-          {this.listQualityIndex.map(it => {
+          {Object.values(AIR_POLLUTION_LEVEL).map(it => {
             return (
               <View
                 style={{
-                  flex: it.value / this.totalAirQualityValue,
+                  flex: it.flex,
                   height: normalize(10),
                   backgroundColor: it.color,
                 }}
               />
             );
           })}
+          <SVGIcon.air_quality_seek
+            style={{
+              position: 'absolute',
+              left:
+                percentage *
+                  (widthDevice - LEFT_PADDING_SCREEN - RIGHT_PADDING_SCREEN) -
+                normalize(35),
+              top: -normalize(30),
+            }}
+            width={normalize(70)}
+            height={normalize(70)}
+          />
         </View>
         <View style={styles.bottomAirSeekBar}>
           <View style={styles.good}>
@@ -587,9 +610,7 @@ class HomeScreen extends BaseScreen {
             <Text
               size={30}
               medium
-              style={{color: Colors.air_quality_text, marginLeft: 4}}>
-              Good
-            </Text>
+              style={{color: Colors.air_quality_text, marginLeft: 4}}></Text>
           </View>
           <View style={styles.unSafe}>
             <SVGIcon.air_unsafe width={normalize(31)} height={normalize(28)} />
@@ -606,13 +627,15 @@ class HomeScreen extends BaseScreen {
   };
 
   renderPMCircleProgress = () => {
-    const {listAirObj} = this.props;
-    if (isEmpty(listAirObj)) return null;
+    const {aqi_data} = this.props;
     return (
       <View style={styles.pmCircleContainer}>
         {this.listQualityIndex.map(airQuality => {
           const {name, key} = airQuality;
-          const value = listAirObj[key];
+          const value = getValueFromObjectByKeys(aqi_data, ['iaqi', key, 'v']);
+          const aqiLevel = getAirPollutionLevel(value);
+          const levelName = getValueFromObjectByKeys(aqiLevel, ['name']);
+          const color = getValueFromObjectByKeys(aqiLevel, ['color']);
           return (
             <View style={styles.circleContainer}>
               <Text size={36} medium style={{color: Colors.air_quality_text}}>
@@ -620,15 +643,21 @@ class HomeScreen extends BaseScreen {
               </Text>
               <AirQualityProgressCircle
                 outerCircleStyle={{marginTop: 12}}
-                percentage={30}
+                percentage={value ? (value * 100) / MAX_AIR_QUALITY_INDEX : 0}
                 radius={normalize(80)}
-                color="green"
+                color={color || Colors.white}
                 innerCircleStyle={styles.innerDashedCircle}
                 value={value && value.toFixed(2)}
               />
-              <View style={styles.airQualityBackground}>
-                <Text size={28} style={{color: Colors.weather_red}}>
-                  Unhealthy
+              <View
+                style={[
+                  styles.airQualityBackground,
+                  {
+                    backgroundColor: color ? color + '26' : Colors.white,
+                  },
+                ]}>
+                <Text size={28} style={{color: color || Colors.white}}>
+                  {levelName}
                 </Text>
               </View>
             </View>
@@ -639,6 +668,8 @@ class HomeScreen extends BaseScreen {
   };
 
   renderAirQualityIndex = () => {
+    const {aqi_data} = this.props;
+    if (!aqi_data) return null;
     return (
       <View style={styles.sectionContainer}>
         {this.renderHeaderSection({
@@ -687,7 +718,7 @@ class HomeScreen extends BaseScreen {
       <View style={styles.commonContainer}>
         <View style={styles.weatherToday}>
           <Text style={{color: Colors.white}} size={160} thin>
-            {Math.floor(temp)}
+            {isNumber(temp) ? Math.floor(temp) : ''}
             <Text size={80} light>
               oC
             </Text>
@@ -828,10 +859,31 @@ class HomeScreen extends BaseScreen {
     );
   };
 
+  getCirclePointY = x => {
+    return (
+      -Math.sqrt(
+        Math.pow(SUN_CIRCLE_R, 2) - Math.pow(x - this.sunCircleCenterX, 2),
+      ) + this.sunCircleCenterY
+    );
+  };
+
   renderSun = () => {
     const {current} = this.props;
     const sunrise = getValueFromObjectByKeys(current, ['sunrise']);
     const sunset = getValueFromObjectByKeys(current, ['sunset']);
+    const dt = getValueFromObjectByKeys(current, ['dt']);
+    if (!dt) return null;
+    let percentage = (dt - sunrise) / (sunset - sunrise);
+    if (percentage > 1) percentage = 1;
+    if (percentage < 0) percentage = 0;
+    this.sunX =
+      (widthDevice -
+        LEFT_PADDING_SCREEN -
+        RIGHT_PADDING_SCREEN -
+        SUN_CIRCLE_R * 2) /
+        2 +
+      percentage * SUN_CIRCLE_R * 2;
+
     return (
       <View style={styles.sectionContainer}>
         {this.renderHeaderSection({title: 'Sun', hasDetail: false})}
@@ -848,11 +900,19 @@ class HomeScreen extends BaseScreen {
                 start={{x: 0, y: 0}}
                 end={{x: 0, y: 1.0}}
                 colors={[Colors.sun_rise, Colors.sun_set]}
-                style={styles.sunInnerBackground}
+                style={[styles.sunInnerBackground, {flex: percentage}]}
               />
-              <View style={styles.sunInnerEmptyBackground} />
             </View>
           </View>
+          <SVGIcon.sun
+            style={{
+              position: 'absolute',
+              top: this.getCirclePointY(this.sunX) - normalize(40) / 2,
+              left: this.sunX - normalize(40) / 2,
+            }}
+            width={normalize(40)}
+            height={normalize(40)}
+          />
           <View>
             <Text style={{color: Colors.textTitle}}>Sunset</Text>
             <Text size={36} style={{color: Colors.air_quality_text}}>
@@ -939,29 +999,33 @@ class HomeScreen extends BaseScreen {
   };
 
   renderCovidTab = () => {
-    const {currentIndexCovidTab} = this.state;
+    const {currentIndexCovidTab, covidTabList} = this.state;
     return (
       <View style={styles.covidTabContainer}>
-        {this.covidInfo.map((it, index) => {
-          const isFocus = currentIndexCovidTab === index;
-          return (
-            <TouchablePlatform
-              onPress={() => this.setStateSafe({currentIndexCovidTab: index})}
-              style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                paddingVertical: 12,
-                backgroundColor: isFocus ? Colors.viewDetail : Colors.white,
-              }}>
-              <Text
-                medium
-                style={{color: isFocus ? Colors.white : Colors.textTitle}}>
-                {it.title}
-              </Text>
-            </TouchablePlatform>
-          );
-        })}
+        {covidTabList
+          ? covidTabList.map((it, index) => {
+              const isFocus = currentIndexCovidTab === index;
+              return (
+                <TouchablePlatform
+                  onPress={() =>
+                    this.setStateSafe({currentIndexCovidTab: index})
+                  }
+                  style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    paddingVertical: 12,
+                    backgroundColor: isFocus ? Colors.viewDetail : Colors.white,
+                  }}>
+                  <Text
+                    medium
+                    style={{color: isFocus ? Colors.white : Colors.textTitle}}>
+                    {it.title}
+                  </Text>
+                </TouchablePlatform>
+              );
+            })
+          : null}
       </View>
     );
   };
@@ -982,23 +1046,29 @@ class HomeScreen extends BaseScreen {
           <Text size={30} style={{color: Colors.air_quality_text}}>
             {title}
           </Text>
-          <Text
-            size={44}
-            light
-            style={{color: Colors.air_quality_text, marginTop: 4}}>
-            {value}
-          </Text>
+          {value ? (
+            <Text
+              size={38}
+              light
+              style={{color: Colors.air_quality_text, marginTop: 4}}>
+              {numeral(value).format('0,0')}
+            </Text>
+          ) : null}
         </View>
       </View>
     );
   };
 
   renderCovidGridInfo = () => {
+    const {currentIndexCovidTab} = this.state;
+    const {listWorldCovidInfo, listCountryCovidInfo} = this.props;
     return (
       <FlatList
         style={styles.covidGridInfo}
-        data={this.listCovidGridInfo}
-        numColumns={this.listCovidGridInfo.length / 2}
+        data={
+          currentIndexCovidTab === 0 ? listCountryCovidInfo : listWorldCovidInfo
+        }
+        numColumns={2}
         showsVerticalScrollIndicator={false}
         bounces={false}
         renderItem={this.renderCovidGridInfoItem}
@@ -1120,15 +1190,14 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
   },
   sunInnerBackground: {
-    flex: 0.75,
     borderWidth: 1,
     borderColor: 'black',
     borderRadius: normalize(175) * 0.75,
     borderTopRightRadius: 0,
   },
   sunInnerCircleContainer: {
-    width: normalize(350),
-    height: normalize(350),
+    width: SUN_CIRCLE_R * 2,
+    height: SUN_CIRCLE_R * 2,
     borderTopLeftRadius: normalize(175),
     borderTopRightRadius: normalize(175),
     overflow: 'hidden',
@@ -1138,11 +1207,11 @@ const styles = StyleSheet.create({
     height: normalize(175),
     borderTopLeftRadius: normalize(175),
     borderTopRightRadius: normalize(175),
-    overflow: 'hidden',
     borderWidth: 1,
     borderColor: Colors.border_color_4,
     borderStyle: 'dashed',
     marginHorizontal: 8,
+    overflow: 'hidden',
   },
   sunContentContainer: {
     flexDirection: 'row',
@@ -1245,7 +1314,6 @@ const styles = StyleSheet.create({
   },
   airQualityBackground: {
     paddingVertical: 8,
-    backgroundColor: Colors.weather_red + '26',
     marginTop: 8,
     width: normalize(160),
     alignItems: 'center',
@@ -1304,7 +1372,12 @@ const mapStateToProps = state => {
     listGridInfo: getStateForKeys(state, ['Weather', 'listGridInfo']),
     hourly: getStateForKeys(state, ['Weather', 'hourly']),
     daily: getStateForKeys(state, ['Weather', 'daily']),
-    listAirObj: getStateForKeys(state, ['Weather', 'listAirObj']),
+    aqi_data: getStateForKeys(state, ['Weather', 'aqi_data']),
+    listCountryCovidInfo: getStateForKeys(state, [
+      'Covid',
+      'listCountryCovidInfo',
+    ]),
+    listWorldCovidInfo: getStateForKeys(state, ['Covid', 'listWorldCovidInfo']),
   };
 };
 
@@ -1312,10 +1385,12 @@ const mapDispatchToProps = (dispatch, getState) => {
   return {
     getAllData: () => dispatch(WeatherAction.getAllData()),
     getAirPollution: () => dispatch(WeatherAction.getAirPollution()),
+    getCountryCovid: () => dispatch(CovidAction.getCountryCovid()),
+    getWorldCovid: () => dispatch(CovidAction.getWorldCovid()),
   };
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(withImmutablePropsToJS(HomeScreen));
+)(withI18n(withImmutablePropsToJS(HomeScreen)));

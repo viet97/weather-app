@@ -16,6 +16,21 @@ const ERROR_CODE = {
 
 const LocationModule = {
   getCurrentPosition: async () => {
+    if (Config.debug) {
+      const geoObject = {
+        latitude: 21.027763,
+        longitude: 105.83416,
+      };
+      LocationModule.lat = geoObject.latitude;
+      LocationModule.lng = geoObject.longitude;
+      return geoObject;
+    }
+    if (LocationModule.lat !== 0 && LocationModule.lng !== 0) {
+      return {
+        latitude: LocationModule.lat,
+        longitude: LocationModule.lng,
+      };
+    }
     try {
       const location = await GetLocation.getCurrentPosition({
         enableHighAccuracy: true,
@@ -41,25 +56,34 @@ const LocationModule = {
   },
   lat: 0,
   lng: 0,
-  getCurrentAddress: async () => {
-    let lat = LocationModule.lat;
-    let lng = LocationModule.lng;
-    if (!lat || !lng) {
-      const location = await LocationModule.getCurrentPosition();
-      lat = getValueFromObjectByKeys(location, ['latitude']);
-      lng = getValueFromObjectByKeys(location, ['longitude']);
+  address_info: null,
+  getCurrentAddressInfo: async () => {
+    if (LocationModule.address_info) {
+      return LocationModule.address_info;
     }
+
+    const location = await LocationModule.getCurrentPosition();
+    lat = getValueFromObjectByKeys(location, ['latitude']);
+    lng = getValueFromObjectByKeys(location, ['longitude']);
     const geoObject = {
       lat,
       lng,
     };
-    let addressStr = '';
     const addressArray = await Geocoder.geocodePosition(geoObject);
+
     if (size(addressArray) > 0) {
-      const {country, locality} = addressArray[0];
-      addressStr = `${country}, ${locality}`;
+      LocationModule.address_info = addressArray[0];
+      myLog('getCurrentAddress', addressArray[0]);
+
+      return addressArray[0];
     }
-    myLog('getCurrentAddress', addressStr);
+    return null;
+  },
+  getCurrentAddressStr: async () => {
+    const currentAddressInfo = await LocationModule.getCurrentAddressInfo();
+    const {country, locality} = currentAddressInfo;
+    addressStr = `${locality}, ${country}`;
+
     return addressStr;
   },
 };

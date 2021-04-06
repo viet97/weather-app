@@ -28,7 +28,7 @@ export default (state = initState, action) => {
           const humidity = getValueFromObjectByKeys(currentWeather, [
             'humidity',
           ]);
-          const rain = getValueFromObjectByKeys(currentWeather, ['rain']);
+          const rain = getValueFromObjectByKeys(currentWeather, ['rain', '1h']);
           const wind_speed = getValueFromObjectByKeys(currentWeather, [
             'wind_speed',
           ]);
@@ -107,17 +107,14 @@ export default (state = initState, action) => {
     case REQUEST_TYPE.GET_AIR_POLLUTION:
       switch (action.subType) {
         case REQUEST_SUBTYPE.SUCCESS:
-          const data = getValueFromObjectByKeys(action, ['data', 'data']);
-          const list = getValueFromObjectByKeys(data, ['list']);
-          let listAirObj = {};
-          let aqi = 0;
-          if (size(list) > 0) {
-            listAirObj = getValueFromObjectByKeys(list[0], ['components']);
-            aqi = getValueFromObjectByKeys(list[0], ['main', 'aqi']);
-          }
-          myLog('REQUEST_TYPE.GET_AIR_POLLUTION', list);
+          const data = getValueFromObjectByKeys(action, [
+            'data',
+            'data',
+            'data',
+          ]);
+          myLog('REQUEST_TYPE.GET_AIR_POLLUTION', data);
 
-          return state.setIn(['listAirObj'], listAirObj).setIn(['aqi'], aqi);
+          return state.setIn(['aqi_data'], data);
         default:
           return state;
       }

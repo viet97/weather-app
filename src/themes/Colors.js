@@ -54,4 +54,9 @@ export const Colors = {
   visibility_dot: '#4465A7',
   visibility_line: '#6178A7',
   title_background: '#D4F0FD',
+  moderate: '#F8C864',
+  unhealthy_sensitive: '#FF954D',
+  unhealthy: '#FF4E4E',
+  very_unhealthy: '#A65AC6',
+  hazardous: '#C92727',
 };

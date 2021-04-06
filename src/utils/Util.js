@@ -3,7 +3,12 @@ import {myLog} from '../Debug';
 import {md5} from '../modules/CryptoJS';
 import {getConfigDevice} from '../ConfigDevice';
 import Config from '../Config';
-import {MONTH_NAME, WEEK_DAY_NAME, WEEK_FULL_DAY_NAME} from '../Define';
+import {
+  AIR_POLLUTION_LEVEL,
+  MONTH_NAME,
+  WEEK_DAY_NAME,
+  WEEK_FULL_DAY_NAME,
+} from '../Define';
 const appInfo = {
   deviceId: getConfigDevice().deviceId,
   deviceType: getConfigDevice().deviceType,
@@ -318,6 +323,16 @@ export const getMoonPhase = (year, month, day) => {
   // 7 => Waning Crescent Moon
 
   return b;
+};
+
+export const getAirPollutionLevel = iaqi => {
+  for (const key in AIR_POLLUTION_LEVEL) {
+    if (Object.hasOwnProperty.call(AIR_POLLUTION_LEVEL, key)) {
+      const airLevel = AIR_POLLUTION_LEVEL[key];
+      myLog('getAirPollutionLevel', iaqi, airLevel);
+      if (iaqi <= airLevel.max && iaqi >= airLevel.min) return airLevel;
+    }
+  }
 };
 
 export const temperatureC = '°C';
