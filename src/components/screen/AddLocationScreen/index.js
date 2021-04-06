@@ -121,7 +121,9 @@ class AddLocationScreen extends BaseScreen {
   onPressItem = item => {
     const {myLocations, changeLocation} = this.props;
     myLog('onPressItem--->', myLocations, item);
-    const isChoiced = myLocations.find(x => x.id === item.id);
+    const isChoiced = myLocations.find(
+      x => x.googlePlaceId === item.googlePlaceId,
+    );
     if (!isChoiced) {
       let tmpLocation = [...myLocations];
       tmpLocation.unshift({
