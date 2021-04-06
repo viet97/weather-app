@@ -9,6 +9,7 @@ export const URL = {
   _tmpUrl: '',
   getBaseUrl: () => 'https://api.openweathermap.org/data/2.5/',
   getBaseCovidUrl: () => 'https://corona-api.com/',
+  getBaseAqiUrl: () => 'https://api.waqi.info/feed/',
   customerUrl: Config.serverHostCustomer,
   switchCustomerUrl: function (url) {
     if (url) {
@@ -41,7 +42,8 @@ export const URL = {
     }
   },
   allData: 'onecall',
-  airPollution: 'air_pollution',
+  getAirPollutionUrl: ({lat, lon}) =>
+    `geo:${lat};${lon}/?token=${Config.aqiToken}`,
   getCountryCovidUrl: code => `countries/${code}`,
   worldCovid: 'timeline',
 };
@@ -117,13 +119,10 @@ export default class ManagerAPI {
     let lat = getValueFromObjectByKeys(location, ['latitude']);
     let lon = getValueFromObjectByKeys(location, ['longitude']);
 
-    return this.getConnector(URL.airPollution)
-      .setQuery({
-        lat,
-        lon,
-        appid: Config.apiKey,
-      })
-      .getPromise();
+    return this.getConnector(
+      URL.getAirPollutionUrl({lat, lon}),
+      URL.getBaseAqiUrl(),
+    ).getPromise();
   };
   getCountryCovid = async () => {
     const currentAddressInfo = await LocationModule.getCurrentAddressInfo();

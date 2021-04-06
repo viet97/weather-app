@@ -85,6 +85,11 @@ const DEFINE_REQUIRE = {
     type: TYPE_IMAGE.PNG,
     ratio: 341 / 70,
   },
+  air_quality_seek: {
+    source: require('../../assets/images/air_quality_seek.png'),
+    type: TYPE_IMAGE.PNG,
+    ratio: 1,
+  },
 };
 
 export const Images = {

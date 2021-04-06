@@ -28,7 +28,7 @@ import {
   WeatherIcon,
 } from '../../element';
 import {Images} from '../../../themes/Images';
-import {TYPE_IMAGE_RESIZE_MODE} from '../../common/Image';
+import Image, {TYPE_IMAGE_RESIZE_MODE} from '../../common/Image';
 import NavigationService from '../../../navigation/NavigationService';
 import WeatherInfo from './component/weather-info';
 import {ROUTER_NAME} from '../../../navigation/NavigationConst';
@@ -39,6 +39,7 @@ import WeatherAction from '../../../actions/WeatherAction';
 import {connect} from 'react-redux';
 import withImmutablePropsToJS from 'with-immutable-props-to-js';
 import {
+  getAirPollutionLevel,
   getDateTimeString,
   getDayMonth,
   getGreetingTime,
@@ -46,12 +47,18 @@ import {
   getStateForKeys,
   getValueFromObjectByKeys,
 } from '../../../utils/Util';
-import {AIR_LIST} from '../../../Define';
+import {
+  AIR_LIST,
+  AIR_POLLUTION_LEVEL,
+  MAX_AIR_QUALITY_INDEX,
+} from '../../../Define';
 import {EmitterManager} from '../../../modules/EmitterManager';
 import LocationModule from '../../../modules/LocationModule';
 import Svg from 'react-native-svg';
 import {CovidAction} from '../../../actions';
 import numeral from 'numeral';
+import {isNumber} from 'lodash';
+import withI18n from '../../../modules/i18n/HOC';
 
 const LEFT_PADDING_SCREEN = normalize(14) + 8;
 const RIGHT_PADDING_SCREEN = 16;
@@ -526,11 +533,15 @@ class HomeScreen extends BaseScreen {
   };
 
   renderAirQualityStatus = () => {
+    const {aqi_data} = this.props;
+    const aqi = getValueFromObjectByKeys(aqi_data, ['aqi']);
+    const currentAirLevel = getAirPollutionLevel(aqi);
+    this._debugLog('renderAirQualityStatus', this.props);
     return (
       <View style={styles.airStatusContainer}>
         <View style={styles.airIndexContainer}>
           <Text thin style={{color: Colors.text_color1}} size={78}>
-            160
+            {aqi}
           </Text>
           <SVGIcon.air_quality_status
             style={styles.air_status_icon}
@@ -543,9 +554,9 @@ class HomeScreen extends BaseScreen {
             size={38}
             medium
             style={{
-              color: Colors.weather_red,
+              color: currentAirLevel.color,
             }}>
-            Unhealthy
+            {currentAirLevel.name}
           </Text>
           <View style={styles.airWarnContent}>
             <Text
@@ -554,7 +565,7 @@ class HomeScreen extends BaseScreen {
               style={{
                 color: Colors.air_quality_text,
               }}>
-              Everyone may begin to experience sadipscing elitrsed diam nonu.
+              {currentAirLevel.description}
             </Text>
           </View>
         </View>
@@ -563,20 +574,35 @@ class HomeScreen extends BaseScreen {
   };
 
   renderAirSeekBar = () => {
+    const {aqi_data} = this.props;
+    const aqi = getValueFromObjectByKeys(aqi_data, ['aqi']);
+    const percentage = aqi / MAX_AIR_QUALITY_INDEX;
     return (
       <View>
         <View style={styles.airSeekBar}>
-          {this.listQualityIndex.map(it => {
+          {Object.values(AIR_POLLUTION_LEVEL).map(it => {
             return (
               <View
                 style={{
-                  flex: it.value / this.totalAirQualityValue,
+                  flex: it.flex,
                   height: normalize(10),
                   backgroundColor: it.color,
                 }}
               />
             );
           })}
+          <SVGIcon.air_quality_seek
+            style={{
+              position: 'absolute',
+              left:
+                percentage *
+                  (widthDevice - LEFT_PADDING_SCREEN - RIGHT_PADDING_SCREEN) -
+                normalize(35),
+              top: -normalize(30),
+            }}
+            width={normalize(70)}
+            height={normalize(70)}
+          />
         </View>
         <View style={styles.bottomAirSeekBar}>
           <View style={styles.good}>
@@ -584,9 +610,7 @@ class HomeScreen extends BaseScreen {
             <Text
               size={30}
               medium
-              style={{color: Colors.air_quality_text, marginLeft: 4}}>
-              Good
-            </Text>
+              style={{color: Colors.air_quality_text, marginLeft: 4}}></Text>
           </View>
           <View style={styles.unSafe}>
             <SVGIcon.air_unsafe width={normalize(31)} height={normalize(28)} />
@@ -603,13 +627,15 @@ class HomeScreen extends BaseScreen {
   };
 
   renderPMCircleProgress = () => {
-    const {listAirObj} = this.props;
-    if (isEmpty(listAirObj)) return null;
+    const {aqi_data} = this.props;
     return (
       <View style={styles.pmCircleContainer}>
         {this.listQualityIndex.map(airQuality => {
           const {name, key} = airQuality;
-          const value = listAirObj[key];
+          const value = getValueFromObjectByKeys(aqi_data, ['iaqi', key, 'v']);
+          const aqiLevel = getAirPollutionLevel(value);
+          const levelName = getValueFromObjectByKeys(aqiLevel, ['name']);
+          const color = getValueFromObjectByKeys(aqiLevel, ['color']);
           return (
             <View style={styles.circleContainer}>
               <Text size={36} medium style={{color: Colors.air_quality_text}}>
@@ -617,15 +643,21 @@ class HomeScreen extends BaseScreen {
               </Text>
               <AirQualityProgressCircle
                 outerCircleStyle={{marginTop: 12}}
-                percentage={30}
+                percentage={value ? (value * 100) / MAX_AIR_QUALITY_INDEX : 0}
                 radius={normalize(80)}
-                color="green"
+                color={color || Colors.white}
                 innerCircleStyle={styles.innerDashedCircle}
                 value={value && value.toFixed(2)}
               />
-              <View style={styles.airQualityBackground}>
-                <Text size={28} style={{color: Colors.weather_red}}>
-                  Unhealthy
+              <View
+                style={[
+                  styles.airQualityBackground,
+                  {
+                    backgroundColor: color ? color + '26' : Colors.white,
+                  },
+                ]}>
+                <Text size={28} style={{color: color || Colors.white}}>
+                  {levelName}
                 </Text>
               </View>
             </View>
@@ -636,6 +668,8 @@ class HomeScreen extends BaseScreen {
   };
 
   renderAirQualityIndex = () => {
+    const {aqi_data} = this.props;
+    if (!aqi_data) return null;
     return (
       <View style={styles.sectionContainer}>
         {this.renderHeaderSection({
@@ -684,7 +718,7 @@ class HomeScreen extends BaseScreen {
       <View style={styles.commonContainer}>
         <View style={styles.weatherToday}>
           <Text style={{color: Colors.white}} size={160} thin>
-            {Math.floor(temp)}
+            {isNumber(temp) ? Math.floor(temp) : ''}
             <Text size={80} light>
               oC
             </Text>
@@ -1280,7 +1314,6 @@ const styles = StyleSheet.create({
   },
   airQualityBackground: {
     paddingVertical: 8,
-    backgroundColor: Colors.weather_red + '26',
     marginTop: 8,
     width: normalize(160),
     alignItems: 'center',
@@ -1339,7 +1372,7 @@ const mapStateToProps = state => {
     listGridInfo: getStateForKeys(state, ['Weather', 'listGridInfo']),
     hourly: getStateForKeys(state, ['Weather', 'hourly']),
     daily: getStateForKeys(state, ['Weather', 'daily']),
-    listAirObj: getStateForKeys(state, ['Weather', 'listAirObj']),
+    aqi_data: getStateForKeys(state, ['Weather', 'aqi_data']),
     listCountryCovidInfo: getStateForKeys(state, [
       'Covid',
       'listCountryCovidInfo',
@@ -1360,4 +1393,4 @@ const mapDispatchToProps = (dispatch, getState) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(withImmutablePropsToJS(HomeScreen));
+)(withI18n(withImmutablePropsToJS(HomeScreen)));
