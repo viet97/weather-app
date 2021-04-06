@@ -74,9 +74,13 @@ const {
   time30m,
   time1h,
   time2h,
+  receiveTime,
+  dailyNotification,
 } = i18Defined.languagesKeys;
 
 export default en = {
+  [dailyNotification]: 'daily notification',
+  [receiveTime]: 'receive time',
   [time12h]: '12 hours',
   [time24h]: '24 hours',
   [time30m]: '30 minutes',

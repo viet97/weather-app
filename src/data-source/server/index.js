@@ -1,12 +1,12 @@
 import Connector from '../../connection/Connector';
 import ConfigStore from '../../container/ConfigStore';
-import {myLog} from '../../Debug';
-import {DEFINE_DATA_SOURCE} from '../../Define';
+import { myLog } from '../../Debug';
+import { DEFINE_DATA_SOURCE } from '../../Define';
 import LocalStorage from '../../modules/LocalStorage';
-import {deepCopyObject, getStateForKeys} from '../../utils/Util';
-import {AdapterManager} from '../adapter';
-import {openWeatherManager} from '../open-weather';
-import {weatherBitManager} from '../weather-bit';
+import { deepCopyObject, getStateForKeys } from '../../utils/Util';
+import { AdapterManager } from '../adapter';
+import { openWeatherManager } from '../open-weather';
+import { weatherBitManager } from '../weather-bit';
 
 export class MyServer {
   constructor(props) {
@@ -26,7 +26,7 @@ export class MyServer {
       getStateForKeys(ConfigStore().store.getState(), ['Setting', 'dataSource'])
     );
   };
-  getLocationByName = async ({query = {}}) => {
+  getLocationByName = async ({ query = {} }) => {
     try {
       const keyDataSource = await this.getKeyDataSource();
       switch (keyDataSource) {
@@ -34,7 +34,17 @@ export class MyServer {
           return AdapterManager.getInstance().convertLocationData({
             data: await openWeatherManager
               .getInstance()
-              .getLocationByName({query}),
+              .getLocationByName({ query }),
+            source: keyDataSource,
+          });
+        case DEFINE_DATA_SOURCE.weatherBit.key:
+          let queryWeatherBit = deepCopyObject(query);
+          queryWeatherBit.city = query.q;
+          delete queryWeatherBit.q;
+          return AdapterManager.getInstance().convertLocationData({
+            data: await weatherBitManager
+              .getInstance()
+              .getLocationByName({ query: queryWeatherBit }),
             source: keyDataSource,
           });
         default:
@@ -45,7 +55,7 @@ export class MyServer {
       throw error;
     }
   };
-  getWeatherByCityId = async ({query = {}}) => {
+  getWeatherByCityId = async ({ query = {} }) => {
     try {
       const keyDataSource = await this.getKeyDataSource();
       myLog('getWeatherByCityId--->', query, keyDataSource);
@@ -54,7 +64,7 @@ export class MyServer {
           return AdapterManager.getInstance().convertWeatherDetailData({
             data: await openWeatherManager
               .getInstance()
-              .getWeatherByCityId({query}),
+              .getWeatherByCityId({ query }),
             source: keyDataSource,
           });
         case DEFINE_DATA_SOURCE.weatherBit.key:
@@ -64,7 +74,7 @@ export class MyServer {
           return AdapterManager.getInstance().convertWeatherDetailData({
             data: await weatherBitManager
               .getInstance()
-              .getWeatherByCityId({query: tmpQueryWeatherBit}),
+              .getWeatherByCityId({ query: tmpQueryWeatherBit }),
             source: keyDataSource,
           });
         default:

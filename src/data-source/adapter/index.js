@@ -1,6 +1,6 @@
-import {myLog} from '../../Debug';
-import {DEFINE_DATA_SOURCE} from '../../Define';
-import {deepCopyObject, getValueFromObjectByKeys} from '../../utils/Util';
+import { myLog } from '../../Debug';
+import { DEFINE_DATA_SOURCE } from '../../Define';
+import { deepCopyObject, getValueFromObjectByKeys } from '../../utils/Util';
 
 export class AdapterManager {
   constructor() {
@@ -12,16 +12,18 @@ export class AdapterManager {
     }
     return this.instance;
   };
-  convertLocationData = ({data, source}) => {
+  convertLocationData = ({ data, source }) => {
     myLog('---convertLocationData--->', data, source);
     switch (source) {
       case DEFINE_DATA_SOURCE.openWeather.key:
+        return data;
+      case DEFINE_DATA_SOURCE.weatherBit.key:
         return data;
       default:
         return null;
     }
   };
-  convertWeatherDetailData = ({data, source}) => {
+  convertWeatherDetailData = ({ data, source }) => {
     myLog('---convertLocationData--->', data, source);
     switch (source) {
       case DEFINE_DATA_SOURCE.openWeather.key:
@@ -38,11 +40,11 @@ export class AdapterManager {
               name: dataDetailWeatherBit.city_name,
               id: data.arg.query.city_id,
               key: data.arg.query.city_id,
-              main: {temp: dataDetailWeatherBit.temp},
+              main: { temp: dataDetailWeatherBit.temp },
             };
           }
         }
-        return {...data, data: dataDetailWeatherBitFormat};
+        return { ...data, data: dataDetailWeatherBitFormat };
       default:
         return null;
     }

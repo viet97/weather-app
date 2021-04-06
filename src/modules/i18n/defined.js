@@ -76,6 +76,8 @@ export const languagesKeys = {
   time30m: 'time30m',
   time1h: 'time1h',
   time2h: 'time2h',
+  receiveTime: 'receiveTime',
+  dailyNotification: 'dailyNotification',
 };
 
 export default {
