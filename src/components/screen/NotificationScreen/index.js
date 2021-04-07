@@ -265,11 +265,6 @@ class NotificationScreen extends BaseScreen {
               }
               renderExtraView={() => {
                 const {timeDailyNotification, timeFormat} = this.props;
-                myLog(
-                  'timeDailyNotification-->',
-                  timeDailyNotification,
-                  typeof timeDailyNotification,
-                );
                 let styleAnimate = {
                   transform: [
                     {translateY: -100},
@@ -316,7 +311,12 @@ class NotificationScreen extends BaseScreen {
                         </CustomText>
                       </View>
                       <CustomText color={Colors.air_quality_text} size={32}>
-                        {format(new Date(), timeFormatShow)}
+                        {timeDailyNotification
+                          ? format(
+                              new Date(timeDailyNotification),
+                              timeFormatShow,
+                            )
+                          : format(new Date(), timeFormatShow)}
                       </CustomText>
                     </TouchablePlatform>
                     <ImageBackground
@@ -427,7 +427,7 @@ class NotificationScreen extends BaseScreen {
     await AlarmManager.getInstance().deleteAllAlarm();
     const dateFormat = format(new Date(date), 'MM-dd-yyy HH:mm').valueOf();
     AlarmManager.getInstance().setFutureRpeatAlarm(
-      new Date(dateFormat).toISOString(),
+      new Date(date).toISOString(),
     );
     myLog('onChangeTimeDailyNotification--->', dateFormat);
     this.setState(
@@ -436,7 +436,7 @@ class NotificationScreen extends BaseScreen {
       },
       () => {
         const {changeValueTimeDailyNotification} = this.props;
-        changeValueTimeDailyNotification(new Date(dateFormat).toISOString());
+        changeValueTimeDailyNotification(new Date(date).toISOString());
       },
     );
   };

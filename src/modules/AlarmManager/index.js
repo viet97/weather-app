@@ -62,14 +62,29 @@ export class AlarmManager {
   stopAlarm = () => {
     ReactNativeAN.stopAlarmSound();
   };
+  convertDateToClearSecond = (date = new Date()) => {
+    return new Date(
+      new Date(date).getFullYear(),
+      new Date(date).getMonth(),
+      new Date(date).getDate(),
+      new Date(date).getHours(),
+      new Date(date).getMinutes(),
+      0,
+    );
+  };
   setFutureRpeatAlarm = async date => {
+    const timestampNow = Date.now();
     const _seconds =
-      new Date(date).valueOf() - Date.now() <= 0
-        ? new Date(new Date().setDate(new Date().getDate() + 1)).valueOf() -
-          Date.now()
-        : new Date(date).valueOf() - Date.now();
+      new Date(this.convertDateToClearSecond(date)).valueOf() - timestampNow <=
+      0
+        ? new Date(
+            new Date().setDate(
+              new Date(this.convertDateToClearSecond(date)).getDate() + 1,
+            ),
+          ).valueOf() - timestampNow
+        : this.convertDateToClearSecond(date).valueOf() - timestampNow;
     const fire_date = ReactNativeAN.parseDate(
-      new Date(Date.now() + _seconds - new Date().getSeconds() * 1000),
+      new Date(timestampNow + _seconds),
     );
 
     const details = {
