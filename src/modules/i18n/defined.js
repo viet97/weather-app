@@ -115,6 +115,8 @@ export const languagesKeys = {
   fineParticlesMatter: 'fineParticlesMatter',
   coarseParticulateMatter: 'coarseParticulateMatter',
   ammonia: 'ammonia',
+  worldwide: 'worldwide',
+  rainSnow: 'rainSnow',
 };
 
 export default {
