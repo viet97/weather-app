@@ -7,27 +7,28 @@ import {
   ScrollView,
 } from 'react-native';
 import BaseScreen from '../BaseScreen';
-import {Header} from '../Header';
-import {getBottomSpace, normalize} from '../../../utils/DeviceUtil';
-import {Colors} from '../../../themes/Colors';
+import { Header } from '../Header';
+import { getBottomSpace, normalize } from '../../../utils/DeviceUtil';
+import { Colors } from '../../../themes/Colors';
 import SVGIcon from '../../../../assets/SVGIcon';
-import {TYPE_IMAGE_RESIZE_MODE} from '../../common/Image';
-import {Images} from '../../../themes/Images';
+import { TYPE_IMAGE_RESIZE_MODE } from '../../common/Image';
+import { Images } from '../../../themes/Images';
 import Text from '../../common/Text';
 import NavigationService from '../../../navigation/NavigationService';
-import {AirQualityProgressCircle} from '../../element';
+import { AirQualityProgressCircle } from '../../element';
 import {
   AIR_LIST,
   AIR_POLLUTION_LEVEL,
   MAX_AIR_QUALITY_INDEX,
 } from '../../../Define';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import withImmutablePropsToJS from 'with-immutable-props-to-js';
 import {
   getAirPollutionLevel,
   getStateForKeys,
   getValueFromObjectByKeys,
 } from '../../../utils/Util';
+import withI18n from '../../../modules/i18n/HOC';
 class AirQualityDetailScreen extends BaseScreen {
   constructor(props) {
     super(props);
@@ -63,19 +64,23 @@ class AirQualityDetailScreen extends BaseScreen {
   }
 
   renderStatus = () => {
+    const { aqi_data } = this.props
+    const aqi = getValueFromObjectByKeys(aqi_data, ['aqi']);
+    const currentAirLevel = getAirPollutionLevel(aqi);
+    const color = getValueFromObjectByKeys(currentAirLevel, ['color']);
     return (
-      <View style={{backgroundColor: Colors.white}}>
-        <View style={styles.statusContainer}>
+      <View style={{ backgroundColor: Colors.white }}>
+        <View style={[styles.statusContainer, { backgroundColor: color + '20' }]}>
           {this.renderAirQualityStatus()}
-          <View style={{marginTop: 16}}>{this.renderAirSeekBar()}</View>
+          <View style={{ marginTop: 16 }}>{this.renderAirSeekBar()}</View>
         </View>
       </View>
     );
   };
 
-  renderCircle = ({item, index}) => {
-    const {name, fullName, key} = item;
-    const {aqi_data} = this.props;
+  renderCircle = ({ item, index }) => {
+    const { name, fullName, key } = item;
+    const { aqi_data, t } = this.props;
     const iaqi = getValueFromObjectByKeys(aqi_data, ['iaqi']);
 
     if (!iaqi) return null;
@@ -87,7 +92,7 @@ class AirQualityDetailScreen extends BaseScreen {
     return (
       <ImageBackground
         source={Images.assets.background_circle.source}
-        imageStyle={{resizeMode: TYPE_IMAGE_RESIZE_MODE.CONTAIN}}
+        imageStyle={{ resizeMode: TYPE_IMAGE_RESIZE_MODE.CONTAIN }}
         style={{
           flex: 1,
           marginBottom: index < this.listQualityIndex.length / 2 ? 16 : 0,
@@ -106,7 +111,7 @@ class AirQualityDetailScreen extends BaseScreen {
         <Text
           size={36}
           medium
-          style={{color: Colors.air_quality_text, marginTop: 8}}>
+          style={{ color: Colors.air_quality_text, marginTop: 8 }}>
           {name}
         </Text>
         <Text
@@ -118,7 +123,7 @@ class AirQualityDetailScreen extends BaseScreen {
             textAlign: 'center',
             width: normalize(354) * Images.assets.background_circle.ratio,
           }}>
-          {fullName}
+          {t(fullName)}
         </Text>
       </ImageBackground>
     );
@@ -151,12 +156,12 @@ class AirQualityDetailScreen extends BaseScreen {
         <Text
           medium
           size={30}
-          style={{flex: 2, marginLeft: 16, color: Colors.air_quality_text}}>
+          style={{ flex: 2, marginLeft: 16, color: Colors.air_quality_text }}>
           {status}
         </Text>
         <Text
           size={30}
-          style={{flex: 1, marginLeft: 16, color: Colors.textTitle}}>
+          style={{ flex: 1, marginLeft: 16, color: Colors.textTitle }}>
           {value}
         </Text>
       </View>
@@ -164,20 +169,20 @@ class AirQualityDetailScreen extends BaseScreen {
   };
 
   renderValueReference = () => {
-    const {aqi_data} = this.props;
+    const { aqi_data, t } = this.props;
     const cityName = getValueFromObjectByKeys(aqi_data, ['city', 'name']);
     if (!cityName) return null;
     return (
       <View style={styles.valueReferenceContainer}>
         {Object.values(AIR_POLLUTION_LEVEL).map((it, index) => {
           return this.renderValueReferenceRow(
-            it.name,
+            t(it.name),
             it.rangeText,
             it.color,
             index > 0
               ? {
-                  marginTop: 8,
-                }
+                marginTop: 8,
+              }
               : {},
           );
         })}
@@ -193,7 +198,7 @@ class AirQualityDetailScreen extends BaseScreen {
           }}>
           <SVGIcon.waqi width={normalize(20)} height={normalize(20)} />
           <Text
-            style={{color: Colors.viewDetail, marginLeft: 16}}
+            style={{ color: Colors.viewDetail, marginLeft: 16 }}
             size={32}
             medium>
             WAQI: {cityName}
@@ -205,9 +210,9 @@ class AirQualityDetailScreen extends BaseScreen {
 
   renderContent() {
     return (
-      <View style={{flex: 1, backgroundColor: Colors.backgroundGray}}>
+      <View style={{ flex: 1, backgroundColor: Colors.backgroundGray }}>
         <Header title="Air Quality Index" />
-        <ScrollView contentContainerStyle={{paddingBottom: getBottomSpace()}}>
+        <ScrollView contentContainerStyle={{ paddingBottom: getBottomSpace() }}>
           {this.renderStatus()}
           {this.renderListCircleAirQuality()}
           {this.renderValueReference()}
@@ -226,7 +231,7 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   null,
-)(withImmutablePropsToJS(AirQualityDetailScreen));
+)(withI18n(withImmutablePropsToJS(AirQualityDetailScreen)));
 
 const styles = StyleSheet.create({
   valueReferenceContainer: {
@@ -234,8 +239,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.backgroundGray,
     flex: 1,
   },
-  staticRowContainer: {flexDirection: 'row', flex: 1, alignItems: 'center'},
-  listCircle: {paddingVertical: 24, backgroundColor: Colors.white},
+  staticRowContainer: { flexDirection: 'row', flex: 1, alignItems: 'center' },
+  listCircle: { paddingVertical: 24, backgroundColor: Colors.white },
   innerCircleStyle: {
     width: normalize(130),
     height: normalize(130),

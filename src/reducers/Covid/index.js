@@ -1,18 +1,16 @@
 import Immutable from 'immutable';
-import {size} from 'lodash';
+import { size } from 'lodash';
 import SVGIcon from '../../../assets/SVGIcon';
 import {
   NORMAL_TYPE,
   REQUEST_SUBTYPE,
   REQUEST_TYPE,
 } from '../../actions/ActionTypes';
-import {myLog} from '../../Debug';
-import {getValueFromObjectByKeys} from '../../utils/Util';
+import { myLog } from '../../Debug';
+import { languagesKeys } from '../../modules/i18n/defined';
+import { getValueFromObjectByKeys } from '../../utils/Util';
 
-const initState = Immutable.fromJS({
-  weather: {},
-  listGridInfo: [],
-});
+const initState = Immutable.fromJS({});
 
 export default (state = initState, action) => {
   switch (action.key) {
@@ -41,22 +39,22 @@ export default (state = initState, action) => {
             {
               Icon: SVGIcon.covid_active,
               value: active,
-              title: 'Active',
+              title: languagesKeys.active,
             },
             {
               Icon: SVGIcon.covid_confirm,
               value: confirmed,
-              title: 'Confirmed',
+              title: languagesKeys.confirmed,
             },
             {
               Icon: SVGIcon.covid_recover,
               value: recovered,
-              title: 'Recovered',
+              title: languagesKeys.recovered,
             },
             {
               Icon: SVGIcon.covid_death,
               value: deaths,
-              title: 'Deaths',
+              title: languagesKeys.deaths,
             },
           ];
           myLog('REQUEST_TYPE.GET_COUNTRY_COVID', data);
@@ -85,22 +83,22 @@ export default (state = initState, action) => {
             {
               Icon: SVGIcon.covid_active,
               value: active,
-              title: 'Active',
+              title: languagesKeys.active,
             },
             {
               Icon: SVGIcon.covid_confirm,
               value: confirmed,
-              title: 'Confirmed',
+              title: languagesKeys.confirmed,
             },
             {
               Icon: SVGIcon.covid_recover,
               value: recovered,
-              title: 'Recovered',
+              title: languagesKeys.recovered,
             },
             {
               Icon: SVGIcon.covid_death,
               value: deaths,
-              title: 'Deaths',
+              title: languagesKeys.deaths,
             },
           ];
           myLog('REQUEST_TYPE.GET_WORLD_COVID', data);

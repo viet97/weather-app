@@ -1,7 +1,8 @@
-import {temperatureC, temperatureF} from './utils/Util';
-import {getBootloader} from 'react-native-device-info';
-import {Colors} from './themes/Colors';
-import {languagesKeys} from './modules/i18n/defined';
+import { temperatureC, temperatureF } from './utils/Util';
+import { getBootloader } from 'react-native-device-info';
+import { Colors } from './themes/Colors';
+import { languagesKeys } from './modules/i18n/defined';
+// import I18n from './modules/i18n/I18n';
 
 export const checkExistsSpecailChar = string => {
   const format = /^[a-zA-Z0-9]*$/;
@@ -75,42 +76,42 @@ export const AIR_TYPE = [
 export const AIR_LIST = {
   CO: {
     name: 'CO',
-    fullName: 'Carbon monoxide',
+    fullName: languagesKeys.carbonMonoxide,
     key: 'co',
   },
   NO: {
     name: 'NO',
-    fullName: 'Nitrogen monoxide',
+    fullName: languagesKeys.nitrogenMonoxide,
     key: 'no',
   },
   NO2: {
     name: 'NO2',
-    fullName: 'Nitrogen dioxide',
+    fullName: languagesKeys.nitrogenDioxide,
     key: 'no2',
   },
   O3: {
     name: 'O3',
-    fullName: 'Ozone',
+    fullName: languagesKeys.ozone,
     key: 'o3',
   },
   SO2: {
     name: 'SO2',
-    fullName: 'Sulphur dioxide',
+    fullName: languagesKeys.sulphurDioxide,
     key: 'so2',
   },
   PM2_5: {
     name: 'PM2.5',
-    fullName: 'Fine particles matter',
+    fullName: languagesKeys.fineParticlesMatter,
     key: 'pm25',
   },
   PM10: {
     name: 'PM10',
-    fullName: 'Coarse particulate matter',
+    fullName: languagesKeys.coarseParticulateMatter,
     key: 'pm10',
   },
   NH3: {
     name: 'NH3',
-    fullName: 'Ammonia',
+    fullName: languagesKeys.ammonia,
     key: 'nh3',
   },
 };
@@ -121,7 +122,7 @@ export const AIR_POLLUTION_LEVEL = {
     max: 50,
     rangeText: '0 - 50',
     color: Colors.windLineColor,
-    name: 'Good',
+    name: languagesKeys.good,
     description:
       'Air quality is considered satisfactory, and air pollution poses little or no risk.',
     flex: 1,
@@ -131,7 +132,7 @@ export const AIR_POLLUTION_LEVEL = {
     max: 100,
     rangeText: '51 - 100',
     color: Colors.moderate,
-    name: 'Moderate',
+    name: languagesKeys.moderate,
     description:
       'Air quality is acceptable; however, for some pollutants there may be a moderate health concern for a very small number of people who are unusually sensitive to air pollution.',
     flex: 1,
@@ -141,7 +142,7 @@ export const AIR_POLLUTION_LEVEL = {
     max: 150,
     rangeText: '101 - 150',
     color: Colors.unhealthy_sensitive,
-    name: 'Unhealthy (Sensitive)',
+    name: languagesKeys.unhealthySensitive,
     description:
       'Members of sensitive groups may experience health effects. The general public is not likely to be affected.',
     flex: 1,
@@ -151,7 +152,7 @@ export const AIR_POLLUTION_LEVEL = {
     max: 200,
     rangeText: '151 - 200',
     color: Colors.unhealthy,
-    name: 'Unhealthy',
+    name: languagesKeys.unhealthy,
     description:
       'Everyone may begin to experience health effects; members of sensitive groups may experience more serious health effects',
     flex: 1,
@@ -161,7 +162,7 @@ export const AIR_POLLUTION_LEVEL = {
     max: 300,
     rangeText: '201 - 300',
     color: Colors.very_unhealthy,
-    name: 'Very Unhealthy',
+    name: languagesKeys.veryUnhealthy,
     description:
       'Health warnings of emergency conditions. The entire population is more likely to be affected.',
     flex: 2,
@@ -171,7 +172,7 @@ export const AIR_POLLUTION_LEVEL = {
     max: INFINITY_NUMBER,
     rangeText: '300+',
     color: Colors.hazardous,
-    name: 'Hazardous',
+    name: languagesKeys.hazardous,
     description:
       'Health alert: everyone may experience more serious health effects.',
     flex: 4,
@@ -188,8 +189,8 @@ export const DEFINE_DATA_SOURCE = {
     value: 'openWeather',
     label: 'Open Weather',
   },
-  weatherBit: {key: 'weatherBit', value: 'weatherBit', label: 'Weather Bit'},
-  foreca: {key: 'foreca', value: 'foreca', label: 'Foreca'},
+  weatherBit: { key: 'weatherBit', value: 'weatherBit', label: 'Weather Bit' },
+  foreca: { key: 'foreca', value: 'foreca', label: 'Foreca' },
 };
 export const DEFINE_UNIT_FREQUENCY = {
   '30m': {
@@ -310,8 +311,8 @@ export const DEFINE_THEME_COLOR = {
   },
 };
 export const DEFINE_TIME_FORMAT = {
-  '24h': {value: '24h', label: '24 hours', languageKey: languagesKeys.time24h},
-  '12h': {value: '12h', label: '12 hours', languageKey: languagesKeys.time12h},
+  '24h': { value: '24h', label: '24 hours', languageKey: languagesKeys.time24h },
+  '12h': { value: '12h', label: '12 hours', languageKey: languagesKeys.time12h },
 };
 export const DEFINE_LAYOUT = {
   status: {

@@ -114,6 +114,8 @@ const {
   coarseParticulateMatter,
   ammonia,
   viewDetail,
+  rainSnow,
+  worldwide,
 } = i18Defined.languagesKeys;
 
 export default en = {
@@ -233,4 +235,6 @@ export default en = {
   [coarseParticulateMatter]: 'Coarse particulate matter',
   [ammonia]: 'Ammonia',
   [viewDetail]: 'View detail',
+  [rainSnow]: 'Rain/Snow',
+  [worldwide]: 'Worldwide ',
 };
