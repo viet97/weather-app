@@ -22,6 +22,7 @@ import {Colors} from '../../../themes/Colors';
 import {
   deepCopyObject,
   getStateForKeys,
+  getValueFromObjectByKeys,
   temperatureC,
   temperatureF,
   temperatureNone,
@@ -88,12 +89,20 @@ class MenuScreen extends BaseScreen {
             if (resDetailData) {
               tmpDataLocation.push({
                 label: myLocations[index].label || resDetailData.name,
-                key: resDetailData.id,
-                id: resDetailData.id,
+                key: myLocations[index].googlePlaceId,
+                id: myLocations[index].googlePlaceId,
                 temperature: resDetailData.main.temp,
-                photo: MyServer.getInstance().getPhotoPlaceGg(
-                  resAllPhotoPlace[index].data.result.photos[0].photo_reference,
-                ),
+                photoTmp: Images.assets.bg_menu.source,
+                photo: getValueFromObjectByKeys(resAllPhotoPlace[index], [
+                  'data',
+                  'result',
+                  'photos',
+                ])
+                  ? MyServer.getInstance().getPhotoPlaceGg(
+                      resAllPhotoPlace[index].data.result.photos[0]
+                        .photo_reference,
+                    )
+                  : '',
               });
             }
           });
@@ -148,9 +157,13 @@ class MenuScreen extends BaseScreen {
         }}
         key={index}>
         <CustomImage
-          source={{
-            uri: item.photo,
-          }}
+          source={
+            item.photo
+              ? {
+                  uri: item.photo,
+                }
+              : item.photoTmp
+          }
           style={{width: normalize(544), height: normalize(271.5)}}
           resizeMode={TYPE_IMAGE_RESIZE_MODE.COVER}
         />

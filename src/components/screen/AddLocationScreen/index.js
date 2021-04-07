@@ -137,6 +137,7 @@ class AddLocationScreen extends BaseScreen {
     }
   };
   renderItem = params => {
+    myLog('render item search', params);
     const {item, index} = params;
     const {unitTemp} = this.props;
     return (
@@ -370,7 +371,7 @@ class AddLocationScreen extends BaseScreen {
           />
         ) : null}
         <FlatList
-          keyExtractor={(item, index) => item.id + index}
+          keyExtractor={(item, index) => JSON.stringify(item) + index}
           data={dataSearch}
           renderItem={this.renderItem}
           // ListHeaderComponent={this.renderHeader}

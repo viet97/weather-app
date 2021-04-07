@@ -9,10 +9,11 @@ import {
   getValueFromObjectByKeys,
 } from '../../utils/Util';
 import {AdapterManager} from '../adapter';
+import {forecaWeatherManager} from '../foreca';
 import {openWeatherManager} from '../open-weather';
 import {weatherBitManager} from '../weather-bit';
 
-const googleKey = 'AIzaSyDNI_ZWPqvdS6r6gPVO50I4TlYkfkZdXh8';
+const googleKey = 'AIzaSyCJqpC7oo-YYJJ1pRVZJgf84qExlHZCWSc';
 const apiPlaceGoogle = 'https://maps.googleapis.com/maps/api/place/';
 const apiEndPointPlaceGoogle = {
   findPlaceFromText: 'findplacefromtext/json',
@@ -115,6 +116,13 @@ export class MyServer {
         case DEFINE_DATA_SOURCE.weatherBit.key:
           return AdapterManager.getInstance().convertWeatherDetailData({
             data: await weatherBitManager
+              .getInstance()
+              .getWeatherByGeometry({query}),
+            source: keyDataSource,
+          });
+        case DEFINE_DATA_SOURCE.foreca.key:
+          return AdapterManager.getInstance().convertWeatherDetailData({
+            data: await forecaWeatherManager
               .getInstance()
               .getWeatherByGeometry({query}),
             source: keyDataSource,
