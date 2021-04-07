@@ -1,13 +1,14 @@
 import Immutable from 'immutable';
-import {size} from 'lodash';
+import { size } from 'lodash';
 import SVGIcon from '../../../assets/SVGIcon';
 import {
   NORMAL_TYPE,
   REQUEST_SUBTYPE,
   REQUEST_TYPE,
 } from '../../actions/ActionTypes';
-import {myLog} from '../../Debug';
-import {getValueFromObjectByKeys} from '../../utils/Util';
+import { myLog } from '../../Debug';
+import { languagesKeys } from '../../modules/i18n/defined';
+import { getValueFromObjectByKeys } from '../../utils/Util';
 
 const initState = Immutable.fromJS({
   weather: {},
@@ -47,49 +48,49 @@ export default (state = initState, action) => {
               Icon: SVGIcon.temp,
               value: temp,
               unit: 'oC',
-              description: 'Feel Like',
+              description: languagesKeys.feelsLike,
             },
             {
               Icon: SVGIcon.humidity,
               value: humidity,
               unit: '%',
-              description: 'Humidity',
+              description: languagesKeys.humidity,
             },
             {
               Icon: SVGIcon.rain_snow,
               value: rain,
               unit: 'mm',
-              description: 'Rain/Snow',
+              description: languagesKeys.rainSnow,
             },
             {
               Icon: SVGIcon.wind,
               value: wind_speed,
               unit: 'km/h',
-              description: 'Wind',
+              description: languagesKeys.wind,
             },
             {
               Icon: SVGIcon.uv_index,
               value: uvi,
               unit: '',
-              description: 'UV Index',
+              description: languagesKeys.uvIndex,
             },
             {
               Icon: SVGIcon.dew_point,
               value: dew_point,
               unit: '%',
-              description: 'Dew Point',
+              description: languagesKeys.dewPoint,
             },
             {
               Icon: SVGIcon.pressure,
               value: pressure,
               unit: 'mb',
-              description: 'Pressure',
+              description: languagesKeys.pressure,
             },
             {
               Icon: SVGIcon.visibility,
               value: visibility,
               unit: 'km',
-              description: 'Visibility',
+              description: languagesKeys.visibility,
             },
           ];
           myLog('REQUEST_TYPE.GET_ALL_DATA', listGridInfo);
