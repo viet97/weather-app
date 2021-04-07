@@ -21,6 +21,7 @@ import LocalStorage from '../../modules/LocalStorage';
 const initState = Immutable.fromJS({
   dailyNotification: 0,
   severeAlert: 0,
+  dailyTimeNotification: null,
   alarmRainAndSnow: 0,
   dataSource: DEFINE_DATA_SOURCE.openWeather.key,
   frequencyValue: DEFINE_UNIT_FREQUENCY['30m'].value,
@@ -55,6 +56,13 @@ export default (state = initState, action) => {
             dailyNotification,
           );
           return state.setIn(['dailyNotification'], dailyNotification);
+        case NORMAL_TYPE.CHANGE_VALUE_TIME_DAILY_NOTIFICATION:
+          const {timeDailyNotification} = action.data;
+          AppSettingManager.getInstance().changeDataSetting(
+            LocalStorage.DEFINE_KEY.SETTING_APP.TIME_DAILY_NOTIFICATION,
+            timeDailyNotification,
+          );
+          return state.setIn(['timeDailyNotification'], timeDailyNotification);
         case NORMAL_TYPE.CHANGE_VALUE_SEVERE_ALERT:
           const {severeAlert} = action.data;
           AppSettingManager.getInstance().changeDataSetting(

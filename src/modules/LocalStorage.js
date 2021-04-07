@@ -50,6 +50,7 @@ export const DEFINE_KEY = {
     WEATHER_PROVIDER: md5Key('weatherProvider'),
     CUSTOM_LAYOUT: md5Key('customLayout'),
     DAILY_NOTIFICATION: md5Key('dailyNotification'),
+    TIME_DAILY_NOTIFICATION: md5Key('timeDailyNotification'),
     DAILY_RECEIVE_TIME: md5('dailyReceiveTime'),
     SEVERE_ALERT: md5('severeAlert'),
     ALARM_RAIN_SNOW: md5('rainSnowAlarm'),
@@ -60,7 +61,6 @@ export const DEFINE_KEY = {
     UNIT_WIND_SPEED: md5('unitWindSpeed'),
     UNIT_PRESSURE: md5('unitPressure'),
     THEME_COLOR: md5('themeColor'),
-    TIME_FORMAT: md5('timeFormat'),
   },
   LOCATION: md5('LOCATION'),
 };

@@ -17,6 +17,8 @@ export class AdapterManager {
     switch (source) {
       case DEFINE_DATA_SOURCE.openWeather.key:
         return data;
+      case DEFINE_DATA_SOURCE.weatherBit.key:
+        return data;
       default:
         return null;
     }
@@ -36,13 +38,27 @@ export class AdapterManager {
             );
             dataDetailWeatherBitFormat = {
               name: dataDetailWeatherBit.city_name,
-              id: data.arg.query.city_id,
-              key: data.arg.query.city_id,
               main: {temp: dataDetailWeatherBit.temp},
+              sys: {
+                country: dataDetailWeatherBit.country_code,
+              },
             };
           }
         }
         return {...data, data: dataDetailWeatherBitFormat};
+      case DEFINE_DATA_SOURCE.foreca.key:
+        let tmpDataForeca = deepCopyObject(data),
+          dataDetailForecaFormat = {};
+        if (getValueFromObjectByKeys(tmpDataForeca, ['data', 'current'])) {
+          if (tmpDataForeca.data.current) {
+            let dataDetailForeca = deepCopyObject(tmpDataForeca.data.current);
+            dataDetailForecaFormat = {
+              name: '',
+              main: {temp: dataDetailForeca.temperature},
+            };
+          }
+        }
+        return {...data, data: dataDetailForecaFormat};
       default:
         return null;
     }

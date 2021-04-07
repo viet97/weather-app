@@ -64,9 +64,11 @@ const {
   privacy,
   aboutApp,
   rateUs,
+  receiveTime,
 } = i18Defined.languagesKeys;
 
 export default ca = {
+  [receiveTime]: 'rebre temps',
   [unit]: 'unitats',
   [weatherProvider]: 'proveïdor del temps',
   [themeColor]: 'theme color',

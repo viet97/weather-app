@@ -25,7 +25,11 @@ import {
 import CustomText from '../../common/Text';
 import {Header} from '../Header';
 import {CityList} from '../../../utils/CityList';
-import {getStateForKeys, temperatureC} from '../../../utils/Util';
+import {
+  getStateForKeys,
+  getValueFromObjectByKeys,
+  temperatureC,
+} from '../../../utils/Util';
 import {KEY_FONT} from '../../../themes/Fonts';
 import {Colors} from '../../../themes/Colors';
 import {myLog} from '../../../Debug';
@@ -36,6 +40,7 @@ import {connect} from 'react-redux';
 import withI18n, {typeStringAfterTranslation} from '../../../modules/i18n/HOC';
 import {languagesKeys} from '../../../modules/i18n/defined';
 import {LocationAction} from '../../../actions';
+import Axios from 'axios';
 
 const sizeIconLeft = {
   width: normalize(44),
@@ -108,7 +113,7 @@ class AddLocationScreen extends BaseScreen {
         temperatureSuffix: 'f',
       },
     ];
-    this.onChangeText = debounce(this.onChangeText, 300, {
+    this.onChangeText = debounce(this.onChangeText, 500, {
       leading: false,
       trailing: true,
     });
@@ -116,18 +121,23 @@ class AddLocationScreen extends BaseScreen {
   onPressItem = item => {
     const {myLocations, changeLocation} = this.props;
     myLog('onPressItem--->', myLocations, item);
-    const isChoiced = myLocations.find(x => x.id === item.id);
+    const isChoiced = myLocations.find(
+      x => x.googlePlaceId === item.googlePlaceId,
+    );
     if (!isChoiced) {
       let tmpLocation = [...myLocations];
       tmpLocation.unshift({
         label: item.name,
-        key: item.id,
-        id: item.id,
+        lat: item.lat,
+        lon: item.lon,
+        googlePlaceId: item.googlePlaceId,
       });
+      myLog('---tmpLocation--->', tmpLocation);
       changeLocation(tmpLocation);
     }
   };
   renderItem = params => {
+    myLog('render item search', params);
     const {item, index} = params;
     const {unitTemp} = this.props;
     return (
@@ -209,16 +219,85 @@ class AddLocationScreen extends BaseScreen {
     myLog('onchange search location--->', text, unitTemp);
     if (text.length > 2) {
       this.setState({loadingData: true});
-      const resLocation = await MyServer.getInstance().getLocationByName({
-        query: {q: text},
+      // const resLocation = await MyServer.getInstance().getLocationByName({
+      //   query: {q: text},
+      // });
+      // const resPlace = await MyServer.getInstance().findPlaceFromText({
+      //   name: text,
+      // });
+      const resPlaceLike = await MyServer.getInstance().findPlaceFromTextLike({
+        name: text,
       });
-      myLog('resLocation--->', resLocation);
-      if (resLocation && resLocation.data && resLocation.data.count) {
-        this.setState({
-          dataSearch: resLocation.data.list,
-          loadingData: false,
-          isFirstRender: false,
+      myLog('resPlaceLike--->', resPlaceLike);
+      let arrDetailPlace = [];
+      let {status, predictions} = getValueFromObjectByKeys(resPlaceLike, [
+        'data',
+      ]);
+      predictions.splice(5, 1);
+      if (predictions.length) {
+        predictions.map(place => {
+          if (place.place_id) {
+            arrDetailPlace.push(
+              MyServer.getInstance().getPlaceDetail({placeId: place.place_id}),
+            );
+          }
         });
+        if (arrDetailPlace.length) {
+          const resAllDetailPlace = await Axios.all(arrDetailPlace);
+          myLog('---resAllDetailPlace--->', resAllDetailPlace);
+          let arrDetailWeather = [];
+          resAllDetailPlace.map(item => {
+            const {lat, lng} = getValueFromObjectByKeys(item, [
+              'data',
+              'result',
+              'geometry',
+              'location',
+            ]);
+            if (lat && lng) {
+              arrDetailWeather.push(
+                MyServer.getInstance().getWeatherByGeometry({
+                  query: {
+                    lat,
+                    lon: lng,
+                  },
+                }),
+              );
+            }
+          });
+          if (arrDetailPlace.length) {
+            const resAllDetailWeatherPlace = await Axios.all(arrDetailWeather);
+            myLog('resAllDetailWeatherPlace--->', resAllDetailWeatherPlace);
+            let dataSearch = [];
+            resAllDetailWeatherPlace.map((itemDetailWeather, index) => {
+              const data = getValueFromObjectByKeys(itemDetailWeather, [
+                'data',
+              ]);
+              if (data) {
+                const nameFinal = getValueFromObjectByKeys(
+                  resPlaceLike.data.predictions[index],
+                  ['description'],
+                  data.name,
+                );
+                dataSearch.push({
+                  ...data,
+                  name: nameFinal,
+                  lat:
+                    resAllDetailPlace[index].data.result.geometry.location.lat,
+                  lon:
+                    resAllDetailPlace[index].data.result.geometry.location.lng,
+                  googlePlaceId: resPlaceLike.data.predictions[index].place_id,
+                });
+              }
+            });
+            if (dataSearch.length) {
+              this.setState({
+                dataSearch,
+                loadingData: false,
+                isFirstRender: false,
+              });
+            }
+          }
+        }
       } else {
         this.setState({
           dataSearch: [],
@@ -292,7 +371,7 @@ class AddLocationScreen extends BaseScreen {
           />
         ) : null}
         <FlatList
-          keyExtractor={(item, index) => item.id + index}
+          keyExtractor={(item, index) => JSON.stringify(item) + index}
           data={dataSearch}
           renderItem={this.renderItem}
           // ListHeaderComponent={this.renderHeader}

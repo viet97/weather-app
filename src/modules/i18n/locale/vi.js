@@ -69,9 +69,13 @@ const {
   time1h,
   time2h,
   setting,
+  receiveTime,
+  dailyNotification,
 } = i18Defined.languagesKeys;
 
 export default vi = {
+  [dailyNotification]: 'thông báo hàng ngày',
+  [receiveTime]: 'thời gian nhận',
   [setting]: 'cài đặt',
   [time12h]: '12 giờ',
   [time24h]: '24 giờ',

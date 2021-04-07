@@ -3,7 +3,7 @@ import {FlatList, View, ActivityIndicator, RefreshControl} from 'react-native';
 import BaseScreen from '../BaseScreen';
 import IconWeatherSvg from '../../../../assets/SVGIcon/view-menu/icon_weather.svg';
 import {Images} from '../../../themes/Images';
-import CustomImage from '../../common/Image';
+import CustomImage, {TYPE_IMAGE_RESIZE_MODE} from '../../common/Image';
 import {
   normalize,
   STATUS_BAR_HEIGHT,
@@ -22,6 +22,7 @@ import {Colors} from '../../../themes/Colors';
 import {
   deepCopyObject,
   getStateForKeys,
+  getValueFromObjectByKeys,
   temperatureC,
   temperatureF,
   temperatureNone,
@@ -48,37 +49,60 @@ class MenuScreen extends BaseScreen {
   }
   getWeatherDetail = async (props = this.props) => {
     try {
-      if (!AppSettingManager.getInstance().setFirstValueLocal) return;
+      myLog(
+        '--AppSettingManager.getInstance().setFirstValueLocal---',
+        AppSettingManager.getInstance().isSetFirstValueLocal(),
+      );
+      if (!AppSettingManager.getInstance().isSetFirstValueLocal()) return;
       myLog('getWeatherDetail--->', props);
       this.setState({loadingData: true});
       const {myLocations, unitTemp} = props;
       if (myLocations && myLocations.length) {
-        let arrDetail = [];
+        let arrDetail = [],
+          arrPhotoPlace = [];
         myLocations.map(item => {
+          myLog('---myLocations-->', item);
+          arrPhotoPlace.push(
+            MyServer.getInstance().getPlaceDetail({
+              placeId: item.googlePlaceId,
+            }),
+          );
           arrDetail.push(
-            MyServer.getInstance().getWeatherByCityId({
+            MyServer.getInstance().getWeatherByGeometry({
               query: {
-                id: item.id,
-                units: unitsQuery.openWeather.temp[unitTemp],
+                lat: item.lat,
+                lon: item.lon,
               },
             }),
           );
         });
         if (arrDetail.length) {
           const resAllDetail = await Axios.all(arrDetail);
-          myLog('resAllDetail--->', resAllDetail);
+          const resAllPhotoPlace = await Axios.all(arrPhotoPlace);
+          myLog('resAllDetail--->', resAllDetail, resAllPhotoPlace);
           let tmpDataLocation = [];
-          resAllDetail.map(resDetail => {
+          resAllDetail.map((resDetail, index) => {
             const resDetailData =
               resDetail && resDetail.data && Object.keys(resDetail.data).length
                 ? resDetail.data
                 : null;
             if (resDetailData) {
               tmpDataLocation.push({
-                label: resDetailData.name,
-                key: resDetailData.id,
-                id: resDetailData.id,
+                label: myLocations[index].label || resDetailData.name,
+                key: myLocations[index].googlePlaceId,
+                id: myLocations[index].googlePlaceId,
                 temperature: resDetailData.main.temp,
+                photoTmp: Images.assets.bg_menu.source,
+                photo: getValueFromObjectByKeys(resAllPhotoPlace[index], [
+                  'data',
+                  'result',
+                  'photos',
+                ])
+                  ? MyServer.getInstance().getPhotoPlaceGg(
+                      resAllPhotoPlace[index].data.result.photos[0]
+                        .photo_reference,
+                    )
+                  : '',
               });
             }
           });
@@ -87,6 +111,10 @@ class MenuScreen extends BaseScreen {
             loadingData: false,
           });
         }
+      } else {
+        this.setState({
+          loadingData: false,
+        });
       }
     } catch (error) {
       myLog('getWeatherDetail--->', error);
@@ -99,7 +127,15 @@ class MenuScreen extends BaseScreen {
     this.getWeatherDetail();
   }
   UNSAFE_componentWillReceiveProps(nextProps) {
-    myLog('componentWillReceiveProps--->', nextProps);
+    myLog(
+      'componentWillReceiveProps--->',
+      nextProps,
+      JSON.stringify(nextProps.myLocations) !==
+        JSON.stringify(this.props.myLocations) ||
+        nextProps.unitTemp !== this.props.unitTemp ||
+        nextProps.language !== this.props.language ||
+        nextProps.dataSource !== this.props.dataSource,
+    );
     if (
       JSON.stringify(nextProps.myLocations) !==
         JSON.stringify(this.props.myLocations) ||
@@ -121,8 +157,15 @@ class MenuScreen extends BaseScreen {
         }}
         key={index}>
         <CustomImage
-          source={item.background || Images.assets.bg_menu.source}
+          source={
+            item.photo
+              ? {
+                  uri: item.photo,
+                }
+              : item.photoTmp
+          }
           style={{width: normalize(544), height: normalize(271.5)}}
+          resizeMode={TYPE_IMAGE_RESIZE_MODE.COVER}
         />
         <View
           style={{
@@ -131,7 +174,7 @@ class MenuScreen extends BaseScreen {
             height: normalize(271.5),
             top: 0,
             left: normalize(9),
-            backgroundColor: Colors.TRANSPARENT,
+            backgroundColor: Colors.blackAlpha20,
           }}
         />
         <View
@@ -151,7 +194,17 @@ class MenuScreen extends BaseScreen {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
-            <CustomText numberOfLines={1} color={Colors.white} size={36}>
+            <CustomText
+              style={{
+                maxWidth:
+                  normalize(544) -
+                  normalize(44) -
+                  2 * normalize(30) -
+                  normalize(30),
+              }}
+              numberOfLines={1}
+              color={Colors.white}
+              size={36}>
               {item.label}
             </CustomText>
             <TouchablePlatform

@@ -44,7 +44,6 @@ export class AppSettingManager {
     }
   };
   setDataSettingFromLocal = async () => {
-    this.setDataLocationFromLocal();
     const dataSetting = await LocalStorage.getMultiItem(
       Object.values(LocalStorage.DEFINE_KEY.SETTING_APP),
     );
@@ -69,7 +68,7 @@ export class AppSettingManager {
             if (item[1]) settingAppFromLocalStorage.severeAlert = item[1];
             break;
           case LocalStorage.DEFINE_KEY.SETTING_APP.ALARM_RAIN_SNOW:
-            if (item[1]) settingAppFromLocalStorage.rainAndSnow = item[1];
+            if (item[1]) settingAppFromLocalStorage.alarmRainAndSnow = item[1];
             break;
           case LocalStorage.DEFINE_KEY.SETTING_APP.WEATHER_PROVIDER:
             if (item[1]) settingAppFromLocalStorage.dataSource = item[1];
@@ -101,10 +100,23 @@ export class AppSettingManager {
           case LocalStorage.DEFINE_KEY.SETTING_APP.UNIT_PRESSURE:
             if (item[1]) settingAppFromLocalStorage.unitPressure = item[1];
             break;
+          case LocalStorage.DEFINE_KEY.SETTING_APP.TIME_FORMAT:
+            if (item[1]) settingAppFromLocalStorage.timeFormat = item[1];
+            break;
+          case LocalStorage.DEFINE_KEY.SETTING_APP.TIME_DAILY_NOTIFICATION:
+            if (item[1])
+              settingAppFromLocalStorage.timeDailyNotification = item[1];
+            break;
+          case LocalStorage.DEFINE_KEY.SETTING_APP.THEME_COLOR:
+            if (item[1]) settingAppFromLocalStorage.themeColor = item[1];
+            break;
           default:
             break;
         }
       });
+    myLog('---setFirstValueLocal 123---');
+    this.setFirstValueLocal = true;
+    this.setDataLocationFromLocal();
     if (Object.keys(settingAppFromLocalStorage).length) {
       myLog('---settingAppFromLocalStorage---', settingAppFromLocalStorage);
       ConfigStore().store.dispatch(
@@ -113,6 +125,6 @@ export class AppSettingManager {
         }),
       );
     }
-    this.setFirstValueLocal = true;
   };
+  isSetFirstValueLocal = () => this.setFirstValueLocal;
 }
